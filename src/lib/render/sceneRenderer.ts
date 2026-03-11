@@ -1,5 +1,6 @@
 import { resolveColor } from '@/lib/theme/colors';
 import { typographyScale } from '@/lib/theme/typography';
+import { createTypographyLayout } from '@/lib/render/typographyLayout';
 import type {
   AnchorPosition,
   BrandDocument,
@@ -13,32 +14,6 @@ type DrawSceneOptions = {
   showGrid?: boolean;
   showSafeMargins?: boolean;
 };
-
-function wrapLines(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  maxWidth: number
-) {
-  const words = text.split(/\s+/).filter(Boolean);
-  const lines: string[] = [];
-  let current = '';
-
-  for (const word of words) {
-    const candidate = current ? `${current} ${word}` : word;
-    if (ctx.measureText(candidate).width <= maxWidth || !current) {
-      current = candidate;
-    } else {
-      lines.push(current);
-      current = word;
-    }
-  }
-
-  if (current) {
-    lines.push(current);
-  }
-
-  return lines;
-}
 
 function anchorToOrigin(
   anchor: AnchorPosition,
@@ -216,43 +191,38 @@ function drawTypography(
   };
   const padding = paddingMap[document.typography.paddingPreset];
   const origin = anchorToOrigin(document.typography.anchor, width, height, padding);
-  const maxWidth = width * document.typography.maxWidth;
+  const layout = createTypographyLayout(ctx, width, height, document, padding);
 
   ctx.save();
   ctx.fillStyle = resolveColor(document.typography.textColor);
   applyTextAlign(ctx, document.typography.alignment, document.typography.anchor);
   ctx.textBaseline = 'top';
 
-  let cursorY = origin.y;
-  if (document.typography.anchor.startsWith('center') || document.typography.anchor === 'center') {
-    cursorY -= height * 0.12;
-  } else if (document.typography.anchor.startsWith('bottom')) {
-    cursorY -= height * 0.2;
-  }
+  let cursorY = layout.startY;
 
-  if (document.typography.eyebrow) {
+  if (layout.eyebrowText) {
     ctx.font = `600 ${typographyScale.eyebrow.size}px ${typographyScale.eyebrow.family}`;
     ctx.globalAlpha = 0.78;
-    ctx.fillText(document.typography.eyebrow.toUpperCase(), origin.x, cursorY);
+    ctx.fillText(layout.eyebrowText, origin.x, cursorY);
     cursorY += typographyScale.eyebrow.size * 2.1;
   }
 
-  if (document.typography.headline) {
+  if (layout.headlineLines.length > 0) {
     ctx.globalAlpha = 1;
     ctx.font = `${document.typography.weight} ${document.typography.headlineSize}px ${typographyScale.display.family}`;
-    const headlineLines = wrapLines(ctx, document.typography.headline, maxWidth);
-    for (const line of headlineLines) {
+    for (const line of layout.headlineLines) {
       ctx.fillText(line, origin.x, cursorY);
       cursorY += document.typography.headlineSize * document.typography.lineHeight;
     }
-    cursorY += 20;
+    if (layout.bodyLines.length > 0) {
+      cursorY += 20;
+    }
   }
 
-  if (document.typography.body) {
+  if (layout.bodyLines.length > 0) {
     ctx.globalAlpha = 0.82;
     ctx.font = `500 ${document.typography.bodySize}px ${typographyScale.body.family}`;
-    const bodyLines = wrapLines(ctx, document.typography.body, maxWidth * 0.92);
-    for (const line of bodyLines) {
+    for (const line of layout.bodyLines) {
       ctx.fillText(line, origin.x, cursorY);
       cursorY += document.typography.bodySize * 1.55;
     }

@@ -1,5 +1,6 @@
 import type { BrandDocument } from '@/lib/types/document';
 import { renderDocumentToCanvas } from '@/lib/render/captureFrame';
+import { getLogicalCanvasSize } from '@/lib/render/renderSizing';
 import { drawScene } from '@/lib/render/sceneRenderer';
 
 export async function exportDocumentAsWebM(documentState: BrandDocument) {
@@ -23,6 +24,7 @@ export async function exportDocumentAsWebM(documentState: BrandDocument) {
   if (!ctx) {
     throw new Error('Unable to acquire video export context.');
   }
+  const logicalSize = getLogicalCanvasSize(documentState);
 
   return new Promise<Blob>((resolve, reject) => {
     recorder.onerror = () => reject(new Error('WEBM export failed.'));
@@ -35,7 +37,8 @@ export async function exportDocumentAsWebM(documentState: BrandDocument) {
 
     const tick = () => {
       const elapsed = (performance.now() - startedAt) / 1000;
-      drawScene(ctx, canvas.width, canvas.height, documentState, {
+      ctx.setTransform(documentState.export.scale, 0, 0, documentState.export.scale, 0, 0);
+      drawScene(ctx, logicalSize.width, logicalSize.height, documentState, {
         elapsedSeconds: elapsed
       });
 
