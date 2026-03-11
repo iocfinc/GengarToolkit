@@ -1,27 +1,6 @@
-import { exportResolutionSizes } from '@/lib/types/controls';
 import type { BrandDocument, ResolutionPreset } from '@/lib/types/document';
 import { drawScene } from '@/lib/render/sceneRenderer';
-
-function resolutionFor(document: BrandDocument, resolution: ResolutionPreset) {
-  const base = exportResolutionSizes[resolution];
-  const aspect =
-    document.aspectRatio === '4:5'
-      ? 4 / 5
-      : document.aspectRatio === '1:1'
-        ? 1
-        : document.aspectRatio === '9:16'
-          ? 9 / 16
-          : document.aspectRatio === 'a4-portrait'
-            ? 210 / 297
-            : document.aspectRatio === 'a4-landscape'
-              ? 297 / 210
-              : 16 / 9;
-
-  return {
-    width: Math.round(base.width * document.export.scale),
-    height: Math.round((base.width / aspect) * document.export.scale)
-  };
-}
+import { getLogicalCanvasSize, getOutputCanvasSize } from '@/lib/render/renderSizing';
 
 export async function renderDocumentToCanvas(
   brandDocument: BrandDocument,
@@ -29,16 +8,19 @@ export async function renderDocumentToCanvas(
   resolution: ResolutionPreset = brandDocument.export.resolution
 ) {
   const canvas = globalThis.document.createElement('canvas');
-  const { width, height } = resolutionFor(brandDocument, resolution);
-  canvas.width = width;
-  canvas.height = height;
+  const logicalSize = getLogicalCanvasSize(brandDocument, resolution);
+  const outputSize = getOutputCanvasSize(brandDocument, resolution);
+  canvas.width = outputSize.width;
+  canvas.height = outputSize.height;
 
   const context = canvas.getContext('2d');
   if (!context) {
     throw new Error('Unable to create export canvas.');
   }
 
-  drawScene(context, width, height, brandDocument, {
+  context.setTransform(brandDocument.export.scale, 0, 0, brandDocument.export.scale, 0, 0);
+
+  drawScene(context, logicalSize.width, logicalSize.height, brandDocument, {
     elapsedSeconds
   });
 

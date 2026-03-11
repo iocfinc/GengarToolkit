@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { aspectRatioDimensions, aspectRatioLabels } from '@/lib/types/controls';
+import { aspectRatioLabels } from '@/lib/types/controls';
+import { getLogicalCanvasSize, getPreviewDisplaySize } from '@/lib/render/renderSizing';
 import { drawScene } from '@/lib/render/sceneRenderer';
 import { useEditorStore } from '@/lib/store/editorStore';
 
@@ -47,7 +48,6 @@ export function CanvasStage() {
 
     const render = (now: number) => {
       const state = useEditorStore.getState();
-      const ratio = aspectRatioDimensions[state.document.aspectRatio];
       const rect = canvas.parentElement?.getBoundingClientRect();
 
       if (!rect) {
@@ -57,18 +57,20 @@ export function CanvasStage() {
 
       const targetWidth = rect.width;
       const targetHeight = rect.height;
-      const fitWidth = Math.min(targetWidth, targetHeight * ratio) * state.ui.zoom;
-      const fitHeight = fitWidth / ratio;
-      const dpr = window.devicePixelRatio || 1;
+      const displaySize = getPreviewDisplaySize(
+        targetWidth,
+        targetHeight,
+        state.document.aspectRatio,
+        state.ui.zoom
+      );
+      const logicalSize = getLogicalCanvasSize(state.document);
 
-      canvas.style.width = `${fitWidth}px`;
-      canvas.style.height = `${fitHeight}px`;
-      canvas.width = Math.max(1, Math.floor(fitWidth * dpr));
-      canvas.height = Math.max(1, Math.floor(fitHeight * dpr));
+      canvas.style.width = `${displaySize.width}px`;
+      canvas.style.height = `${displaySize.height}px`;
+      canvas.width = Math.max(1, logicalSize.width);
+      canvas.height = Math.max(1, logicalSize.height);
 
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const renderWidth = Math.floor(fitWidth);
-      const renderHeight = Math.floor(fitHeight);
+      context.setTransform(1, 0, 0, 1, 0, 0);
 
       if (state.document.motion.playing) {
         if (animationStartRef.current === null) {
@@ -82,7 +84,7 @@ export function CanvasStage() {
       const elapsedSeconds =
         animationStartRef.current === null ? pauseTimeRef.current : (now - animationStartRef.current) / 1000;
 
-      drawScene(context, renderWidth, renderHeight, state.document, {
+      drawScene(context, logicalSize.width, logicalSize.height, state.document, {
         elapsedSeconds,
         showGrid: state.ui.showGrid,
         showSafeMargins: state.ui.showSafeMargins

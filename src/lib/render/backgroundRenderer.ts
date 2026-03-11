@@ -1,13 +1,6 @@
 import { resolveColor } from '@/lib/theme/colors';
+import { createRenderMotion, type RenderMotion } from '@/lib/render/motionEngine';
 import type { BrandDocument, Point } from '@/lib/types/document';
-
-type RenderMotion = {
-  phase: number;
-  layerDrift: number;
-  pulse: number;
-  verticalDrift: number;
-  pan: number;
-};
 
 function clamp(value: number, min = 0, max = 1) {
   return Math.max(min, Math.min(max, value));
@@ -243,25 +236,7 @@ export function drawBackground(
   document: BrandDocument,
   elapsedSeconds: number
 ) {
-  const phase = document.motion.enabled
-    ? (elapsedSeconds % document.motion.loopDuration) / document.motion.loopDuration
-    : 0;
-  const cycle = Math.sin(phase * Math.PI * 2);
-  const pulseStrength =
-    document.motion.behavior === 'pulse' || document.motion.behavior === 'breathe'
-      ? 1
-      : 0.42;
-  const panStrength = document.motion.behavior === 'pan' ? 1 : 0.16;
-  const floatStrength = document.motion.behavior === 'float' ? 1 : 0.28;
-  const driftStrength = document.motion.behavior === 'drift' ? 1 : 0.52;
-
-  const motion: RenderMotion = {
-    phase,
-    layerDrift: cycle * document.motion.speed * driftStrength,
-    pulse: cycle * document.motion.amplitude * 4 * pulseStrength,
-    verticalDrift: Math.cos(phase * Math.PI * 2) * document.motion.speed * floatStrength,
-    pan: cycle * document.motion.speed * panStrength
-  };
+  const motion: RenderMotion = createRenderMotion(document, elapsedSeconds);
 
   ctx.save();
   ctx.fillStyle = resolveColor(document.background.baseColor);
