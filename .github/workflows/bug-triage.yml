@@ -1,0 +1,33 @@
+name: Bug Triage
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    if: github.event.label.name == 'bug'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post bug triage checklist
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = context.payload.issue.number;
+            const body = [
+              "Bug triage checklist:",
+              "",
+              "- Run `agent/skills/triage_bug.md`.",
+              "- Confirm the affected subsystem.",
+              "- Propose the narrowest fix.",
+              "- Identify regression tests before implementation."
+            ].join("\n");
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body
+            });

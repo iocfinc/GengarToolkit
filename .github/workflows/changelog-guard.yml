@@ -1,0 +1,46 @@
+name: Changelog Guard
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce changelog updates
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const labels = (pr.labels || []).map((label) => label.name);
+            if (labels.includes("skip-changelog")) {
+              core.info("skip-changelog label present.");
+              return;
+            }
+
+            const files = await github.paginate(
+              github.rest.pulls.listFiles,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                per_page: 100
+              }
+            );
+
+            const changed = files.map((file) => file.filename);
+            const touchesTrackedAreas = changed.some((file) =>
+              file.startsWith("src/") ||
+              file.startsWith("agent/") ||
+              file.startsWith(".github/")
+            );
+            const touchesChangelog = changed.includes("CHANGELOG.md");
+
+            if (touchesTrackedAreas && !touchesChangelog) {
+              core.setFailed("Tracked source, agent, or GitHub workflow changes require a CHANGELOG.md update or a skip-changelog label.");
+            }

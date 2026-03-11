@@ -1,0 +1,30 @@
+name: Feature request
+description: Propose new product, workflow, or automation behavior.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What outcome are you trying to achieve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the desired feature or workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: Success criteria
+      description: What would make this complete?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Constraints or scope notes
+      description: List non-goals, constraints, or rollout notes.

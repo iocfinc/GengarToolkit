@@ -1,0 +1,42 @@
+name: Bug report
+description: Report a reproducible defect in the editor or agent operating layer.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the bug in one or two sentences.
+      placeholder: The export dialog closes before download begins.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: List exact steps to reproduce the bug.
+      placeholder: |
+        1. Open /editor
+        2. Select WEBM export
+        3. Click Export
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, and any relevant local setup.
