@@ -1,0 +1,126 @@
+'use client';
+
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { aspectRatioDimensions, aspectRatioLabels } from '@/lib/types/controls';
+import { drawScene } from '@/lib/render/sceneRenderer';
+import { useEditorStore } from '@/lib/store/editorStore';
+
+export function CanvasStage() {
+  const aspectRatio = useEditorStore((state) => state.document.aspectRatio);
+  const ui = useEditorStore((state) => state.ui);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animationStartRef = useRef<number | null>(null);
+  const pauseTimeRef = useRef(0);
+  const [bounds, setBounds] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const element = stageRef.current;
+    if (!element) {
+      return;
+    }
+
+    const observer = new ResizeObserver(() => {
+      const rect = element.getBoundingClientRect();
+      setBounds({
+        width: rect.width,
+        height: rect.height
+      });
+    });
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+
+    const context = canvas.getContext('2d');
+    if (!context) {
+      return;
+    }
+
+    let frameId = 0;
+
+    const render = (now: number) => {
+      const state = useEditorStore.getState();
+      const ratio = aspectRatioDimensions[state.document.aspectRatio];
+      const rect = canvas.parentElement?.getBoundingClientRect();
+
+      if (!rect) {
+        frameId = requestAnimationFrame(render);
+        return;
+      }
+
+      const targetWidth = rect.width;
+      const targetHeight = rect.height;
+      const fitWidth = Math.min(targetWidth, targetHeight * ratio) * state.ui.zoom;
+      const fitHeight = fitWidth / ratio;
+      const dpr = window.devicePixelRatio || 1;
+
+      canvas.style.width = `${fitWidth}px`;
+      canvas.style.height = `${fitHeight}px`;
+      canvas.width = Math.max(1, Math.floor(fitWidth * dpr));
+      canvas.height = Math.max(1, Math.floor(fitHeight * dpr));
+
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const renderWidth = Math.floor(fitWidth);
+      const renderHeight = Math.floor(fitHeight);
+
+      if (state.document.motion.playing) {
+        if (animationStartRef.current === null) {
+          animationStartRef.current = now - pauseTimeRef.current * 1000;
+        }
+      } else if (animationStartRef.current !== null) {
+        pauseTimeRef.current = (now - animationStartRef.current) / 1000;
+        animationStartRef.current = null;
+      }
+
+      const elapsedSeconds =
+        animationStartRef.current === null ? pauseTimeRef.current : (now - animationStartRef.current) / 1000;
+
+      drawScene(context, renderWidth, renderHeight, state.document, {
+        elapsedSeconds,
+        showGrid: state.ui.showGrid,
+        showSafeMargins: state.ui.showSafeMargins
+      });
+
+      frameId = requestAnimationFrame(render);
+    };
+
+    frameId = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(frameId);
+  }, []);
+
+  const stageLabel = useMemo(
+    () => aspectRatioLabels[aspectRatio],
+    [aspectRatio]
+  );
+
+  return (
+    <section className="panel-surface relative flex min-h-[68vh] flex-col overflow-hidden rounded-[28px] p-4">
+      <div className="mb-3 flex items-center justify-between">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.3em] text-white/40">Live Canvas</p>
+          <h2 className="mt-1 font-display text-2xl text-fog">{stageLabel}</h2>
+        </div>
+        <div className="rounded-full border border-white/8 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.2em] text-white/56">
+          {(ui.zoom * 100).toFixed(0)}% Zoom
+        </div>
+      </div>
+      <div
+        className="relative flex flex-1 items-center justify-center overflow-hidden rounded-[24px] border border-white/8 bg-black/30"
+        ref={stageRef}
+      >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_32%)]" />
+        <canvas className="relative z-10 shadow-stage" ref={canvasRef} />
+        <div className="pointer-events-none absolute bottom-5 left-5 rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[11px] uppercase tracking-[0.24em] text-white/50">
+          {bounds.width > 0 ? `${Math.round(bounds.width)}px stage` : 'Ready'}
+        </div>
+      </div>
+    </section>
+  );
+}

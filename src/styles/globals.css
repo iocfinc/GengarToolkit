@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: 5 5 5;
+  --fog: 237 233 225;
+  --panel: 18 18 22;
+  --border: 255 255 255;
+  --glow: 118 105 255;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background:
+    radial-gradient(circle at top, rgba(109, 94, 248, 0.16), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(198, 255, 59, 0.1), transparent 22%),
+    #050505;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: rgb(var(--fog));
+  background:
+    radial-gradient(circle at top, rgba(109, 94, 248, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 28%),
+    rgb(var(--ink));
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(198, 255, 59, 0.7);
+  outline-offset: 2px;
+}
+
+.panel-surface {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+    rgba(18, 18, 22, 0.82);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
