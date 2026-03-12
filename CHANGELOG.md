@@ -8,6 +8,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 - Agent operating layer scaffolding under `agent/`
 - GitHub workflow and issue/PR templates for agentic development
+- Autonomous backlog scan tooling, workflow guidance, and roadmap memory for selecting one validated bug and one validated feature per pull request cycle
 - Vitest and React Testing Library scaffolding for store, render, preset, and export coverage
 - A reusable issue-comment skill and workflow reflection memory for future issue work
 

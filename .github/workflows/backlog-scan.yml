@@ -1,0 +1,40 @@
+name: Backlog Scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Maximum number of open issues to inspect
+        required: false
+        default: "50"
+  schedule:
+    - cron: "0 9 * * 1"
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate backlog summary
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BACKLOG_LIMIT: ${{ github.event.inputs.limit || '50' }}
+        run: node agent/scripts/backlog_sweep.mjs --limit "$BACKLOG_LIMIT" --format markdown >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish operating note
+        run: |
+          {
+            echo ""
+            echo "Follow-up:"
+            echo ""
+            echo "- Run \`agent/skills/run_backlog_cycle.md\` to validate the selected bug and feature."
+            echo "- Keep one fix or feature per pull request."
+            echo "- Move under-specified features into \`agent/memory/roadmap.md\`."
+            echo "- Record post-task reflection in \`agent/memory/workflow_learnings.md\`."
+          } >> "$GITHUB_STEP_SUMMARY"

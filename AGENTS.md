@@ -47,3 +47,23 @@ Before implementing code changes:
 - Use `codex/GENGARVIS-###-short-slug` for active work branches.
 - Use the GitHub issue number when available, padded to three digits.
 - Keep the slug short and outcome-oriented.
+
+## Verified Commands
+
+- `npm run backlog:scan` to fetch and summarize open GitHub issues for autonomous backlog work.
+- `npm install` to install dependencies.
+- `npm run dev` to run the editor locally.
+- `npm run test` for local test runs.
+- `npm run test:watch` for iterative testing.
+- `npm run test:ci` for CI-style test execution (used in PR workflow).
+- `npm run lint` for lint checks.
+- `npm run build` for production build validation.
+
+## GitHub Workflow Hooks
+
+- `.github/workflows/issue-intake.yml` posts issue intake guidance and routes to `agent/skills/read_issue.md`.
+- `.github/workflows/bug-triage.yml` triggers on `bug` label and routes to `agent/skills/triage_bug.md`.
+- `.github/workflows/backlog-scan.yml` summarizes open issues and routes autonomous backlog work to `agent/skills/run_backlog_cycle.md`.
+- `.github/workflows/pr-review.yml` runs `npm ci`, executes `npm run test:ci`, and posts review guidance for `agent/skills/analyze_pr.md`.
+- `.github/workflows/changelog-guard.yml` requires `CHANGELOG.md` updates when `src/`, `agent/`, or `.github/` changes are included without a `skip-changelog` label.
+- `.github/workflows/post-merge-changelog.yml` opens a follow-up issue to run `agent/skills/write_changelog.md` when merged tracked changes missed `CHANGELOG.md`.

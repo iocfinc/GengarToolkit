@@ -15,3 +15,4 @@
 ## Agent Layer
 
 - The agent operating layer is repository-native, GitHub-integrated, and documented in-tree rather than delegated to an external AI orchestration service.
+- Under-specified but promising features are recorded in `agent/memory/roadmap.md` instead of being implemented speculatively.

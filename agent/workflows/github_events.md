@@ -4,10 +4,19 @@ This repository uses GitHub events to drive a structured agentic development cyc
 
 ## Lifecycle
 
-User feedback -> GitHub Issue -> `read_issue` -> `plan_feature` or `triage_bug` -> implementation -> `generate_tests` -> Pull Request -> `analyze_pr` -> merge -> `write_changelog`
+Scheduled backlog sweep -> `run_backlog_cycle` -> `read_issue` -> `plan_feature` or `triage_bug` -> implementation -> `generate_tests` -> Pull Request -> `analyze_pr` -> merge -> `write_changelog`
 
 Before PR creation for issue-linked work, run `comment_issue_update`.
 After merge, record learnings in `agent/memory/`.
+
+## Event: Scheduled Or Manual Backlog Sweep
+
+- Trigger source: GitHub `workflow_dispatch` or `schedule`
+- Skill: `run_backlog_cycle`
+- Expected inputs: open GitHub issues, feature requests, and GitHub CLI access
+- Required output: one validated bug candidate, one validated feature candidate, roadmap deferrals, and completion criteria
+- Human or agent follow-up: create separate branches and separate PRs, or route ambiguous features into `agent/memory/roadmap.md`
+- Matching GitHub workflow file: `.github/workflows/backlog-scan.yml`
 
 ## Event: Issue Opened Or Edited
 
@@ -33,7 +42,7 @@ After merge, record learnings in `agent/memory/`.
 - Skill: `plan_feature`
 - Expected inputs: accepted feature request, desired outcome, acceptance criteria
 - Required output: structured feature plan with module, test, and changelog impact
-- Human or agent follow-up: implement the planned change
+- Human or agent follow-up: implement the planned change or route the request to `agent/memory/roadmap.md` if it is valid but under-specified
 - Matching GitHub workflow file: repository process, referenced by `.github/ISSUE_TEMPLATE/feature_request.yml`
 
 ## Event: Implementation Complete
