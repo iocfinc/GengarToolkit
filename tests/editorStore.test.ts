@@ -38,6 +38,23 @@ describe('editorStore', () => {
     expect(state.document.motif.position).toEqual({ x: 0.8, y: 0.3 });
   });
 
+  it('preserves typography content when toggling through background-only', () => {
+    const store = useEditorStore.getState();
+    const originalTypography = { ...store.document.typography };
+
+    store.setLayoutPreset('background-only');
+    let state = useEditorStore.getState();
+    expect(state.document.typography.eyebrow).toBe(originalTypography.eyebrow);
+    expect(state.document.typography.headline).toBe(originalTypography.headline);
+    expect(state.document.typography.body).toBe(originalTypography.body);
+
+    store.setLayoutPreset('editorial-top-left');
+    state = useEditorStore.getState();
+    expect(state.document.typography.eyebrow).toBe(originalTypography.eyebrow);
+    expect(state.document.typography.headline).toBe(originalTypography.headline);
+    expect(state.document.typography.body).toBe(originalTypography.body);
+  });
+
   it('supports save, duplicate, load, and delete preset flows', () => {
     const store = useEditorStore.getState();
     const initialCount = store.presets.length;

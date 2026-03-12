@@ -81,9 +81,6 @@ function applyLayoutPreset(
       next.motif.position = { x: 0.72, y: 0.22 };
       break;
     case 'background-only':
-      next.typography.eyebrow = '';
-      next.typography.headline = '';
-      next.typography.body = '';
       break;
     case 'editorial-top-left':
     default:
