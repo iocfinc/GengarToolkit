@@ -1,0 +1,58 @@
+name: Post Merge Changelog
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  follow-up:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check merged PR for changelog coverage
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const files = await github.paginate(
+              github.rest.pulls.listFiles,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                per_page: 100
+              }
+            );
+
+            const changed = files.map((file) => file.filename);
+            const touchesTrackedAreas = changed.some((file) =>
+              file.startsWith("src/") ||
+              file.startsWith("agent/") ||
+              file.startsWith(".github/")
+            );
+
+            if (!touchesTrackedAreas || changed.includes("CHANGELOG.md")) {
+              core.info("CHANGELOG.md updated in merged PR.");
+              return;
+            }
+
+            const title = `Changelog follow-up for merged PR #${pr.number}`;
+            const body = [
+              "A merged PR changed tracked repository files without updating `CHANGELOG.md`.",
+              "",
+              `Merged PR: #${pr.number} ${pr.title}`,
+              "",
+              "Run `agent/skills/write_changelog.md` and update the topmost version section."
+            ].join("\n");
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body
+            });

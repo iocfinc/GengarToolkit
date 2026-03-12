@@ -1,0 +1,26 @@
+# Changelog
+
+This changelog tracks notable repository changes. Add new entries to the topmost version section unless the package version is explicitly bumped.
+
+## Version 0.1.0
+
+### Added
+
+- Agent operating layer scaffolding under `agent/`
+- GitHub workflow and issue/PR templates for agentic development
+- Vitest and React Testing Library scaffolding for store, render, preset, and export coverage
+- A reusable issue-comment skill and workflow reflection memory for future issue work
+
+### Changed
+
+- Introduced test-oriented motion helpers without changing editor behavior
+- Branch naming, PR templates, and skills now capture debugging steps, issue updates, and workflow reflection requirements
+
+### Fixed
+
+- Preview rendering now uses the same logical composition dimensions as export, eliminating layout mismatches like overflowing preview text that exported correctly
+- Centered and bottom-anchored typography is now positioned from measured text-block height instead of fixed offsets, keeping live preview placement representative for large headlines
+
+### Removed
+
+- N/A
