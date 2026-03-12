@@ -165,7 +165,7 @@ function applyTextAlign(
   alignment: TextAlignment,
   anchor: AnchorPosition
 ) {
-  if (alignment === 'center' || anchor.includes('center')) {
+  if (alignment === 'center' || anchor === 'center' || anchor.endsWith('center')) {
     ctx.textAlign = 'center';
     return;
   }

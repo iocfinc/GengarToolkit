@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createDocument } from '@/lib/presets/defaultPresets';
+import { drawScene } from '@/lib/render/sceneRenderer';
 import { createTypographyLayout } from '@/lib/render/typographyLayout';
 import { asCanvasContext, createMockCanvasContext } from './testUtils';
 
@@ -55,5 +56,25 @@ describe('typographyLayout', () => {
     );
 
     expect(layout.startY).toBeLessThan(1080 - 112);
+  });
+
+  it.each([
+    ['center-left', 'left'],
+    ['center', 'center'],
+    ['center-right', 'right'],
+    ['top-center', 'center'],
+    ['bottom-center', 'center']
+  ] as const)('uses %s anchor with %s horizontal alignment', (anchor, expectedAlign) => {
+    const context = createMockCanvasContext();
+    const document = createDocument();
+    document.typography.anchor = anchor;
+    document.typography.alignment = 'left';
+    document.motion.enabled = false;
+
+    drawScene(asCanvasContext(context), 1920, 1080, document, {
+      elapsedSeconds: 0
+    });
+
+    expect(context.textAlign).toBe(expectedAlign);
   });
 });
