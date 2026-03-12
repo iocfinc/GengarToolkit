@@ -32,12 +32,13 @@ Use this skill to autonomously work the open GitHub backlog: validate issues, se
 3. For the top validated bug, run `agent/skills/triage_bug.md` and confirm the issue is reproducible before writing code.
 4. For the top validated feature, run `agent/skills/plan_feature.md` and confirm the request is feasible without extra product input.
 5. If a feature is promising but under-specified, add it to `agent/memory/roadmap.md` instead of guessing at behavior.
-6. Select at most one bug fix and one feature for active implementation per cycle.
-7. Create separate branches and separate pull requests. Never combine a fix and a feature in the same merge request.
-8. Implement the minimal change set for each item, add tests with `agent/skills/generate_tests.md`, and update `CHANGELOG.md`.
-9. Before opening or updating a PR, run `agent/skills/comment_issue_update.md` so the linked issue records summary, root cause or rationale, validation, and PR link.
-10. Mark the work complete only when validation confirms the bug fix or feature behavior and the PR has been pushed for review.
-11. After the delivery step, record what worked, what slowed the task down, and any needed skill or workflow updates in `agent/memory/workflow_learnings.md`.
+6. Select at most one bug fix and one feature for active implementation per cycle, but move a valid feature to the roadmap if it would widen or block the bug-fix sequence.
+7. If the repo workflow or automation needs changes to support the cycle, merge that workflow PR first before creating dependent issue branches.
+8. Create separate branches and separate pull requests. Never combine multiple fixes or a fix and a feature in the same merge request.
+9. Implement the minimal change set for each item, add tests with `agent/skills/generate_tests.md`, and update `CHANGELOG.md`.
+10. Before opening or updating a PR, run `agent/skills/comment_issue_update.md` so the linked issue records summary, root cause or rationale, validation, and PR link.
+11. Mark the work complete only when validation confirms the bug fix or feature behavior and the PR has been pushed for review.
+12. After the delivery step, record what worked, what slowed the task down, and any needed skill or workflow updates in `agent/memory/workflow_learnings.md`.
 
 ## Output Contract
 
@@ -53,6 +54,6 @@ Use this skill to autonomously work the open GitHub backlog: validate issues, se
 
 - open issues were pulled from GitHub rather than assumed
 - invalid or ambiguous work is either left for more input or moved into the roadmap
-- exactly one bug fix PR and one feature PR are planned per cycle at most
+- exactly one issue or feature is shipped per pull request, with workflow infrastructure merged first when needed
 - completion is tied to validation plus a pushed PR
 - workflow reflection is logged after delivery

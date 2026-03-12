@@ -66,3 +66,36 @@
 3. Ship the narrowest bug fix and feature in separate PRs.
 4. Route unclear features into the roadmap rather than guessing.
 5. Reflect on the cycle so the next run has less ambiguity.
+
+## Issue 3: Branch Sequencing For Backlog Work
+
+### What Worked
+
+- Pulling the live backlog first exposed that the real queue priority was two bug fixes before the open feature.
+- Splitting the bug fixes back into issue-specific branches restored the intended one-fix-per-PR workflow.
+
+### What Slowed Us Down
+
+- The workflow-update branch was not merged before issue branches were created, which widened the coordination surface.
+- A combined bug-fix branch briefly violated the repo rule of one fix per merge request.
+- Feature issue #6 was valid, but it should have been deferred to the roadmap immediately so it did not compete with the bug-fix sequence.
+
+### Skill Updates Needed
+
+- `run_backlog_cycle` should require an implementation order before any issue branch is created.
+- `run_backlog_cycle` should explicitly route valid-but-blocking features to the roadmap.
+
+### Workflow Updates Needed
+
+- Merge workflow/process PRs before opening dependent issue PRs.
+- Keep one issue per branch and one issue per pull request.
+- When backlog review finds a feature that widens the active fix stream, keep it open and record it in the roadmap instead of implementing it in parallel.
+- State the intended PR merge order before starting code changes.
+
+### Reusable Debugging Pattern
+
+1. Pull and prioritize the open queue.
+2. Decide which items are shipping now and which items move to the roadmap.
+3. Land workflow prerequisites first.
+4. Create one branch per issue.
+5. Keep the merge sequence explicit until each PR is closed.

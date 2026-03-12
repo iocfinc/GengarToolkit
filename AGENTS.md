@@ -25,21 +25,25 @@ Before implementing code changes:
 1. Identify request type: feature, bug, refactor, or documentation.
 2. Invoke the appropriate skill from `agent/skills/`.
 3. Generate a structured plan.
-4. Create a branch named `codex/GENGARVIS-###-short-slug`.
-5. Implement the minimal change set.
-6. Add or update tests.
-7. Update `CHANGELOG.md`.
-8. If work is ready for review, comment on the linked GitHub issue with the bug summary, root cause, validation, and PR link.
-9. After the work closes, record workflow learnings and skill updates in `agent/memory/`.
+4. Decide implementation order and whether any valid features should be deferred to `agent/memory/roadmap.md`.
+5. If the workflow itself needs changes to support the run, land those workflow updates before spawning dependent issue branches.
+6. Create a branch named `codex/GENGARVIS-###-short-slug`.
+7. Implement the minimal change set.
+8. Add or update tests.
+9. Update `CHANGELOG.md`.
+10. If work is ready for review, comment on the linked GitHub issue with the bug summary, root cause, validation, and PR link.
+11. After the work closes, record workflow learnings and skill updates in `agent/memory/`.
 
 ## Guardrails
 
 - Follow the development workflow defined in `agent/`.
+- Plan merge order before opening multiple issue branches.
 - Never modify unrelated modules unless required.
 - Preserve the current modular architecture.
 - Prefer extending existing `src/lib/*` modules over duplicating logic.
 - Update `agent/memory/` when a design decision, durable feature record, or known issue changes.
 - Keep changes reviewable and aligned with the current editor behavior unless the request explicitly changes behavior.
+- Keep one issue or feature per pull request. If a valid feature would widen or block bug-fix work, add it to `agent/memory/roadmap.md` and keep the issue open.
 - Pull requests must include the debugging steps and notes that led to the fix.
 
 ## Branch Naming
