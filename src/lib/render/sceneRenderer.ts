@@ -190,6 +190,10 @@ function drawTypography(
   height: number,
   document: BrandDocument
 ) {
+  if (document.layoutPreset === 'background-only') {
+    return;
+  }
+
   const paddingMap = {
     sm: 52,
     md: 76,

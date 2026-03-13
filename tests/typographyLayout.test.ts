@@ -83,4 +83,17 @@ describe('typographyLayout', () => {
     expect(context.fillText).toHaveBeenCalledWith('Hello', expectedX, expect.any(Number));
   }
   );
+
+  it('skips typography drawing for the background-only layout preset', () => {
+    const context = createMockCanvasContext();
+    const document = createDocument();
+    document.layoutPreset = 'background-only';
+    document.motion.enabled = false;
+
+    drawScene(asCanvasContext(context), 1920, 1080, document, {
+      elapsedSeconds: 0
+    });
+
+    expect(context.fillText).not.toHaveBeenCalled();
+  });
 });
