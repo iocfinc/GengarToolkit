@@ -1,11 +1,7 @@
 import { resolveColor } from '@/lib/theme/colors';
 import { typographyScale } from '@/lib/theme/typography';
 import { createTypographyLayout } from '@/lib/render/typographyLayout';
-import type {
-  AnchorPosition,
-  BrandDocument,
-  TextAlignment
-} from '@/lib/types/document';
+import type { AnchorPosition, BrandDocument, TextAlignment } from '@/lib/types/document';
 import { drawBackground } from '@/lib/render/backgroundRenderer';
 import { drawTexture } from '@/lib/render/textureRenderer';
 
@@ -15,32 +11,56 @@ type DrawSceneOptions = {
   showSafeMargins?: boolean;
 };
 
-function anchorToOrigin(
-  anchor: AnchorPosition,
-  width: number,
-  height: number,
-  padding: number
-) {
-  const xMap = {
-    left: padding,
-    center: width / 2,
-    right: width - padding
-  };
-  const yMap = {
-    top: padding,
-    center: height / 2,
-    bottom: height - padding
-  };
-  const [row, column] = anchor.split('-') as [string, string?];
-
+function getAnchorColumn(anchor: AnchorPosition) {
   if (anchor === 'center') {
-    return { x: width / 2, y: height / 2 };
+    return 'center';
   }
 
-  return {
-    x: xMap[(column ?? 'center') as keyof typeof xMap],
-    y: yMap[row as keyof typeof yMap]
-  };
+  return (anchor.split('-')[1] ?? 'center') as 'left' | 'center' | 'right';
+}
+
+function getHorizontalOrigin(
+  alignment: TextAlignment,
+  anchor: AnchorPosition,
+  width: number,
+  padding: number,
+  blockWidth: number
+) {
+  const column = getAnchorColumn(anchor);
+
+  if (alignment === 'center') {
+    if (column === 'left') {
+      return padding + blockWidth / 2;
+    }
+
+    if (column === 'right') {
+      return width - padding - blockWidth / 2;
+    }
+
+    return width / 2;
+  }
+
+  if (alignment === 'right') {
+    if (column === 'left') {
+      return padding + blockWidth;
+    }
+
+    if (column === 'center') {
+      return (width + blockWidth) / 2;
+    }
+
+    return width - padding;
+  }
+
+  if (column === 'center') {
+    return (width - blockWidth) / 2;
+  }
+
+  if (column === 'right') {
+    return width - padding - blockWidth;
+  }
+
+  return padding;
 }
 
 function drawGuides(
@@ -160,22 +180,8 @@ function drawMotif(
   ctx.restore();
 }
 
-function applyTextAlign(
-  ctx: CanvasRenderingContext2D,
-  alignment: TextAlignment,
-  anchor: AnchorPosition
-) {
-  if (alignment === 'center' || anchor === 'center' || anchor.endsWith('center')) {
-    ctx.textAlign = 'center';
-    return;
-  }
-
-  if (alignment === 'right' || anchor.endsWith('right')) {
-    ctx.textAlign = 'right';
-    return;
-  }
-
-  ctx.textAlign = 'left';
+function applyTextAlign(ctx: CanvasRenderingContext2D, alignment: TextAlignment) {
+  ctx.textAlign = alignment;
 }
 
 function drawTypography(
@@ -190,12 +196,18 @@ function drawTypography(
     lg: 112
   };
   const padding = paddingMap[document.typography.paddingPreset];
-  const origin = anchorToOrigin(document.typography.anchor, width, height, padding);
   const layout = createTypographyLayout(ctx, width, height, document, padding);
+  const originX = getHorizontalOrigin(
+    document.typography.alignment,
+    document.typography.anchor,
+    width,
+    padding,
+    layout.blockWidth
+  );
 
   ctx.save();
   ctx.fillStyle = resolveColor(document.typography.textColor);
-  applyTextAlign(ctx, document.typography.alignment, document.typography.anchor);
+  applyTextAlign(ctx, document.typography.alignment);
   ctx.textBaseline = 'top';
 
   let cursorY = layout.startY;
@@ -203,7 +215,7 @@ function drawTypography(
   if (layout.eyebrowText) {
     ctx.font = `600 ${typographyScale.eyebrow.size}px ${typographyScale.eyebrow.family}`;
     ctx.globalAlpha = 0.78;
-    ctx.fillText(layout.eyebrowText, origin.x, cursorY);
+    ctx.fillText(layout.eyebrowText, originX, cursorY);
     cursorY += typographyScale.eyebrow.size * 2.1;
   }
 
@@ -211,7 +223,7 @@ function drawTypography(
     ctx.globalAlpha = 1;
     ctx.font = `${document.typography.weight} ${document.typography.headlineSize}px ${typographyScale.display.family}`;
     for (const line of layout.headlineLines) {
-      ctx.fillText(line, origin.x, cursorY);
+      ctx.fillText(line, originX, cursorY);
       cursorY += document.typography.headlineSize * document.typography.lineHeight;
     }
     if (layout.bodyLines.length > 0) {
@@ -223,7 +235,7 @@ function drawTypography(
     ctx.globalAlpha = 0.82;
     ctx.font = `500 ${document.typography.bodySize}px ${typographyScale.body.family}`;
     for (const line of layout.bodyLines) {
-      ctx.fillText(line, origin.x, cursorY);
+      ctx.fillText(line, originX, cursorY);
       cursorY += document.typography.bodySize * 1.55;
     }
   }
