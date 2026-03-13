@@ -22,6 +22,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - Preview rendering now uses the same logical composition dimensions as export, eliminating layout mismatches like overflowing preview text that exported correctly
 - Centered and bottom-anchored typography is now positioned from measured text-block height instead of fixed offsets, keeping live preview placement representative for large headlines
 - Center-left and center-right anchors now respect their horizontal safe margins instead of centering text off the working area
+- Switching through the Background Only layout preset no longer deletes typography content, while still hiding text output for that preset
 
 ### Removed
 

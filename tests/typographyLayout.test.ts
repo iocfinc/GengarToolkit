@@ -59,22 +59,41 @@ describe('typographyLayout', () => {
   });
 
   it.each([
-    ['center-left', 'left'],
-    ['center', 'center'],
-    ['center-right', 'right'],
-    ['top-center', 'center'],
-    ['bottom-center', 'center']
-  ] as const)('uses %s anchor with %s horizontal alignment', (anchor, expectedAlign) => {
+    ['center-left', 'center', 137],
+    ['center-right', 'center', 1783],
+    ['center-right', 'left', 1758],
+    ['center-left', 'right', 162]
+  ] as const)(
+    'keeps %s inside safe margins when aligned %s',
+    (anchor, alignment, expectedX) => {
     const context = createMockCanvasContext();
     const document = createDocument();
+    document.typography.eyebrow = '';
+    document.typography.body = '';
+    document.typography.headline = 'Hello';
     document.typography.anchor = anchor;
-    document.typography.alignment = 'left';
+    document.typography.alignment = alignment;
     document.motion.enabled = false;
 
     drawScene(asCanvasContext(context), 1920, 1080, document, {
       elapsedSeconds: 0
     });
 
-    expect(context.textAlign).toBe(expectedAlign);
+    expect(context.textAlign).toBe(alignment);
+    expect(context.fillText).toHaveBeenCalledWith('Hello', expectedX, expect.any(Number));
+  }
+  );
+
+  it('skips typography drawing for the background-only layout preset', () => {
+    const context = createMockCanvasContext();
+    const document = createDocument();
+    document.layoutPreset = 'background-only';
+    document.motion.enabled = false;
+
+    drawScene(asCanvasContext(context), 1920, 1080, document, {
+      elapsedSeconds: 0
+    });
+
+    expect(context.fillText).not.toHaveBeenCalled();
   });
 });

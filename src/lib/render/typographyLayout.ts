@@ -5,6 +5,7 @@ type TypographyLayout = {
   eyebrowText: string | null;
   headlineLines: string[];
   bodyLines: string[];
+  blockWidth: number;
   startY: number;
 };
 
@@ -64,6 +65,37 @@ function measureTypographyBlockHeight(
   return height;
 }
 
+function measureTypographyBlockWidth(
+  ctx: CanvasRenderingContext2D,
+  document: BrandDocument,
+  eyebrowText: string | null,
+  headlineLines: string[],
+  bodyLines: string[]
+) {
+  let width = 0;
+
+  if (eyebrowText) {
+    ctx.font = `600 ${typographyScale.eyebrow.size}px ${typographyScale.eyebrow.family}`;
+    width = Math.max(width, ctx.measureText(eyebrowText).width);
+  }
+
+  if (headlineLines.length > 0) {
+    ctx.font = `${document.typography.weight} ${document.typography.headlineSize}px ${typographyScale.display.family}`;
+    for (const line of headlineLines) {
+      width = Math.max(width, ctx.measureText(line).width);
+    }
+  }
+
+  if (bodyLines.length > 0) {
+    ctx.font = `500 ${document.typography.bodySize}px ${typographyScale.body.family}`;
+    for (const line of bodyLines) {
+      width = Math.max(width, ctx.measureText(line).width);
+    }
+  }
+
+  return width;
+}
+
 function getVerticalStart(
   anchor: AnchorPosition,
   height: number,
@@ -112,11 +144,19 @@ export function createTypographyLayout(
     headlineLines,
     bodyLines
   );
+  const blockWidth = measureTypographyBlockWidth(
+    ctx,
+    document,
+    eyebrowText,
+    headlineLines,
+    bodyLines
+  );
 
   return {
     eyebrowText,
     headlineLines,
     bodyLines,
+    blockWidth,
     startY: getVerticalStart(document.typography.anchor, height, padding, blockHeight)
   };
 }
