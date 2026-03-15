@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const codexConfigPath = path.join(repoRoot, '.codex', 'config.toml');
+const codexConfigDir = path.dirname(codexConfigPath);
 const skillsPath = path.join(repoRoot, 'skills.md');
 const prTemplatePath = path.join(repoRoot, '.github', 'pull_request_template.md');
 const agentsDir = path.join(repoRoot, 'agents');
@@ -35,7 +36,7 @@ describe('multi-agent scaffold', () => {
     );
 
     for (const file of configFiles) {
-      expect(existsSync(path.join(repoRoot, file))).toBe(true);
+      expect(existsSync(path.resolve(codexConfigDir, file))).toBe(true);
     }
   });
 
@@ -56,8 +57,11 @@ describe('multi-agent scaffold', () => {
     const prTemplate = readText(prTemplatePath);
 
     expect(skills).toContain('Chrome MCP');
+    expect(skills).toContain('PR-ready validation evidence');
     expect(skills).toContain('soft-required for frontend-affecting work');
     expect(prTemplate).toContain('## Visual Validation');
+    expect(prTemplate).toContain('What the screenshot proves');
+    expect(prTemplate).toContain('terminal/app capture');
     expect(prTemplate).toContain('skip reason');
   });
 });
