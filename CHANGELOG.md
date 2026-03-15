@@ -17,6 +17,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - A reusable issue-comment skill and workflow reflection memory for future issue work
 - A root `ROADMAP.md` that sequences open feature issues, handover phases, and tracked multi-agent execution expectations for suite delivery
 - A shared `packages/design-tokens` source of truth for brand colors, themes, and typography scales
+- A shared `packages/config-schema` source of truth for toolkit and document schemas
 
 ### Changed
 
@@ -29,6 +30,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - PR workflow guidance now asks for screenshot artifact paths, capture method, and what each screenshot proves for both browser-facing and terminal/app workflow fixes
 - `agent/memory/roadmap.md` now stays focused on deferred or unresolved ideas while the root roadmap tracks scheduled delivery work
 - `src/lib/theme/colors.ts` and `src/lib/theme/typography.ts` now act as compatibility re-exports over the shared design-token package
+- `src/lib/types/document.ts` now acts as a compatibility re-export over the shared config-schema package
 
 ### Fixed
 
