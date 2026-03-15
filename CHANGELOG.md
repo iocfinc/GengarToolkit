@@ -42,6 +42,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - Motion preset persistence now runs through shared version-aware storage helpers in `packages/studio-shell`
 - Shared named output presets now live in `packages/studio-shell` as the foundation for later selector adoption
 - Motion Toolkit now adopts shared editor-shell primitives while palette-grid groundwork is available for later palette-first control adoption
+- Live preview now renders into a fixed viewport (left pane) with internal scale/centering; 100% zoom no longer resizes the pane
 - Skill contracts, workflow memory, and tracked agent descriptions now spell out branch modes, delegation evidence, and checkpoint-slice expectations more explicitly
 
 ### Fixed
