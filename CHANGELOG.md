@@ -15,6 +15,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - Autonomous backlog scan tooling, workflow guidance, and roadmap memory for selecting one validated bug and one validated feature per pull request cycle
 - Vitest and React Testing Library scaffolding for store, render, preset, and export coverage
 - A reusable issue-comment skill and workflow reflection memory for future issue work
+- A root `ROADMAP.md` that sequences open feature issues, handover phases, and tracked multi-agent execution expectations for suite delivery
+- A shared `packages/design-tokens` source of truth for brand colors, themes, and typography scales
 
 ### Changed
 
@@ -25,6 +27,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - Frontend workflow guidance now treats browser screenshots as soft-required PR-prep artifacts when tooling is available
 - Build and lint validation now run non-interactively through repo-owned config
 - PR workflow guidance now asks for screenshot artifact paths, capture method, and what each screenshot proves for both browser-facing and terminal/app workflow fixes
+- `agent/memory/roadmap.md` now stays focused on deferred or unresolved ideas while the root roadmap tracks scheduled delivery work
+- `src/lib/theme/colors.ts` and `src/lib/theme/typography.ts` now act as compatibility re-exports over the shared design-token package
 
 ### Fixed
 
