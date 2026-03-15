@@ -1,3 +1,4 @@
+# Expected output: files changed, changelog wording, workflow-doc updates, and issue or PR summary text when needed.
 model = "gpt-5"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"

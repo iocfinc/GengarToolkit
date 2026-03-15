@@ -1,3 +1,4 @@
+# Expected output: sizing or capability contracts touched, browser API mock strategy, parity risks, and contract-test suggestions.
 model = "gpt-5"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"

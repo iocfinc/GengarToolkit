@@ -37,6 +37,14 @@ Before implementing code changes:
 12. If work is ready for review, comment on the linked GitHub issue with the bug summary, root cause, validation, and PR link.
 13. After the work closes, record workflow learnings and skill updates in `agent/memory/`.
 
+## Branching Modes
+
+- Issue Mode is the default: one issue per branch and one issue per pull request.
+- Cycle Mode is allowed only when a maintainer explicitly requests it for a shared delivery stream.
+- In Cycle Mode, use one branch such as `codex/GENGARVIS-###-cycle-short-slug` and keep one checkpoint commit per issue or feature slice.
+- In Cycle Mode, write the implementation order down before coding and keep unrelated WIP parked until the pre-PR sweep.
+- Prefer commit subjects that include the issue reference and an outcome-oriented summary.
+
 ## Guardrails
 
 - Follow the development workflow defined in `agent/`.

@@ -23,6 +23,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - Shared preset storage helpers with version-aware motion preset persistence
 - A shared output preset catalog for social, LinkedIn, video, and PDF deliverables
 - Shared editor-shell primitives and palette-grid groundwork for toolkit layout standardization
+- Refined workflow skills, cycle-branch guidance, and tracked agent definitions from Cycle 1 delivery learnings
 
 ### Changed
 
@@ -41,6 +42,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - Motion preset persistence now runs through shared version-aware storage helpers in `packages/studio-shell`
 - Shared named output presets now live in `packages/studio-shell` as the foundation for later selector adoption
 - Motion Toolkit now adopts shared editor-shell primitives while palette-grid groundwork is available for later palette-first control adoption
+- Skill contracts, workflow memory, and tracked agent descriptions now spell out branch modes, delegation evidence, and checkpoint-slice expectations more explicitly
 
 ### Fixed
 
