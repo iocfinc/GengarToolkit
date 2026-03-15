@@ -1,6 +1,13 @@
-# Dioscuri Brand Motion Toolkit
+# Dioscuri Brand Toolkit Suite
 
-Browser-based MVP editor for creating branded stills and subtle looping motion backgrounds from a constrained visual system.
+Browser-based internal platform for creating branded motion scenes, editorial data visualizations, and constrained social card assets from shared brand primitives.
+
+## Suite Apps
+
+- `/` platform launcher
+- `/motion-toolkit/editor` motion scene editor
+- `/dataviz-toolkit` structured chart generator
+- `/social-card-toolkit` constrained social card generator
 
 ## Stack
 
@@ -8,7 +15,25 @@ Browser-based MVP editor for creating branded stills and subtle looping motion b
 - React + TypeScript
 - Tailwind CSS
 - Zustand
-- Canvas 2D rendering pipeline with PNG + WEBM export
+- Canvas 2D rendering pipeline for motion scenes
+- SVG-first rendering for dataviz and social card exports
+
+## Repository layout
+
+```text
+apps/
+  motion-toolkit/
+  dataviz-toolkit/
+  social-card-toolkit/
+packages/
+  chart-core/
+  config-schema/
+  design-tokens/
+  export-engine/
+  motion-core/
+  studio-shell/
+  ui/
+```
 
 ## Getting started
 
@@ -24,14 +49,16 @@ npm install
 npm run dev
 ```
 
-3. Open `http://localhost:3000/editor`
+3. Open `http://localhost:3000/`
+4. Use `http://localhost:3000/motion-toolkit/editor` for the dedicated motion app entry.
 
 ## Notes
 
-- Presets are stored in `localStorage`.
-- Static export is PNG.
-- Motion export uses in-browser WEBM recording via `MediaRecorder`.
-- The render stack uses a canvas-first pipeline instead of Three.js so the MVP can ship faster with simpler export behavior.
+- Motion presets, dataviz presets, and social card presets are stored locally in `localStorage`.
+- Motion export supports PNG and WEBM through the existing canvas-first pipeline.
+- Dataviz and social card exports support SVG and PNG in-browser.
+- Shared theme, schema, and export contracts live under `packages/`.
+- The legacy `/editor` route remains as a compatibility redirect to `/motion-toolkit/editor`.
 
 ## Codex Multi-Agent Workflow
 

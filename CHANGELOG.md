@@ -19,6 +19,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - A shared `packages/design-tokens` source of truth for brand colors, themes, and typography scales
 - A shared `packages/config-schema` source of truth for toolkit and document schemas
 - A shared `packages/export-engine` source of truth for export sizing and canvas/video export helpers
+- A dedicated `apps/motion-toolkit` app entry with toolkit routing under `/motion-toolkit/editor`
 
 ### Changed
 
@@ -33,6 +34,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - `src/lib/theme/colors.ts` and `src/lib/theme/typography.ts` now act as compatibility re-exports over the shared design-token package
 - `src/lib/types/document.ts` now acts as a compatibility re-export over the shared config-schema package
 - `src/lib/render/renderSizing.ts`, `src/lib/render/captureFrame.ts`, and `src/lib/render/exportVideo.ts` now act as compatibility re-exports over the shared export-engine package
+- The launcher now points Motion Toolkit to `/motion-toolkit/editor` while `/editor` remains a compatibility redirect
 
 ### Fixed
 

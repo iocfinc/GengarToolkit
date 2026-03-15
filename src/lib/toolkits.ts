@@ -5,7 +5,7 @@ export const toolkitRegistry: ToolkitDefinition[] = [
     id: 'motion-toolkit',
     label: 'Motion Toolkit',
     summary: 'Canvas-based branded still and motion scenes with presets, overlays, and in-browser export.',
-    href: '/editor',
+    href: '/motion-toolkit/editor',
     status: 'live',
     capabilities: [
       { id: 'motion-png', label: 'PNG' },
