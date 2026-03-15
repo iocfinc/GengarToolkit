@@ -4,6 +4,7 @@ import { useEditorStore } from '@/lib/store/editorStore';
 import { resetEditorStore } from './testUtils';
 
 const PRESETS_KEY = 'dioscuri-motion-presets-v1';
+const PRESETS_STORAGE_VERSION = 1;
 
 describe('editorStore', () => {
   beforeEach(() => {
@@ -83,7 +84,13 @@ describe('editorStore', () => {
   });
 
   it('hydrates from localStorage and falls back on invalid preset data', () => {
-    window.localStorage.setItem(PRESETS_KEY, JSON.stringify([defaultPresets[1]]));
+    window.localStorage.setItem(
+      PRESETS_KEY,
+      JSON.stringify({
+        version: PRESETS_STORAGE_VERSION,
+        data: [defaultPresets[1]]
+      })
+    );
     useEditorStore.getState().hydrate();
 
     let state = useEditorStore.getState();
@@ -91,7 +98,13 @@ describe('editorStore', () => {
     expect(state.document.name).toBe(defaultPresets[1]?.document.name);
 
     resetEditorStore();
-    window.localStorage.setItem(PRESETS_KEY, JSON.stringify([{ broken: true }]));
+    window.localStorage.setItem(
+      PRESETS_KEY,
+      JSON.stringify({
+        version: PRESETS_STORAGE_VERSION,
+        data: [{ broken: true }]
+      })
+    );
     useEditorStore.getState().hydrate();
 
     state = useEditorStore.getState();

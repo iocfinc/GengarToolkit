@@ -20,6 +20,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - A shared `packages/config-schema` source of truth for toolkit and document schemas
 - A shared `packages/export-engine` source of truth for export sizing and canvas/video export helpers
 - A dedicated `apps/motion-toolkit` app entry with toolkit routing under `/motion-toolkit/editor`
+- Shared preset storage helpers with version-aware motion preset persistence
 
 ### Changed
 
@@ -35,6 +36,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - `src/lib/types/document.ts` now acts as a compatibility re-export over the shared config-schema package
 - `src/lib/render/renderSizing.ts`, `src/lib/render/captureFrame.ts`, and `src/lib/render/exportVideo.ts` now act as compatibility re-exports over the shared export-engine package
 - The launcher now points Motion Toolkit to `/motion-toolkit/editor` while `/editor` remains a compatibility redirect
+- Motion preset persistence now runs through shared version-aware storage helpers in `packages/studio-shell`
 
 ### Fixed
 
