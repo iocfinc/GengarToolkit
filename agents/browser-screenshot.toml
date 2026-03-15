@@ -1,4 +1,6 @@
 # Expected output: artifact paths, captured states, capture method, what each image proves, or a concrete skip reason.
+# Preferred capture backend: Chrome DevTools MCP server when available.
+# Fallback: OS-level `screencapture` with a documented skip reason if the browser window cannot be targeted.
 model = "gpt-5"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
