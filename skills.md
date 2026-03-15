@@ -55,14 +55,15 @@ Run the app, reproduce frontend bugs, inspect console and layout failures, and r
 
 ### `browser_screenshot`
 
-Use browser-native tooling first, including Chrome MCP when available. Start the app when needed, open the changed flows, capture screenshots for the relevant feature states, flag obvious layout, overflow, styling, console, or interaction regressions, and return artifact paths plus a short visual QA summary for PR preparation.
+Use browser-native tooling first, including Chrome MCP when available. Start the app when needed, open the changed flows, capture screenshots for the relevant feature states, flag obvious layout, overflow, styling, console, or interaction regressions, and return artifact paths plus a short visual QA summary for PR-ready validation evidence.
 
 Fallback behavior:
 
 - Prefer Chrome MCP or another browser-native capture path.
 - Fall back to the existing screenshot skill only when browser-native capture is unavailable.
 - Treat screenshot capture as soft-required for frontend-affecting work. If the environment cannot access browser tooling, record the skip reason in the PR notes instead of blocking the branch.
-- Store captures in temp or other local artifacts; do not commit screenshots to the repo by default.
+- For terminal, desktop-app, or agent-workflow fixes, capture equivalent terminal/app evidence with the screenshot skill and reference the artifact path in the PR notes.
+- Store captures in temp or other local artifacts; do not commit screenshots to the repo by default unless the task explicitly asks for a durable docs asset.
 
 ### `docs_writer`
 
@@ -73,4 +74,4 @@ Update only the contributor-facing docs that changed. Keep extension notes conci
 - Keep the main thread focused on orchestration and decisions.
 - Use `AGENTS.md` and `agent/skills/*.md` for repo workflow rules.
 - Use `.codex/config.toml` and `agents/*.toml` for Codex runtime delegation.
-- For frontend-affecting work, include a visual validation pass and mention artifact paths or skip reasons in the PR notes.
+- For frontend-affecting work, include a visual validation pass and mention artifact paths, capture method, what the screenshot proves, or skip reasons in the PR notes.

@@ -15,7 +15,8 @@
 ## Visual Validation
 
 - Screenshot artifacts or local paths:
-- Browser tooling used, or skip reason:
+- Browser tooling used, terminal/app capture method, or skip reason:
+- What the screenshot proves:
 - Visual QA summary:
 
 ## Notes For Reviewers
