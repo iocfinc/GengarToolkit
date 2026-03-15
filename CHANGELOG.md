@@ -18,6 +18,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - A root `ROADMAP.md` that sequences open feature issues, handover phases, and tracked multi-agent execution expectations for suite delivery
 - A shared `packages/design-tokens` source of truth for brand colors, themes, and typography scales
 - A shared `packages/config-schema` source of truth for toolkit and document schemas
+- A shared `packages/export-engine` source of truth for export sizing and canvas/video export helpers
 
 ### Changed
 
@@ -31,6 +32,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - `agent/memory/roadmap.md` now stays focused on deferred or unresolved ideas while the root roadmap tracks scheduled delivery work
 - `src/lib/theme/colors.ts` and `src/lib/theme/typography.ts` now act as compatibility re-exports over the shared design-token package
 - `src/lib/types/document.ts` now acts as a compatibility re-export over the shared config-schema package
+- `src/lib/render/renderSizing.ts`, `src/lib/render/captureFrame.ts`, and `src/lib/render/exportVideo.ts` now act as compatibility re-exports over the shared export-engine package
 
 ### Fixed
 
