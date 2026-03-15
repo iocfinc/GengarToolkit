@@ -46,6 +46,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Fixed
 
+- Motion Toolkit shell now keeps preview and controls in a side-by-side split from `md` upward instead of dropping the controls pane below the preview until `lg`
 - Codex startup now resolves tracked sub-agent profiles relative to `.codex/config.toml`, so launching from the repo correctly finds the top-level `agents/` files
 - Preview rendering now uses the same logical composition dimensions as export, eliminating layout mismatches like overflowing preview text that exported correctly
 - Centered and bottom-anchored typography is now positioned from measured text-block height instead of fixed offsets, keeping live preview placement representative for large headlines
