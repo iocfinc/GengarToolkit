@@ -39,6 +39,8 @@ Use this skill to add or update automated tests for code changes in the editor o
 6. Cover rendering parameter changes when background, texture, motif, motion, or typography logic changed.
 7. Cover export triggers when export behavior changed.
 8. Add browser API mocks only where required.
+9. For repo-operating or workflow changes, add contract tests that verify new config, docs, and workflow guidance stay aligned.
+10. For frontend-affecting work, pair automated tests with a browser screenshot pass for PR preparation when browser tooling is available.
 
 ## Output Contract
 

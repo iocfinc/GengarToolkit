@@ -25,9 +25,11 @@ export type MockCanvasContext = {
   ellipse: ReturnType<typeof vi.fn>;
   fill: ReturnType<typeof vi.fn>;
   fillText: ReturnType<typeof vi.fn>;
-  measureText: ReturnType<typeof vi.fn>;
-  createRadialGradient: ReturnType<typeof vi.fn>;
-  createLinearGradient: ReturnType<typeof vi.fn>;
+  measureText: ReturnType<typeof vi.fn<[string], TextMetrics>>;
+  createRadialGradient: ReturnType<
+    typeof vi.fn<[number, number, number, number, number, number], CanvasGradient>
+  >;
+  createLinearGradient: ReturnType<typeof vi.fn<[number, number, number, number], CanvasGradient>>;
   canvas: { width: number; height: number };
   globalAlpha: number;
   globalCompositeOperation: string;
@@ -64,13 +66,13 @@ export function createMockCanvasContext() {
     ellipse: vi.fn(),
     fill: vi.fn(),
     fillText: vi.fn(),
-    measureText: vi.fn((value: string) => ({ width: value.length * 10 })),
-    createRadialGradient: vi.fn(() => {
+    measureText: vi.fn<[string], TextMetrics>((value: string) => ({ width: value.length * 10 } as TextMetrics)),
+    createRadialGradient: vi.fn<[number, number, number, number, number, number], CanvasGradient>(() => {
       const gradient = { addColorStop: vi.fn() };
       radialGradients.push(gradient);
       return gradient as unknown as CanvasGradient;
     }),
-    createLinearGradient: vi.fn(() => {
+    createLinearGradient: vi.fn<[number, number, number, number], CanvasGradient>(() => {
       const gradient = { addColorStop: vi.fn() };
       linearGradients.push(gradient);
       return gradient as unknown as CanvasGradient;

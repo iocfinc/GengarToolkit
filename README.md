@@ -32,3 +32,11 @@ npm run dev
 - Static export is PNG.
 - Motion export uses in-browser WEBM recording via `MediaRecorder`.
 - The render stack uses a canvas-first pipeline instead of Three.js so the MVP can ship faster with simpler export behavior.
+
+## Codex Multi-Agent Workflow
+
+- Repo workflow skills, templates, and memory live under `agent/`.
+- Tracked Codex runtime delegation lives in `.codex/config.toml` and `agents/`.
+- Role definitions and delegation order live in `skills.md`.
+- For frontend-affecting work, run a browser visual-validation pass before PR prep when browser tooling is available.
+- Screenshot artifacts should stay in temp or other local paths and be summarized in PR notes rather than committed by default.

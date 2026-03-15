@@ -27,7 +27,7 @@ function createCanvasContextMock() {
     ellipse: vi.fn(),
     fill: vi.fn(),
     fillText: vi.fn(),
-    measureText: vi.fn((value: string) => ({ width: value.length * 10 })),
+    measureText: vi.fn<[string], TextMetrics>((value: string) => ({ width: value.length * 10 } as TextMetrics)),
     createRadialGradient: vi.fn(() => createCanvasGradientMock()),
     createLinearGradient: vi.fn(() => createCanvasGradientMock()),
     canvas: { width: 0, height: 0 },
