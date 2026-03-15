@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { BrandedHeader } from '@packages/studio-shell/src/BrandedHeader';
+import { EditorShell } from '@packages/studio-shell/src/EditorShell';
+import { PreviewSurface } from '@packages/studio-shell/src/PreviewSurface';
 import { AppHeader } from '@/components/editor/AppHeader';
 import { BottomBar } from '@/components/editor/BottomBar';
 import { CanvasStage } from '@/components/editor/CanvasStage';
@@ -18,21 +21,31 @@ export function MotionToolkitEditorPage() {
   }, [hydrate]);
 
   return (
-    <main className="min-h-screen bg-chrome px-4 py-4 text-fog md:px-6">
-      <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-[1680px] flex-col gap-4 rounded-[30px] border border-white/8 bg-white/[0.03] p-4 shadow-panel md:p-5">
-        <AppHeader onOpenSavePreset={() => setPresetPromptOpen(true)} />
-        <div className="grid flex-1 gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <CanvasStage />
-          <ControlPanel />
-        </div>
-        <BottomBar />
-      </div>
+    <>
+      <EditorShell
+        controls={<ControlPanel />}
+        footer={<BottomBar />}
+        header={
+          <>
+            <BrandedHeader
+              subtitle="Build branded motion scenes in a shared shell that can expand across the toolkit suite."
+              title="Motion Toolkit"
+            />
+            <AppHeader onOpenSavePreset={() => setPresetPromptOpen(true)} />
+          </>
+        }
+        preview={
+          <PreviewSurface>
+            <CanvasStage />
+          </PreviewSurface>
+        }
+      />
       <PresetDrawer />
       <ExportDialog />
       {presetPromptOpen ? (
         <SavePresetPrompt onClose={() => setPresetPromptOpen(false)} />
       ) : null}
-    </main>
+    </>
   );
 }
 

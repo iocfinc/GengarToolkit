@@ -22,6 +22,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - A dedicated `apps/motion-toolkit` app entry with toolkit routing under `/motion-toolkit/editor`
 - Shared preset storage helpers with version-aware motion preset persistence
 - A shared output preset catalog for social, LinkedIn, video, and PDF deliverables
+- Shared editor-shell primitives and palette-grid groundwork for toolkit layout standardization
 
 ### Changed
 
@@ -39,6 +40,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - The launcher now points Motion Toolkit to `/motion-toolkit/editor` while `/editor` remains a compatibility redirect
 - Motion preset persistence now runs through shared version-aware storage helpers in `packages/studio-shell`
 - Shared named output presets now live in `packages/studio-shell` as the foundation for later selector adoption
+- Motion Toolkit now adopts shared editor-shell primitives while palette-grid groundwork is available for later palette-first control adoption
 
 ### Fixed
 
