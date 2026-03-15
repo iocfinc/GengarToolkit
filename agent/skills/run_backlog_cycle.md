@@ -36,9 +36,10 @@ Use this skill to autonomously work the open GitHub backlog: validate issues, se
 7. If the repo workflow or automation needs changes to support the cycle, merge that workflow PR first before creating dependent issue branches.
 8. Create separate branches and separate pull requests. Never combine multiple fixes or a fix and a feature in the same merge request.
 9. Implement the minimal change set for each item, add tests with `agent/skills/generate_tests.md`, and update `CHANGELOG.md`.
-10. Before opening or updating a PR, run `agent/skills/comment_issue_update.md` so the linked issue records summary, root cause or rationale, validation, and PR link.
-11. Mark the work complete only when validation confirms the bug fix or feature behavior and the PR has been pushed for review.
-12. After the delivery step, record what worked, what slowed the task down, and any needed skill or workflow updates in `agent/memory/workflow_learnings.md`.
+10. For frontend-affecting work, run `browser_debugger` and `browser_screenshot` before PR preparation when browser tooling is available.
+11. Before opening or updating a PR, run `agent/skills/comment_issue_update.md` so the linked issue records summary, root cause or rationale, validation, PR link, and any visual-validation artifact notes.
+12. Mark the work complete only when validation confirms the bug fix or feature behavior and the PR has been pushed for review.
+13. After the delivery step, record what worked, what slowed the task down, and any needed skill or workflow updates in `agent/memory/workflow_learnings.md`.
 
 ## Output Contract
 

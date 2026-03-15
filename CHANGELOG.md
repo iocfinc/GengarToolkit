@@ -7,6 +7,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 ### Added
 
 - Agent operating layer scaffolding under `agent/`
+- Codex multi-agent runtime scaffold under `.codex/`, `agents/`, and `skills.md`
+- A dedicated `browser_screenshot` sub-agent contract for PR-ready frontend visual QA artifacts
 - GitHub workflow and issue/PR templates for agentic development
 - Autonomous backlog scan tooling, workflow guidance, and roadmap memory for selecting one validated bug and one validated feature per pull request cycle
 - Vitest and React Testing Library scaffolding for store, render, preset, and export coverage
@@ -16,6 +18,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 - Introduced test-oriented motion helpers without changing editor behavior
 - Branch naming, PR templates, and skills now capture debugging steps, issue updates, and workflow reflection requirements
+- Frontend workflow guidance now treats browser screenshots as soft-required PR-prep artifacts when tooling is available
+- Build and lint validation now run non-interactively through repo-owned config
 
 ### Fixed
 

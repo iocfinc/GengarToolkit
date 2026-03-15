@@ -31,8 +31,9 @@ Use this skill to review pull requests for correctness, architectural fit, and t
 3. Review the documented root cause and debugging steps, not just the final patch.
 4. Review code quality, correctness risks, and maintainability.
 5. Check that tests cover the changed behavior.
-6. Confirm changelog, issue comment, and documentation updates when applicable.
-7. Recommend improvements or follow-up work.
+6. Confirm browser visual-validation evidence for frontend-affecting work, or verify that the PR documents why the screenshot pass was skipped.
+7. Confirm changelog, issue comment, and documentation updates when applicable.
+8. Recommend improvements or follow-up work.
 
 ## Output Contract
 

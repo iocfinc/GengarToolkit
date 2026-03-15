@@ -37,7 +37,8 @@ jobs:
               "- Use `agent/skills/analyze_pr.md` for the review structure.",
               "- Confirm architecture impact is acceptable.",
               "- Confirm tests cover changed behavior.",
-              "- Verify `CHANGELOG.md` is updated when required."
+              "- Verify `CHANGELOG.md` is updated when required.",
+              "- For frontend-affecting work, confirm screenshot artifacts or an explicit skip reason are included in the PR notes."
             ].join("\n");
             await github.rest.issues.createComment({
               owner: context.repo.owner,

@@ -1,0 +1,37 @@
+model = "gpt-5"
+
+[agents]
+max_threads = 7
+max_depth = 1
+
+[agents.explorer]
+description = "Read-only codebase explorer for locating architecture seams, reusable packages, and the smallest safe change set."
+config_file = "agents/explorer.toml"
+
+[agents.design_guardian]
+description = "Design system reviewer that enforces tokens, themes, spacing, and reusable UI primitives."
+config_file = "agents/design-guardian.toml"
+
+[agents.frontend_architect]
+description = "Front-end builder for app shell, generator framework, and shared UI workflows."
+config_file = "agents/frontend-architect.toml"
+
+[agents.chart_engine]
+description = "Chart implementation specialist for data contracts, templates, and responsive rendering."
+config_file = "agents/chart-engine.toml"
+
+[agents.export_engine]
+description = "Export and render specialist for deterministic static output and future motion-compatible interfaces."
+config_file = "agents/export-engine.toml"
+
+[agents.browser_debugger]
+description = "UI debugger that runs the product, checks browser flows, and captures integration failures."
+config_file = "agents/browser-debugger.toml"
+
+[agents.browser_screenshot]
+description = "Browser screenshot specialist that captures feature states, flags obvious visual regressions, and returns PR-ready artifacts."
+config_file = "agents/browser-screenshot.toml"
+
+[agents.docs_writer]
+description = "Documentation and DX specialist for concise README and extension docs updates."
+config_file = "agents/docs-writer.toml"

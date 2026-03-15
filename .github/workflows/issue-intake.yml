@@ -22,8 +22,10 @@ jobs:
               "- Run `agent/skills/read_issue.md`.",
               "- Classify the issue as Feature, Bug, Documentation, or Refactor.",
               "- Record priority and affected components.",
+              "- Keep the lead agent focused on orchestration and choose bounded sub-agents from `skills.md` for non-trivial work.",
               "- Route feature work to `agent/skills/plan_feature.md`.",
-              "- Route bug work to `agent/skills/triage_bug.md`."
+              "- Route bug work to `agent/skills/triage_bug.md`.",
+              "- For frontend-facing work, plan browser debugging and screenshot validation before PR prep."
             ].join("\n");
             await github.rest.issues.createComment({
               owner: context.repo.owner,

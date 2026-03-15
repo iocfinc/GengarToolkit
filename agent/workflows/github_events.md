@@ -4,7 +4,7 @@ This repository uses GitHub events to drive a structured agentic development cyc
 
 ## Lifecycle
 
-Scheduled backlog sweep -> `run_backlog_cycle` -> `read_issue` -> `plan_feature` or `triage_bug` -> implementation -> `generate_tests` -> Pull Request -> `analyze_pr` -> merge -> `write_changelog`
+Scheduled backlog sweep -> `run_backlog_cycle` -> `read_issue` -> `plan_feature` or `triage_bug` -> implementation -> `generate_tests` -> browser debug and screenshot validation for frontend work -> Pull Request -> `analyze_pr` -> merge -> `write_changelog`
 
 Before PR creation for issue-linked work, run `comment_issue_update`.
 After merge, record learnings in `agent/memory/`.
@@ -24,7 +24,7 @@ After merge, record learnings in `agent/memory/`.
 - Skill: `read_issue`
 - Expected inputs: issue title, body, labels, linked screenshots or reproduction notes
 - Required output: issue type, priority, affected components, recommended next skill
-- Human or agent follow-up: route the issue to `plan_feature`, `triage_bug`, documentation work, or refactor work
+- Human or agent follow-up: route the issue to `plan_feature`, `triage_bug`, documentation work, or refactor work, then choose the relevant sub-agents from `skills.md`
 - Matching GitHub workflow file: `.github/workflows/issue-intake.yml`
 
 ## Event: Issue Labeled `bug`
@@ -33,7 +33,7 @@ After merge, record learnings in `agent/memory/`.
 - Skill: `triage_bug`
 - Expected inputs: bug label, issue details, reproduction steps, environment notes
 - Required output: bug summary, possible root causes, code areas to inspect, proposed fix, tests required
-- Human or agent follow-up: confirm repro and implement the narrowest fix
+- Human or agent follow-up: confirm repro, use `browser_debugger` for UI-facing issues, and implement the narrowest fix
 - Matching GitHub workflow file: `.github/workflows/bug-triage.yml`
 
 ## Event: Issue Classified As Feature
@@ -42,7 +42,7 @@ After merge, record learnings in `agent/memory/`.
 - Skill: `plan_feature`
 - Expected inputs: accepted feature request, desired outcome, acceptance criteria
 - Required output: structured feature plan with module, test, and changelog impact
-- Human or agent follow-up: implement the planned change or route the request to `agent/memory/roadmap.md` if it is valid but under-specified
+- Human or agent follow-up: implement the planned change with the bounded sub-agents from `skills.md`, or route the request to `agent/memory/roadmap.md` if it is valid but under-specified
 - Matching GitHub workflow file: repository process, referenced by `.github/ISSUE_TEMPLATE/feature_request.yml`
 
 ## Event: Implementation Complete
@@ -51,7 +51,7 @@ After merge, record learnings in `agent/memory/`.
 - Skill: `generate_tests`
 - Expected inputs: changed files, feature or fix summary, expected behavior
 - Required output: test coverage plan and runnable tests
-- Human or agent follow-up: open or update a pull request
+- Human or agent follow-up: run `browser_screenshot` for frontend-affecting work when browser tooling is available, then open or update a pull request
 - Matching GitHub workflow file: `.github/workflows/pr-review.yml`
 
 ## Event: PR Ready For Review
@@ -59,7 +59,7 @@ After merge, record learnings in `agent/memory/`.
 - Trigger source: branch is committed and PR is about to be opened
 - Skill: `comment_issue_update`
 - Expected inputs: issue number, root cause, fix summary, validation, PR URL
-- Required output: a short issue comment linking the work back to the issue
+- Required output: a short issue comment linking the work back to the issue, including visual-validation notes when relevant
 - Human or agent follow-up: open or refresh the pull request
 - Matching GitHub workflow file: repository process before PR review
 
@@ -68,7 +68,7 @@ After merge, record learnings in `agent/memory/`.
 - Trigger source: GitHub `pull_request` event on `opened`, `synchronize`, and `reopened`
 - Skill: `analyze_pr`
 - Expected inputs: PR body, diff, workflow results, linked issues
-- Required output: PR summary, architecture impact, code quality review, risks, test coverage analysis, suggested improvements
+- Required output: PR summary, architecture impact, code quality review, risks, test coverage analysis, visual-validation review, and suggested improvements
 - Human or agent follow-up: address findings and keep `CHANGELOG.md` current
 - Matching GitHub workflow file: `.github/workflows/pr-review.yml`
 

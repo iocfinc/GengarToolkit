@@ -32,3 +32,5 @@
 
 - Autonomous backlog scan for open issues and feature requests
 - Roadmap capture for valid but under-specified feature ideas
+- Tracked Codex multi-agent runtime profiles under `.codex/` and `agents/`
+- Browser screenshot validation guidance for frontend PR preparation

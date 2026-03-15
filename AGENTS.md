@@ -8,6 +8,7 @@ You are an AI coding agent operating inside the Dioscuri Brand Motion Toolkit re
 - Stack: Next.js, React, TypeScript, Tailwind CSS, Zustand, Canvas/WebGL-style rendering
 - Main editor code lives under `src/`
 - Agent operating assets live under `agent/`
+- Codex runtime sub-agent profiles live under `agents/` and `.codex/`
 
 ## Responsibilities
 
@@ -24,15 +25,17 @@ Before implementing code changes:
 
 1. Identify request type: feature, bug, refactor, or documentation.
 2. Invoke the appropriate skill from `agent/skills/`.
-3. Generate a structured plan.
-4. Decide implementation order and whether any valid features should be deferred to `agent/memory/roadmap.md`.
-5. If the workflow itself needs changes to support the run, land those workflow updates before spawning dependent issue branches.
-6. Create a branch named `codex/GENGARVIS-###-short-slug`.
-7. Implement the minimal change set.
-8. Add or update tests.
-9. Update `CHANGELOG.md`.
-10. If work is ready for review, comment on the linked GitHub issue with the bug summary, root cause, validation, and PR link.
-11. After the work closes, record workflow learnings and skill updates in `agent/memory/`.
+3. For non-trivial work, load the lead/sub-agent guidance in `skills.md` and delegate bounded exploration, implementation, QA, or docs tasks through the tracked profiles in `.codex/config.toml` and `agents/`.
+4. Generate a structured plan.
+5. Decide implementation order and whether any valid features should be deferred to `agent/memory/roadmap.md`.
+6. For frontend-affecting work, include a browser visual-validation pass and capture screenshot artifacts when browser tooling is available.
+7. If the workflow itself needs changes to support the run, land those workflow updates before spawning dependent issue branches.
+8. Create a branch named `codex/GENGARVIS-###-short-slug`.
+9. Implement the minimal change set.
+10. Add or update tests.
+11. Update `CHANGELOG.md`.
+12. If work is ready for review, comment on the linked GitHub issue with the bug summary, root cause, validation, and PR link.
+13. After the work closes, record workflow learnings and skill updates in `agent/memory/`.
 
 ## Guardrails
 
@@ -45,6 +48,7 @@ Before implementing code changes:
 - Keep changes reviewable and aligned with the current editor behavior unless the request explicitly changes behavior.
 - Keep one issue or feature per pull request. If a valid feature would widen or block bug-fix work, add it to `agent/memory/roadmap.md` and keep the issue open.
 - Pull requests must include the debugging steps and notes that led to the fix.
+- Frontend-affecting work should include visual QA artifacts or an explicit skip reason in the PR notes.
 
 ## Branch Naming
 
@@ -71,3 +75,4 @@ Before implementing code changes:
 - `.github/workflows/pr-review.yml` runs `npm ci`, executes `npm run test:ci`, and posts review guidance for `agent/skills/analyze_pr.md`.
 - `.github/workflows/changelog-guard.yml` requires `CHANGELOG.md` updates when `src/`, `agent/`, or `.github/` changes are included without a `skip-changelog` label.
 - `.github/workflows/post-merge-changelog.yml` opens a follow-up issue to run `agent/skills/write_changelog.md` when merged tracked changes missed `CHANGELOG.md`.
+- Frontend review readiness should include `browser_debugger` plus `browser_screenshot` when browser tooling is available.
