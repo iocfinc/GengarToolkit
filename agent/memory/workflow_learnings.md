@@ -99,3 +99,37 @@
 3. Land workflow prerequisites first.
 4. Create one branch per issue.
 5. Keep the merge sequence explicit until each PR is closed.
+
+## Issue 4: Multi-Agent Trial For Suite Launcher
+
+### What Worked
+
+- Reducing the epic to issue `#22` produced a small, testable product slice with visible behavior and a clean PR boundary.
+- Comparing the selected issue to committed `HEAD` exposed that the local tree already contained broader suite WIP, which prevented over-crediting unrelated in-progress work.
+- A focused launcher test plus browser screenshot evidence was enough to validate the first suite feature end to end.
+
+### What Slowed Us Down
+
+- The first candidate pass looked at the dirty worktree before checking committed repo state, which made later hardening/doc issues look more “buildable” than the real first product slice.
+- We used an ad-hoc explorer-style `codex exec` prompt instead of a tracked profile invocation, so the delegation trail was weaker than intended.
+- The current guidance said “run sub-agents” but did not require explicit evidence of which profile ran or why a profile was skipped.
+
+### Skill Updates Needed
+
+- `run_backlog_cycle` should require a committed-`HEAD` reality check before issue selection when the tree is already dirty.
+- `plan_feature` should require the planned sub-agent list to include explicit profile names, bounded tasks, and expected outputs.
+- `skills.md` should prefer real tracked-profile invocations over role-play prompts so the session trail proves whether delegation happened.
+
+### Workflow Updates Needed
+
+- Frontend issue work should record whether visual QA used `browser_debugger`, `browser_screenshot`, or a documented skip path.
+- Delivery notes should distinguish “tracked profile used” from “main-thread manual work” so multi-agent trials can be scored honestly.
+- Reflection should be added immediately after first-live feature delivery, not deferred until later backlog passes.
+
+### Reusable Delivery Pattern
+
+1. Pull the live issue queue.
+2. Compare candidate issues against committed `HEAD`, not just the current worktree.
+3. Pick the smallest visible slice with a narrow PR boundary.
+4. State which tracked profiles will run and what each owns.
+5. Validate with focused tests plus one concrete artifact for the changed flow.

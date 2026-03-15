@@ -74,4 +74,8 @@ Update only the contributor-facing docs that changed. Keep extension notes conci
 - Keep the main thread focused on orchestration and decisions.
 - Use `AGENTS.md` and `agent/skills/*.md` for repo workflow rules.
 - Use `.codex/config.toml` and `agents/*.toml` for Codex runtime delegation.
+- When a sub-agent is used, invoke the tracked profile explicitly and record which profile ran plus what bounded task it covered.
+- Prefer `codex exec -p <profile>` over ad-hoc prompts like “act as the explorer sub-agent” so delegation is auditable in the session trail.
+- If a tracked sub-agent is skipped for a non-trivial task, note the skip reason in the main thread instead of silently collapsing everything into one pass.
+- For backlog or issue-driven work in a dirty tree, compare the candidate issue against `HEAD` before assuming local WIP counts as issue progress.
 - For frontend-affecting work, include a visual validation pass and mention artifact paths, capture method, what the screenshot proves, or skip reasons in the PR notes.
