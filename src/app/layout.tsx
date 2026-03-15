@@ -3,8 +3,8 @@ import type { Metadata } from 'next';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
-  title: 'Dioscuri Brand Motion Toolkit',
-  description: 'Constrained editor for cinematic branded stills and looping motion.'
+  title: 'Dioscuri Brand Toolkit Suite',
+  description: 'Shared platform for motion scenes, branded dataviz, and social publishing templates.'
 };
 
 export default function RootLayout({

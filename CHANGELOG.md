@@ -6,6 +6,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Added
 
+- Shared studio-shell launcher and typed toolkit registry contract for suite entry-point routing
+- Focused launcher coverage for the shared toolkit registry and planned-versus-live card behavior
 - Agent operating layer scaffolding under `agent/`
 - Codex multi-agent runtime scaffold under `.codex/`, `agents/`, and `skills.md`
 - A dedicated `browser_screenshot` sub-agent contract for PR-ready frontend visual QA artifacts
@@ -16,6 +18,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Changed
 
+- The root landing page now renders a suite launcher from shared registry data instead of redirecting directly into the motion editor
+- Added package path aliases and Next.js tracing support needed for the shared launcher contract
 - Introduced test-oriented motion helpers without changing editor behavior
 - Branch naming, PR templates, and skills now capture debugging steps, issue updates, and workflow reflection requirements
 - Frontend workflow guidance now treats browser screenshots as soft-required PR-prep artifacts when tooling is available
