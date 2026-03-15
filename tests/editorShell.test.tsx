@@ -21,7 +21,7 @@ describe('EditorShell', () => {
     );
 
     expect(screen.getByText('Shared title')).toBeInTheDocument();
-    expect(screen.getByTestId('editor-shell-panes')).toHaveClass('md:grid-cols-2');
+    expect(screen.getByTestId('editor-shell-panes')).toHaveClass('grid-cols-[minmax(0,1fr)_380px]');
     expect(screen.getByTestId('editor-shell-preview-pane')).toHaveTextContent('Preview');
     expect(screen.getByTestId('editor-shell-controls-pane')).toHaveTextContent('Controls');
     expect(screen.getByText('Footer')).toBeInTheDocument();
