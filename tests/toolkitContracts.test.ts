@@ -16,7 +16,8 @@ describe('toolkit contracts', () => {
       aspectRatio: '4:5',
       export: {
         format: 'svg',
-        filename: 'ridership-story'
+        filename: 'ridership-story',
+        presetId: 'portrait-4x5'
       },
       presetMeta: {
         id: 'preset-1',
@@ -143,12 +144,24 @@ describe('toolkit contracts', () => {
       headline: 'Ridership grew',
       subheadline: 'Morning and evening recovered',
       source: 'Internal analytics',
-      themeId: 'dark-editorial'
+      themeId: 'dark-editorial',
+      annotations: ['North region outpaced plan'],
+      options: {
+        showGrid: true,
+        showLegend: true,
+        animate: false,
+        highlightSeries: 'North'
+      },
+      size: {
+        width: 1080,
+        height: 1350
+      }
     });
 
     expect(dataset.rows).toHaveLength(2);
     expect(chart.svg).toContain('<svg');
     expect(chart.svg).toContain('Ridership grew');
+    expect(chart.svg).toContain('North region outpaced plan');
   });
 
   it('ships themes that pass the configured contrast guidance', () => {

@@ -12,7 +12,7 @@ description = "Read-only codebase explorer for locating architecture seams, reus
 config_file = "../agents/explorer.toml"
 
 [agents.design_guardian]
-description = "Design system reviewer that enforces tokens, themes, spacing, palette behavior, and reusable UI primitives while flagging likely visual regressions."
+description = "Design system reviewer that enforces tokens, themes, spacing, palette behavior, reusable UI primitives, and review-driven visual polish passes."
 config_file = "../agents/design-guardian.toml"
 
 [agents.frontend_architect]
@@ -32,7 +32,7 @@ description = "UI debugger that runs the product, captures repro steps, inspects
 config_file = "../agents/browser-debugger.toml"
 
 [agents.browser_screenshot]
-description = "Browser screenshot specialist that captures feature states, flags obvious visual regressions, and returns artifact paths plus proof notes for PR prep."
+description = "Browser screenshot specialist that captures feature states, flags obvious visual regressions, and returns artifact paths plus proof notes or an immediate skip reason for PR prep."
 config_file = "../agents/browser-screenshot.toml"
 
 [agents.docs_writer]

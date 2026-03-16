@@ -28,6 +28,11 @@ describe('output preset catalog', () => {
       height: 1350,
       class: 'image'
     });
+    expect(getOutputPreset('landscape-16x9')).toMatchObject({
+      width: 1920,
+      height: 1080,
+      class: 'image'
+    });
     expect(getOutputPreset('linkedin-shared-image')).toMatchObject({
       width: 1200,
       height: 627,
@@ -61,6 +66,6 @@ describe('output preset catalog', () => {
 
     const ratio = (linkedinPreset!.width / linkedinPreset!.height).toFixed(2);
     expect(Number(ratio)).toBe(1.91);
-    expect(listAllOutputPresets()).toHaveLength(8);
+    expect(listAllOutputPresets()).toHaveLength(9);
   });
 });

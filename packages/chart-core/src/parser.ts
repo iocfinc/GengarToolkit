@@ -59,3 +59,16 @@ export function inferNumericColumns(dataset: DatavizDataset) {
     })
   );
 }
+
+export function datasetToDelimitedText(dataset: DatavizDataset) {
+  if (dataset.columns.length === 0) {
+    return '';
+  }
+
+  const header = dataset.columns.join(',');
+  const rows = dataset.rows.map((row) =>
+    dataset.columns.map((column) => row[column] ?? '').join(',')
+  );
+
+  return [header, ...rows].join('\n');
+}

@@ -15,11 +15,13 @@ export const toolkitRegistry: ToolkitDefinition[] = [
   {
     id: 'dataviz-toolkit',
     label: 'Data Visualization Toolkit',
-    summary: 'Structured chart workflows will launch here once the shared shell and toolkit contracts are in place.',
-    status: 'planned',
+    summary: 'Structured chart workflows with guided mapping, shared presets, and branded SVG/PNG export.',
+    href: '/dataviz-toolkit',
+    status: 'live',
     capabilities: [
       { id: 'dataviz-data', label: 'CSV / JSON' },
-      { id: 'dataviz-chart', label: 'Chart Templates' }
+      { id: 'dataviz-chart', label: 'Chart Templates' },
+      { id: 'dataviz-export', label: 'SVG / PNG' }
     ]
   },
   {

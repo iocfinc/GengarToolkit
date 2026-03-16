@@ -11,3 +11,7 @@ export const chartTemplateDefinitions: ChartTemplateDefinition[] = [
   { id: 'scatter', label: 'Scatter', summary: 'Two-value relationship' },
   { id: 'pie-donut', label: 'Pie / Donut', summary: 'Composition snapshot' }
 ];
+
+export function getChartTemplateDefinition(id: ChartTemplateDefinition['id']) {
+  return chartTemplateDefinitions.find((entry) => entry.id === id);
+}
