@@ -19,7 +19,7 @@ describe('ToolkitLauncher', () => {
     expect(screen.getByText('Social Card Toolkit')).toBeInTheDocument();
   });
 
-  it('links only the live motion toolkit card', () => {
+  it('links the live motion and dataviz toolkits', () => {
     render(
       <ToolkitLauncher
         title="Brand Toolkit Suite"
@@ -30,8 +30,9 @@ describe('ToolkitLauncher', () => {
 
     const links = screen.getAllByRole('link');
 
-    expect(links).toHaveLength(1);
+    expect(links).toHaveLength(2);
     expect(links[0]).toHaveAttribute('href', '/motion-toolkit/editor');
-    expect(screen.getAllByText('Planned')).toHaveLength(2);
+    expect(links[1]).toHaveAttribute('href', '/dataviz-toolkit');
+    expect(screen.getAllByText('Planned')).toHaveLength(1);
   });
 });

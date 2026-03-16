@@ -6,6 +6,9 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Added
 
+- A shared-shell Data Visualization Toolkit route with guided data mapping, saveable dataviz presets, annotation fields, and output-preset-driven SVG/PNG export
+- Dataviz validation helpers for multi-series and scatter-chart mapping requirements
+- A shared collapsible control-section primitive for dropdown-style editor panes
 - Shared studio-shell launcher and typed toolkit registry contract for suite entry-point routing
 - Focused launcher coverage for the shared toolkit registry and planned-versus-live card behavior
 - Agent operating layer scaffolding under `agent/`
@@ -27,6 +30,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Changed
 
+- The Data Visualization Toolkit now uses dropdown edit panes, standard 4:5/16:9/1:1 output presets, editable palette overrides, always-on cartesian axes, legend placement under the subheadline, fitted header copy, and a centered Big Number layout
+- Skill guidance and tracked agent profiles now treat maintainer review notes as structured QA input and require immediate screenshot skip reasons when capture tooling is blocked
 - The root landing page now renders a suite launcher from shared registry data instead of redirecting directly into the motion editor
 - Added package path aliases and Next.js tracing support needed for the shared launcher contract
 - Introduced test-oriented motion helpers without changing editor behavior

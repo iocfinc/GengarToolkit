@@ -29,10 +29,11 @@ Use the lead product engineer flow in the main thread to keep planning, sequenci
 ### Bug fix
 
 1. `explorer`
-2. `browser_debugger` when the flow is UI-facing
-3. relevant implementation agent
-4. `browser_screenshot` when the fix changes visible behavior
-5. `docs_writer` only when workflow or contributor guidance changes
+2. `design_guardian` when the fix is driven by visual QA, spacing, palette, typography, or layout review notes
+3. `browser_debugger` when the flow is UI-facing
+4. relevant implementation agent
+5. `browser_screenshot` when the fix changes visible behavior
+6. `docs_writer` only when workflow or contributor guidance changes
 
 ## Role Contracts
 
@@ -69,6 +70,7 @@ Fallback behavior:
 - Prefer Chrome MCP or another browser-native capture path.
 - Fall back to the existing screenshot skill only when browser-native capture is unavailable.
 - Treat screenshot capture as soft-required for frontend-affecting work. If the environment cannot access browser tooling, record the skip reason in the PR notes instead of blocking the branch.
+- If capture is blocked, interrupted, or times out, return a concrete skip reason immediately instead of waiting indefinitely.
 - For terminal, desktop-app, or agent-workflow fixes, capture equivalent terminal/app evidence with the screenshot skill and reference the artifact path in the PR notes.
 - Store captures in temp or other local artifacts; do not commit screenshots to the repo by default unless the task explicitly asks for a durable docs asset.
 
@@ -86,6 +88,7 @@ Update only the contributor-facing docs that changed. Keep extension notes conci
 - Record delegation evidence for non-trivial work: profile used, expected output, returned output, and any skip reason.
 - Ask each tracked profile to return changed files or inspected files, key risks, suggested tests, and artifact paths when UI evidence is expected.
 - If a tracked sub-agent is skipped for a non-trivial task, note the skip reason in the main thread instead of silently collapsing everything into one pass.
+- When a maintainer supplies manual UI review notes, treat them as explicit QA input, route them through `design_guardian` before implementation, and convert the accepted fixes into regression tests where feasible.
 - For backlog or issue-driven work in a dirty tree, compare the candidate issue against `HEAD` before assuming local WIP counts as issue progress.
 - Treat committed `HEAD` as the delivery baseline; do not count uncommitted local work as shipped progress.
 - Default to Issue Mode for branching. Only use Cycle Mode when the maintainer explicitly requests a shared branch with checkpoint commits per issue.

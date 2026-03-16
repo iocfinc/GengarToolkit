@@ -28,6 +28,14 @@ const outputPresets = [
     class: 'image'
   },
   {
+    id: 'landscape-16x9',
+    label: 'Landscape',
+    width: 1920,
+    height: 1080,
+    aspectRatio: '16:9',
+    class: 'image'
+  },
+  {
     id: 'stories-9x16',
     label: 'Stories / Reels / TikTok',
     width: 1080,

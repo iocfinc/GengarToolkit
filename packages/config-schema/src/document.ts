@@ -217,7 +217,9 @@ export const datavizOptionsSchema = z.object({
   showGrid: z.boolean().default(true),
   showLegend: z.boolean().default(true),
   animate: z.boolean().default(false),
-  highlightSeries: z.string().optional()
+  highlightSeries: z.string().optional(),
+  useCustomPalette: z.boolean().default(false),
+  customPalette: z.array(z.string()).default([])
 });
 
 export const datavizToolkitDocumentSchema = z.object({
@@ -227,7 +229,8 @@ export const datavizToolkitDocumentSchema = z.object({
   aspectRatio: z.enum(suiteAspectRatios),
   export: z.object({
     format: z.enum(['png', 'svg']),
-    filename: z.string()
+    filename: z.string(),
+    presetId: z.string().default('portrait-4x5')
   }),
   presetMeta: presetMetaSchema,
   content: datavizContentSchema,

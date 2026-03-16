@@ -1,4 +1,4 @@
-# Expected output: artifact paths, captured states, capture method, what each image proves, or a concrete skip reason.
+# Expected output: artifact paths, captured states, capture method, what each image proves, or a concrete skip reason returned immediately if capture is blocked or interrupted.
 # Preferred capture backend: Chrome DevTools MCP server when available.
 # Fallback: OS-level `screencapture` with a documented skip reason if the browser window cannot be targeted.
 model = "gpt-5"

@@ -1,4 +1,4 @@
-# Expected output: tokens or palettes touched, spacing or shell concerns, and a shortlist of visual regressions to verify later.
+# Expected output: tokens or palettes touched, spacing or shell concerns, maintainer-review polish risks, and a shortlist of visual regressions to verify later.
 model = "gpt-5"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"

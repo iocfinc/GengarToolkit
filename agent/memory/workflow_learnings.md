@@ -167,3 +167,35 @@
 3. Validate the package entry point and the compatibility layer together.
 4. Commit one clean checkpoint per issue inside the cycle branch.
 5. Leave unrelated WIP parked until the PR sweep classifies it.
+
+## Issue 15: Dataviz Review Polish
+
+### What Worked
+
+- A maintainer-provided visual bug list was enough to drive a focused polish pass without reopening discovery from scratch.
+- Converting review notes into renderer-level regression tests kept typography fitting, legend placement, axes, and big-number layout from drifting again.
+- Reusing the shared shell while adding a reusable collapsible section kept the app-specific fix from becoming a one-off UI pattern.
+
+### What Slowed Us Down
+
+- The screenshot pass stalled when capture could not complete cleanly, which delayed handoff despite the rest of the validation already being green.
+- Visual review fixes touched both editor controls and SVG layout, so the implementation map had to be restated before coding resumed.
+
+### Skill Updates Needed
+
+- `skills.md` should route review-driven polish passes through `design_guardian` before implementation.
+- `browser_screenshot` guidance should explicitly require an immediate skip reason when capture is blocked or interrupted.
+
+### Workflow Updates Needed
+
+- Treat maintainer review notes as first-class QA evidence, not just as ad-hoc comments.
+- Convert accepted review findings into focused regression tests during the same pass whenever feasible.
+- Record screenshot skips quickly so PR prep is not blocked on tooling timeouts.
+
+### Reusable Delivery Pattern
+
+1. Turn reviewed bugs into a concrete implementation checklist.
+2. Map each note to the current shell, renderer, or contract layer before editing.
+3. Fix shared geometry or UI primitives before patching template-specific symptoms.
+4. Add regression tests for each review finding that can be expressed deterministically.
+5. Capture browser evidence or record an explicit skip reason immediately.

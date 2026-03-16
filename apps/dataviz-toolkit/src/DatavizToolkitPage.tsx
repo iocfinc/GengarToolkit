@@ -1,34 +1,50 @@
 'use client';
 
 import { useDeferredValue, useMemo, useState } from 'react';
-import { chartTemplateDefinitions } from '@packages/chart-core/src/templates';
-import { inferNumericColumns, parseDatasetInput } from '@packages/chart-core/src/parser';
+import { datasetToDelimitedText, inferNumericColumns, parseDatasetInput } from '@packages/chart-core/src/parser';
 import { renderChartSvg } from '@packages/chart-core/src/renderSvg';
-import { brandThemes, themePassesContrastGuidance } from '@packages/design-tokens/src/colors';
+import { getChartTemplateDefinition, chartTemplateDefinitions } from '@packages/chart-core/src/templates';
+import { getDatavizValidationMessages } from '@packages/chart-core/src/validation';
+import {
+  brandThemes,
+  themePassesContrastGuidance,
+  type ThemeDefinition
+} from '@packages/design-tokens/src/colors';
 import type {
   DatavizDataset,
   DatavizFieldMapping,
+  DatavizOptions,
   DatavizTemplate,
+  DatavizToolkitDocument,
   SuiteAspectRatio
 } from '@packages/config-schema/src/document';
+import { suiteExportCapabilities } from '@packages/export-engine/src/contracts';
 import { downloadBlob, svgMarkupToBlob, svgMarkupToPngBlob } from '@packages/export-engine/src/svgExport';
-import { loadStoredValue, saveStoredValue } from '@packages/studio-shell/src/presetStorage';
+import { BrandedHeader } from '@packages/studio-shell/src/BrandedHeader';
+import { EditorShell } from '@packages/studio-shell/src/EditorShell';
+import { getOutputPreset } from '@packages/studio-shell/src/outputPresets';
+import { loadVersionedStoredValue, saveVersionedStoredValue } from '@packages/studio-shell/src/presetStorage';
+import { PreviewSurface } from '@packages/studio-shell/src/PreviewSurface';
+import { CollapsibleSection } from '@packages/ui/src/CollapsibleSection';
 import { SurfaceCard } from '@packages/ui/src/SurfaceCard';
+import { ColorTokenPicker } from '@packages/ui/src/controls/ColorTokenPicker';
+import { SelectField } from '@packages/ui/src/controls/SelectField';
+import { ToggleField } from '@packages/ui/src/controls/ToggleField';
 
 const STORAGE_KEY = 'dioscuri-dataviz-presets-v1';
-
-type DatavizPreset = {
-  id: string;
-  name: string;
-  template: DatavizTemplate;
-  aspectRatio: SuiteAspectRatio;
-  themeId: string;
-  inputMode: 'csv' | 'table' | 'json';
-  rawInput: string;
-  mapping: DatavizFieldMapping;
-  headline: string;
-  subheadline: string;
-  source: string;
+const STORAGE_VERSION = 1;
+const DATAVIZ_OUTPUT_PRESET_IDS = ['portrait-4x5', 'landscape-16x9', 'square-1080'] as const;
+const DATAVIZ_OUTPUT_PRESETS = DATAVIZ_OUTPUT_PRESET_IDS
+  .map((presetId) => getOutputPreset(presetId))
+  .filter((preset): preset is NonNullable<ReturnType<typeof getOutputPreset>> => Boolean(preset));
+const DEFAULT_OUTPUT_PRESET_ID = DATAVIZ_OUTPUT_PRESETS[0]?.id ?? 'portrait-4x5';
+const DEFAULT_OPTIONS: DatavizOptions = {
+  showGrid: true,
+  showLegend: true,
+  animate: false,
+  highlightSeries: undefined,
+  useCustomPalette: false,
+  customPalette: []
 };
 
 function createId(prefix: string) {
@@ -44,26 +60,76 @@ const emptyDataset: DatavizDataset = {
   rows: []
 };
 
+function getSuiteAspectRatioForPreset(presetId: string): SuiteAspectRatio {
+  const aspectRatio = getOutputPreset(presetId)?.aspectRatio;
+
+  if (aspectRatio === '1:1' || aspectRatio === '4:5' || aspectRatio === '16:9') {
+    return aspectRatio;
+  }
+
+  return '4:5';
+}
+
+function slugifyFilename(value: string) {
+  return (
+    value
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'dataviz-chart'
+  );
+}
+
+function getTheme(themeId: string) {
+  return brandThemes.find((theme) => theme.id === themeId) ?? brandThemes[0];
+}
+
+function buildPaletteSlots(theme: ThemeDefinition, options: DatavizOptions) {
+  return Array.from({ length: 4 }, (_, index) => {
+    return options.customPalette[index] ?? theme.chartPalette[index % theme.chartPalette.length];
+  });
+}
+
 export function DatavizToolkitPage() {
   const [template, setTemplate] = useState<DatavizTemplate>('bar');
-  const [aspectRatio, setAspectRatio] = useState<SuiteAspectRatio>('4:5');
+  const [outputPresetId, setOutputPresetId] = useState(DEFAULT_OUTPUT_PRESET_ID);
+  const [exportFormat, setExportFormat] = useState<'png' | 'svg'>('png');
   const [themeId, setThemeId] = useState('dark-editorial');
   const [inputMode, setInputMode] = useState<'csv' | 'table' | 'json'>('csv');
   const [rawInput, setRawInput] = useState(defaultInput);
   const [headline, setHeadline] = useState('Ridership grew across peak hours');
-  const [subheadline, setSubheadline] = useState('Morning demand recovered faster than evening demand');
+  const [subheadline, setSubheadline] = useState(
+    'Morning demand recovered faster than evening demand'
+  );
   const [source, setSource] = useState('Source: Internal analytics');
+  const [annotationsInput, setAnnotationsInput] = useState('North region reopened in March');
   const [mapping, setMapping] = useState<DatavizFieldMapping>({
     xColumn: 'Month',
     valueColumns: ['North', 'South', 'West'],
     yColumn: 'North'
   });
+  const [options, setOptions] = useState<DatavizOptions>(DEFAULT_OPTIONS);
   const [presetName, setPresetName] = useState('Peak Hours Story');
-  const [presets, setPresets] = useState<DatavizPreset[]>(() =>
-    loadStoredValue<DatavizPreset[]>(STORAGE_KEY, [])
+  const [presets, setPresets] = useState<DatavizToolkitDocument[]>(() =>
+    loadVersionedStoredValue<DatavizToolkitDocument[]>(STORAGE_KEY, STORAGE_VERSION, [])
   );
 
   const deferredInput = useDeferredValue(rawInput);
+  const aspectRatio = getSuiteAspectRatioForPreset(outputPresetId);
+  const outputPreset =
+    getOutputPreset(outputPresetId) ?? getOutputPreset(DEFAULT_OUTPUT_PRESET_ID) ?? DATAVIZ_OUTPUT_PRESETS[0];
+  const annotations = useMemo(
+    () =>
+      annotationsInput
+        .split(/\r?\n/)
+        .map((value) => value.trim())
+        .filter(Boolean),
+    [annotationsInput]
+  );
+  const templateDefinition = getChartTemplateDefinition(template);
+  const exportCapabilities = suiteExportCapabilities.dataviz;
+  const activeTheme = getTheme(themeId);
+  const editablePalette = buildPaletteSlots(activeTheme, options);
 
   const parsedInput = useMemo(() => {
     try {
@@ -80,7 +146,6 @@ export function DatavizToolkitPage() {
   }, [deferredInput, inputMode]);
 
   const { dataset, error } = parsedInput;
-
   const numericColumns = useMemo(() => inferNumericColumns(dataset), [dataset]);
 
   const resolvedMapping = useMemo<DatavizFieldMapping>(() => {
@@ -128,86 +193,117 @@ export function DatavizToolkitPage() {
         headline,
         subheadline,
         source,
-        themeId
+        themeId,
+        annotations,
+        options,
+        size: outputPreset
+          ? {
+              width: outputPreset.width,
+              height: outputPreset.height
+            }
+          : undefined
       }),
-    [aspectRatio, dataset, headline, resolvedMapping, source, subheadline, template, themeId]
+    [
+      annotations,
+      aspectRatio,
+      dataset,
+      headline,
+      options,
+      outputPreset,
+      resolvedMapping,
+      source,
+      subheadline,
+      template,
+      themeId
+    ]
   );
 
   const validationMessages = [
-    dataset.rows.length === 0 ? 'Add data to unlock a valid chart preview.' : null,
-    !resolvedMapping.xColumn ? 'Choose a category or x-axis column.' : null,
-    template !== 'big-number' && !resolvedMapping.yColumn && resolvedMapping.valueColumns.length === 0
-      ? 'Choose at least one numeric value column.'
-      : null,
-    !themePassesContrastGuidance(brandThemes.find((theme) => theme.id === themeId) ?? brandThemes[0], 3.8)
+    ...(!error
+      ? getDatavizValidationMessages({
+          dataset,
+          mapping: resolvedMapping,
+          template,
+          highlightSeries: options.highlightSeries
+        })
+      : []),
+    !themePassesContrastGuidance(activeTheme, 3.8)
       ? 'Selected theme fails the current contrast guidance.'
       : null
   ].filter(Boolean) as string[];
 
+  const exportCurrentPreview = async () => {
+    const filename = slugifyFilename(presetName);
+
+    if (exportFormat === 'svg') {
+      downloadBlob(svgMarkupToBlob(preview.svg), `${filename}.svg`);
+      return;
+    }
+
+    const blob = await svgMarkupToPngBlob(preview.svg, preview.width, preview.height);
+    downloadBlob(blob, `${filename}.png`);
+  };
+
   const savePreset = () => {
-    const nextPreset: DatavizPreset = {
-      id: createId('dataviz-preset'),
-      name: presetName.trim() || 'Untitled preset',
+    const timestamp = new Date().toISOString();
+    const nextPreset: DatavizToolkitDocument = {
+      toolkit: 'dataviz',
       template,
+      theme: themeId,
       aspectRatio,
-      themeId,
-      inputMode,
-      rawInput,
+      export: {
+        format: exportFormat,
+        filename: slugifyFilename(presetName),
+        presetId: outputPresetId
+      },
+      presetMeta: {
+        id: createId('dataviz-preset'),
+        name: presetName.trim() || 'Untitled preset',
+        createdAt: timestamp,
+        updatedAt: timestamp
+      },
+      content: {
+        headline,
+        subheadline,
+        annotations,
+        source
+      },
+      data: dataset,
       mapping: resolvedMapping,
-      headline,
-      subheadline,
-      source
+      options
     };
     const nextPresets = [nextPreset, ...presets];
     setPresets(nextPresets);
-    saveStoredValue(STORAGE_KEY, nextPresets);
+    saveVersionedStoredValue(STORAGE_KEY, STORAGE_VERSION, nextPresets);
+  };
+
+  const updateCustomPalette = (index: number, value: string) => {
+    setOptions((current) => {
+      const nextPalette = buildPaletteSlots(activeTheme, current);
+      nextPalette[index] = value;
+
+      return {
+        ...current,
+        useCustomPalette: true,
+        customPalette: nextPalette
+      };
+    });
   };
 
   return (
-    <main className="min-h-screen px-4 py-4 text-fog md:px-6">
-      <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-[1680px] flex-col gap-4 rounded-[32px] border border-white/8 bg-white/[0.03] p-4 shadow-panel">
-        <SurfaceCard className="px-5 py-5">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.34em] text-white/42">Dataviz Toolkit</p>
-              <h1 className="mt-2 font-display text-4xl text-fog">Structured editorial charts</h1>
-              <p className="mt-3 max-w-3xl text-sm text-white/62">
-                Upload structured data, map fields into approved templates, and export a branded chart without leaving the platform.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                className="rounded-full border border-white/10 px-4 py-2 text-sm text-white/78"
-                onClick={savePreset}
-                type="button"
-              >
-                Save Preset
-              </button>
-              <button
-                className="rounded-full border border-white/10 px-4 py-2 text-sm text-white/78"
-                onClick={() => downloadBlob(svgMarkupToBlob(preview.svg), `${presetName || 'dataviz'}.svg`)}
-                type="button"
-              >
-                Export SVG
-              </button>
-              <button
-                className="rounded-full bg-fog px-4 py-2 text-sm font-semibold text-ink"
-                onClick={async () => {
-                  const blob = await svgMarkupToPngBlob(preview.svg, preview.width, preview.height);
-                  downloadBlob(blob, `${presetName || 'dataviz'}.png`);
-                }}
-                type="button"
-              >
-                Export PNG
-              </button>
-            </div>
-          </div>
-        </SurfaceCard>
+    <EditorShell
+      controls={
+        <div className="space-y-4 overflow-y-auto pr-1">
+          <CollapsibleSection defaultOpen title="Story">
+            <Field label="Preset Name" onChange={setPresetName} value={presetName} />
+            <Field label="Headline" onChange={setHeadline} value={headline} />
+            <TextAreaField label="Subheadline" onChange={setSubheadline} value={subheadline} />
+            <Field label="Source" onChange={setSource} value={source} />
+            <TextAreaField label="Annotations" onChange={setAnnotationsInput} value={annotationsInput} />
+          </CollapsibleSection>
 
-        <div className="grid gap-4 xl:grid-cols-[420px_minmax(0,1fr)_320px]">
-          <SurfaceCard className="space-y-4 p-4">
-            <SectionLabel title="Template" />
-            <Select
+          <CollapsibleSection defaultOpen title="Template & Output">
+            <SelectField
               label="Chart Template"
               onChange={(value) => setTemplate(value as DatavizTemplate)}
               options={chartTemplateDefinitions.map((entry) => ({
@@ -216,17 +312,25 @@ export function DatavizToolkitPage() {
               }))}
               value={template}
             />
-            <Select
-              label="Aspect Ratio"
-              onChange={(value) => setAspectRatio(value as SuiteAspectRatio)}
-              options={[
-                { value: '1:1', label: '1:1 Square' },
-                { value: '4:5', label: '4:5 Portrait' },
-                { value: '16:9', label: '16:9 Presentation' }
-              ]}
-              value={aspectRatio}
+            <SelectField
+              label="Output Preset"
+              onChange={setOutputPresetId}
+              options={DATAVIZ_OUTPUT_PRESETS.map((preset) => ({
+                value: preset.id,
+                label: `${preset.label} · ${preset.aspectRatio}`
+              }))}
+              value={outputPresetId}
             />
-            <Select
+            <SelectField
+              label="Export Format"
+              onChange={(value) => setExportFormat(value as 'png' | 'svg')}
+              options={exportCapabilities.map((capability) => ({
+                value: capability.format,
+                label: capability.label
+              }))}
+              value={exportFormat}
+            />
+            <SelectField
               label="Theme"
               onChange={setThemeId}
               options={brandThemes.map((theme) => ({
@@ -235,42 +339,20 @@ export function DatavizToolkitPage() {
               }))}
               value={themeId}
             />
-            <Field label="Preset Name" onChange={setPresetName} value={presetName} />
-            <Field label="Headline" onChange={setHeadline} value={headline} />
-            <Field label="Subheadline" onChange={setSubheadline} value={subheadline} />
-            <Field label="Source" onChange={setSource} value={source} />
-          </SurfaceCard>
+            <ToggleField
+              checked={options.showGrid}
+              label="Show Grid"
+              onChange={(checked) => setOptions((current) => ({ ...current, showGrid: checked }))}
+            />
+            <ToggleField
+              checked={options.showLegend}
+              label="Show Legend"
+              onChange={(checked) => setOptions((current) => ({ ...current, showLegend: checked }))}
+            />
+          </CollapsibleSection>
 
-          <SurfaceCard className="p-4">
-            <div className="mb-3 flex items-center justify-between">
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.28em] text-white/42">Preview</p>
-                <h2 className="mt-2 font-display text-2xl text-fog">{chartTemplateDefinitions.find((entry) => entry.id === template)?.label}</h2>
-              </div>
-              <span className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-white/54">
-                {dataset.rows.length} rows
-              </span>
-            </div>
-            <div className="overflow-hidden rounded-[28px] border border-white/8 bg-black/30">
-              <div
-                className="aspect-[4/5] w-full [&_svg]:h-full [&_svg]:w-full"
-                dangerouslySetInnerHTML={{ __html: preview.svg }}
-              />
-            </div>
-            {validationMessages.length > 0 ? (
-              <div className="mt-4 space-y-2">
-                {validationMessages.map((message) => (
-                  <p className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/68" key={message}>
-                    {message}
-                  </p>
-                ))}
-              </div>
-            ) : null}
-          </SurfaceCard>
-
-          <SurfaceCard className="space-y-4 p-4">
-            <SectionLabel title="Data" />
-            <Select
+          <CollapsibleSection defaultOpen title="Data & Mapping">
+            <SelectField
               label="Input Mode"
               onChange={(value) => setInputMode(value as 'csv' | 'table' | 'json')}
               options={[
@@ -280,22 +362,17 @@ export function DatavizToolkitPage() {
               ]}
               value={inputMode}
             />
-            <label className="block">
-              <div className="mb-2 text-xs uppercase tracking-[0.18em] text-white/48">Dataset</div>
-              <textarea
-                className="min-h-[220px] w-full rounded-2xl border border-white/10 bg-white/5 px-3 py-3 text-sm text-fog"
-                onChange={(event) => setRawInput(event.target.value)}
-                value={rawInput}
-              />
-            </label>
+            <TextAreaField label="Dataset" onChange={setRawInput} value={rawInput} />
             {error ? <p className="text-sm text-red-200">{error}</p> : null}
-            <Select
+            <SelectField
               label="Category / X Column"
-              onChange={(value) => setMapping((current) => ({ ...current, xColumn: value, labelColumn: value }))}
+              onChange={(value) =>
+                setMapping((current) => ({ ...current, xColumn: value, labelColumn: value }))
+              }
               options={dataset.columns.map((column) => ({ value: column, label: column }))}
               value={resolvedMapping.xColumn ?? ''}
             />
-            <Select
+            <SelectField
               label="Primary Value Column"
               onChange={(value) => setMapping((current) => ({ ...current, yColumn: value }))}
               options={numericColumns.map((column) => ({ value: column, label: column }))}
@@ -306,9 +383,14 @@ export function DatavizToolkitPage() {
               <div className="flex flex-wrap gap-2">
                 {numericColumns.map((column) => {
                   const selected = resolvedMapping.valueColumns.includes(column);
+
                   return (
                     <button
-                      className={`rounded-full border px-3 py-1.5 text-sm ${selected ? 'border-chartreuse/60 bg-chartreuse/15 text-fog' : 'border-white/10 text-white/62'}`}
+                      className={`rounded-full border px-3 py-1.5 text-sm ${
+                        selected
+                          ? 'border-chartreuse/60 bg-chartreuse/15 text-fog'
+                          : 'border-white/10 text-white/62'
+                      }`}
                       key={column}
                       onClick={() =>
                         setMapping((current) => ({
@@ -326,44 +408,150 @@ export function DatavizToolkitPage() {
                 })}
               </div>
             </label>
-            {presets.length > 0 ? (
-              <div className="space-y-2">
-                <SectionLabel title="Saved Presets" />
-                {presets.slice(0, 4).map((preset) => (
-                  <button
-                    className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left"
-                    key={preset.id}
-                    onClick={() => {
-                      setTemplate(preset.template);
-                      setAspectRatio(preset.aspectRatio);
-                      setThemeId(preset.themeId);
-                      setInputMode(preset.inputMode);
-                      setRawInput(preset.rawInput);
-                      setMapping(preset.mapping);
-                      setHeadline(preset.headline);
-                      setSubheadline(preset.subheadline);
-                      setSource(preset.source);
-                      setPresetName(preset.name);
-                    }}
-                    type="button"
+            {templateDefinition?.requiresMultipleSeries && resolvedMapping.valueColumns.length > 0 ? (
+              <SelectField
+                label="Highlight Series"
+                onChange={(value) =>
+                  setOptions((current) => ({ ...current, highlightSeries: value || undefined }))
+                }
+                options={resolvedMapping.valueColumns.map((column) => ({
+                  value: column,
+                  label: column
+                }))}
+                value={options.highlightSeries ?? resolvedMapping.valueColumns[0] ?? ''}
+              />
+            ) : null}
+          </CollapsibleSection>
+
+          <CollapsibleSection defaultOpen={false} title="Palettes">
+            <ToggleField
+              checked={options.useCustomPalette}
+              label="Use Custom Palette"
+              onChange={(checked) =>
+                setOptions((current) => ({
+                  ...current,
+                  useCustomPalette: checked,
+                  customPalette: checked ? buildPaletteSlots(activeTheme, current) : []
+                }))
+              }
+            />
+            {options.useCustomPalette ? (
+              <div className="space-y-4">
+                {editablePalette.map((token, index) => (
+                  <ColorTokenPicker
+                    key={`${index}-${token}`}
+                    label={`Series ${index + 1}`}
+                    onChange={(value) => updateCustomPalette(index, value)}
+                    value={token}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-white/58">
+                The current theme palette stays as the default until you enable custom overrides.
+              </p>
+            )}
+          </CollapsibleSection>
+
+          {presets.length > 0 ? (
+            <CollapsibleSection defaultOpen={false} title="Saved Presets">
+              {presets.slice(0, 4).map((preset) => (
+                <button
+                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left"
+                  key={preset.presetMeta.id}
+                  onClick={() => {
+                    setTemplate(preset.template);
+                    setThemeId(preset.theme);
+                    setOutputPresetId(preset.export.presetId ?? DEFAULT_OUTPUT_PRESET_ID);
+                    setExportFormat(preset.export.format);
+                    setInputMode('csv');
+                    setRawInput(datasetToDelimitedText(preset.data));
+                    setMapping(preset.mapping);
+                    setHeadline(preset.content.headline);
+                    setSubheadline(preset.content.subheadline);
+                    setSource(preset.content.source);
+                    setAnnotationsInput(preset.content.annotations.join('\n'));
+                    setOptions({
+                      ...DEFAULT_OPTIONS,
+                      ...preset.options
+                    });
+                    setPresetName(preset.presetMeta.name);
+                  }}
+                  type="button"
+                >
+                  <p className="text-sm font-semibold text-fog">{preset.presetMeta.name}</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.18em] text-white/48">
+                    {preset.template} / {preset.export.presetId}
+                  </p>
+                </button>
+              ))}
+            </CollapsibleSection>
+          ) : null}
+        </div>
+      }
+      header={
+        <BrandedHeader
+          actions={
+            <>
+              <button
+                className="rounded-full border border-white/10 px-4 py-2 text-sm text-white/78"
+                onClick={savePreset}
+                type="button"
+              >
+                Save Preset
+              </button>
+              <button
+                className="rounded-full bg-fog px-4 py-2 text-sm font-semibold text-ink"
+                onClick={() => void exportCurrentPreview()}
+                type="button"
+              >
+                Export {exportFormat.toUpperCase()}
+              </button>
+            </>
+          }
+          subtitle="Use dropdown editing panels, fixed chart geometry, and branded output presets to build production-ready editorial graphics."
+          title="Data Visualization Toolkit"
+        />
+      }
+      preview={
+        <PreviewSurface>
+          <SurfaceCard className="flex min-h-0 flex-1 flex-col p-4">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.28em] text-white/42">Preview</p>
+                <h2 className="mt-2 font-display text-2xl text-fog">{templateDefinition?.label}</h2>
+                <p className="mt-2 text-sm text-white/58">
+                  {outputPreset?.label} · {preview.width}×{preview.height}
+                </p>
+              </div>
+              <span className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-white/54">
+                {dataset.rows.length} rows
+              </span>
+            </div>
+            <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[28px] border border-white/8 bg-black/30 p-4">
+              <div
+                className="max-h-full max-w-full overflow-hidden rounded-[24px] [&_svg]:h-full [&_svg]:w-full"
+                dangerouslySetInnerHTML={{ __html: preview.svg }}
+                style={{ aspectRatio: `${preview.width} / ${preview.height}`, width: '100%' }}
+              />
+            </div>
+            {validationMessages.length > 0 ? (
+              <div className="mt-4 space-y-2">
+                {validationMessages.map((message) => (
+                  <p
+                    className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/68"
+                    key={message}
                   >
-                    <p className="text-sm font-semibold text-fog">{preset.name}</p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.18em] text-white/48">
-                      {preset.template} / {preset.aspectRatio}
-                    </p>
-                  </button>
+                    {message}
+                  </p>
                 ))}
               </div>
             ) : null}
           </SurfaceCard>
-        </div>
-      </div>
-    </main>
+        </PreviewSurface>
+      }
+    />
   );
-}
-
-function SectionLabel({ title }: { title: string }) {
-  return <p className="text-[11px] uppercase tracking-[0.28em] text-white/42">{title}</p>;
 }
 
 function Field({
@@ -387,31 +575,23 @@ function Field({
   );
 }
 
-function Select({
+function TextAreaField({
   label,
   value,
-  onChange,
-  options
+  onChange
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  options: Array<{ value: string; label: string }>;
 }) {
   return (
     <label className="block">
       <div className="mb-2 text-xs uppercase tracking-[0.18em] text-white/48">{label}</div>
-      <select
-        className="w-full rounded-2xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-fog"
+      <textarea
+        className="min-h-[120px] w-full rounded-2xl border border-white/10 bg-white/5 px-3 py-3 text-sm text-fog"
         onChange={(event) => onChange(event.target.value)}
         value={value}
-      >
-        {options.map((option) => (
-          <option className="bg-[#111111]" key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      />
     </label>
   );
 }
