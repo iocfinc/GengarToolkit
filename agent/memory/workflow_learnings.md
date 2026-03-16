@@ -99,3 +99,71 @@
 3. Land workflow prerequisites first.
 4. Create one branch per issue.
 5. Keep the merge sequence explicit until each PR is closed.
+
+## Issue 4: Multi-Agent Trial For Suite Launcher
+
+### What Worked
+
+- Reducing the epic to issue `#22` produced a small, testable product slice with visible behavior and a clean PR boundary.
+- Comparing the selected issue to committed `HEAD` exposed that the local tree already contained broader suite WIP, which prevented over-crediting unrelated in-progress work.
+- A focused launcher test plus browser screenshot evidence was enough to validate the first suite feature end to end.
+
+### What Slowed Us Down
+
+- The first candidate pass looked at the dirty worktree before checking committed repo state, which made later hardening/doc issues look more “buildable” than the real first product slice.
+- We used an ad-hoc explorer-style `codex exec` prompt instead of a tracked profile invocation, so the delegation trail was weaker than intended.
+- The current guidance said “run sub-agents” but did not require explicit evidence of which profile ran or why a profile was skipped.
+
+### Skill Updates Needed
+
+- `run_backlog_cycle` should require a committed-`HEAD` reality check before issue selection when the tree is already dirty.
+- `plan_feature` should require the planned sub-agent list to include explicit profile names, bounded tasks, and expected outputs.
+- `skills.md` should prefer real tracked-profile invocations over role-play prompts so the session trail proves whether delegation happened.
+
+### Workflow Updates Needed
+
+- Frontend issue work should record whether visual QA used `browser_debugger`, `browser_screenshot`, or a documented skip path.
+- Delivery notes should distinguish “tracked profile used” from “main-thread manual work” so multi-agent trials can be scored honestly.
+- Reflection should be added immediately after first-live feature delivery, not deferred until later backlog passes.
+
+### Reusable Delivery Pattern
+
+1. Pull the live issue queue.
+2. Compare candidate issues against committed `HEAD`, not just the current worktree.
+3. Pick the smallest visible slice with a narrow PR boundary.
+4. State which tracked profiles will run and what each owns.
+5. Validate with focused tests plus one concrete artifact for the changed flow.
+
+## Issue 5: Cycle 1 Foundation Sprint
+
+### What Worked
+
+- Extracting shared packages first created a stable foundation for later toolkit-specific work.
+- Using one shared cycle branch with checkpoint commits made the sequence easier to review without losing issue-level traceability.
+- Keeping compatibility re-export layers in place let the team move code into shared packages without breaking existing app imports.
+
+### What Slowed Us Down
+
+- Foundation work and later toolkit UI work were mixed together in the worktree, which made it harder to see the next clean checkpoint.
+- The previous skill docs did not clearly separate package extraction, shell groundwork, and later feature adoption.
+- Agent profile descriptions were too generic, so expected outputs had to be re-explained in the main thread.
+
+### Skill Updates Needed
+
+- `plan_feature` should explicitly call out shared-package reuse, checkpoint slicing, and branch mode.
+- `run_backlog_cycle` should record implementation order, branch plan, and evidence plan before code changes start.
+- `generate_tests` should recommend package-entry contract tests plus compatibility re-export coverage for shared extractions.
+
+### Workflow Updates Needed
+
+- Maintain an explicit implementation order for multi-issue cycle branches.
+- Treat committed `HEAD` as the delivery baseline when deciding what belongs in the next checkpoint commit.
+- Use shared shell and package groundwork commits before toolkit-specific adoption commits.
+
+### Reusable Delivery Pattern
+
+1. Extract the shared package or shell primitive first.
+2. Preserve compatibility imports while the app surface catches up.
+3. Validate the package entry point and the compatibility layer together.
+4. Commit one clean checkpoint per issue inside the cycle branch.
+5. Leave unrelated WIP parked until the PR sweep classifies it.

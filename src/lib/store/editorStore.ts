@@ -1,6 +1,10 @@
 'use client';
 
 import { create } from 'zustand';
+import {
+  loadVersionedStoredValue,
+  saveVersionedStoredValue
+} from '@packages/studio-shell/src/presetStorage';
 import { brandDocumentSchema, savedPresetSchema } from '@/lib/types/document';
 import type {
   AspectRatio,
@@ -18,6 +22,7 @@ import { approvedPalettes } from '@/lib/theme/colors';
 import { createDocument, defaultPresets } from '@/lib/presets/defaultPresets';
 
 const PRESETS_KEY = 'dioscuri-motion-presets-v1';
+const PRESETS_STORAGE_VERSION = 1;
 
 function nowIso() {
   return new Date().toISOString();
@@ -182,23 +187,15 @@ function fullRandomized(document: BrandDocument): BrandDocument {
 }
 
 function persistPresets(presets: SavedPreset[]) {
-  if (typeof window === 'undefined') {
-    return;
-  }
-  window.localStorage.setItem(PRESETS_KEY, JSON.stringify(presets));
+  saveVersionedStoredValue(PRESETS_KEY, PRESETS_STORAGE_VERSION, presets);
 }
 
 function readStoredPresets() {
-  if (typeof window === 'undefined') {
-    return defaultPresets;
-  }
-
-  const raw = window.localStorage.getItem(PRESETS_KEY);
-  if (!raw) {
-    return defaultPresets;
-  }
-
-  const parsed = JSON.parse(raw);
+  const parsed = loadVersionedStoredValue<SavedPreset[]>(
+    PRESETS_KEY,
+    PRESETS_STORAGE_VERSION,
+    defaultPresets
+  );
   const validated = savedPresetSchema.array().safeParse(parsed);
   return validated.success ? validated.data : defaultPresets;
 }

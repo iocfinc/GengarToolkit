@@ -1,4 +1,5 @@
 import type { Route } from 'next';
+export type { OutputClass, OutputPreset } from './outputPresets';
 
 export type ToolkitCapability = {
   id: string;

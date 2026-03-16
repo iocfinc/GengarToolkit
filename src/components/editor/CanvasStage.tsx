@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { aspectRatioLabels } from '@/lib/types/controls';
-import { getLogicalCanvasSize, getPreviewDisplaySize } from '@/lib/render/renderSizing';
+import { getLogicalCanvasSize } from '@/lib/render/renderSizing';
 import { drawScene } from '@/lib/render/sceneRenderer';
 import { useEditorStore } from '@/lib/store/editorStore';
 
@@ -55,22 +55,26 @@ export function CanvasStage() {
         return;
       }
 
-      const targetWidth = rect.width;
-      const targetHeight = rect.height;
-      const displaySize = getPreviewDisplaySize(
-        targetWidth,
-        targetHeight,
-        state.document.aspectRatio,
-        state.ui.zoom
-      );
+      const viewportWidth = rect.width;
+      const viewportHeight = rect.height;
       const logicalSize = getLogicalCanvasSize(state.document);
 
-      canvas.style.width = `${displaySize.width}px`;
-      canvas.style.height = `${displaySize.height}px`;
-      canvas.width = Math.max(1, logicalSize.width);
-      canvas.height = Math.max(1, logicalSize.height);
+      // Backing store matches viewport for crisp output.
+      const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
+      canvas.width = Math.max(1, Math.floor(viewportWidth * dpr));
+      canvas.height = Math.max(1, Math.floor(viewportHeight * dpr));
 
-      context.setTransform(1, 0, 0, 1, 0, 0);
+      // Stable viewport: canvas fills container; scale/center the logical scene inside.
+      const scale = Math.min(
+        viewportWidth / logicalSize.width,
+        viewportHeight / logicalSize.height
+      ) * state.ui.zoom;
+      const scaledWidth = logicalSize.width * scale;
+      const scaledHeight = logicalSize.height * scale;
+      const offsetX = (viewportWidth - scaledWidth) / 2;
+      const offsetY = (viewportHeight - scaledHeight) / 2;
+
+      context.setTransform(scale * dpr, 0, 0, scale * dpr, offsetX * dpr, offsetY * dpr);
 
       if (state.document.motion.playing) {
         if (animationStartRef.current === null) {
@@ -103,7 +107,7 @@ export function CanvasStage() {
   );
 
   return (
-    <section className="panel-surface relative flex min-h-[68vh] flex-col overflow-hidden rounded-[28px] p-4">
+    <section className="panel-surface relative flex min-h-[68vh] flex-col overflow-hidden rounded-[28px] p-4 transition-none">
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className="text-[11px] uppercase tracking-[0.3em] text-white/40">Live Canvas</p>
@@ -114,11 +118,11 @@ export function CanvasStage() {
         </div>
       </div>
       <div
-        className="relative flex flex-1 items-center justify-center overflow-hidden rounded-[24px] border border-white/8 bg-black/30"
+        className="relative flex w-full flex-1 items-center justify-center overflow-hidden rounded-[24px] border border-white/8 bg-black/30 transition-none"
         ref={stageRef}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_32%)]" />
-        <canvas className="relative z-10 shadow-stage" ref={canvasRef} />
+        <canvas className="relative z-10 h-full w-full shadow-stage transition-none" ref={canvasRef} />
         <div className="pointer-events-none absolute bottom-5 left-5 rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[11px] uppercase tracking-[0.24em] text-white/50">
           {bounds.width > 0 ? `${Math.round(bounds.width)}px stage` : 'Ready'}
         </div>

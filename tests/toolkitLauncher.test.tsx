@@ -31,7 +31,7 @@ describe('ToolkitLauncher', () => {
     const links = screen.getAllByRole('link');
 
     expect(links).toHaveLength(1);
-    expect(links[0]).toHaveAttribute('href', '/editor');
+    expect(links[0]).toHaveAttribute('href', '/motion-toolkit/editor');
     expect(screen.getAllByText('Planned')).toHaveLength(2);
   });
 });

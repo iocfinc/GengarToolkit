@@ -1,3 +1,4 @@
+# Expected output: reproduction steps, console or DOM findings, failing selectors or states, and the minimal fix hypothesis.
 model = "gpt-5"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"

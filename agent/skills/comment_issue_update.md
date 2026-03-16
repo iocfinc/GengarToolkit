@@ -30,7 +30,7 @@ Use this skill when code is ready to commit or a pull request is ready, and the 
 1. Restate the issue status in one line.
 2. Summarize the root cause in plain language.
 3. Summarize the implemented fix.
-4. List validation performed.
+4. List validation performed, including screenshot artifact paths or a concrete skip reason for frontend-visible work.
 5. Link the PR if one exists.
 6. Keep the comment short and useful for future readers.
 

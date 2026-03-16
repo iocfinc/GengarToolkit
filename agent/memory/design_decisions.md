@@ -12,9 +12,16 @@
 
 - PNG and WEBM exports are performed in-browser to avoid backend rendering infrastructure.
 
+## Suite Architecture
+
+- The repository now exposes a Brand Toolkit Suite with toolkit-specific entry points rather than a single top-level editor landing page.
+- Shared contracts are introduced through `apps/` and `packages/` boundaries first, while the existing motion editor remains behaviorally stable at `/motion-toolkit/editor`.
+- New toolkits use shared package contracts for themes, schema, chart/export logic, and shell UI before any deeper package manager or multi-runtime workspace split.
+
 ## Agent Layer
 
 - The agent operating layer is repository-native, GitHub-integrated, and documented in-tree rather than delegated to an external AI orchestration service.
 - Codex runtime delegation is tracked separately from repo workflow skills: `.codex/` and `agents/` define sub-agent runtime profiles, while `agent/` retains workflow instructions, templates, and memory.
 - Frontend-affecting work should include a soft-required browser screenshot pass for PR preparation when browser tooling is available.
 - Under-specified but promising features are recorded in `agent/memory/roadmap.md` instead of being implemented speculatively.
+- The default delivery model remains one issue per branch and per PR, but maintainers may opt into a shared Cycle Mode branch with one checkpoint commit per issue when the delivery stream is tightly related.

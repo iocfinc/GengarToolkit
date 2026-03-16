@@ -1,3 +1,4 @@
+# Expected output: entry points changed, component or state impacts, tests to add or update, and migration notes when shared packages move.
 model = "gpt-5"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
