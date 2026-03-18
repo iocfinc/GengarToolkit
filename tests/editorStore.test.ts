@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { approvedPaletteDefinitions } from '@packages/design-tokens/src/colors';
 import { defaultPresets } from '@/lib/presets/defaultPresets';
 import { useEditorStore } from '@/lib/store/editorStore';
 import { resetEditorStore } from './testUtils';
@@ -37,6 +38,20 @@ describe('editorStore', () => {
     expect(state.document.typography.anchor).toBe('center-left');
     expect(state.document.typography.alignment).toBe('left');
     expect(state.document.motif.position).toEqual({ x: 0.8, y: 0.3 });
+  });
+
+  it('applies an approved palette deterministically', () => {
+    const palette = approvedPaletteDefinitions[1];
+
+    useEditorStore.getState().applyApprovedPalette(palette);
+
+    const state = useEditorStore.getState();
+    expect(state.document.background.paletteName).toBe(palette.name);
+    expect(state.document.background.baseColor).toBe(palette.background);
+    expect(state.document.background.glowColorA).toBe(palette.colors[0]);
+    expect(state.document.background.glowColorB).toBe(palette.colors[1]);
+    expect(state.document.motif.color).toBe(palette.colors[2]);
+    expect(state.document.typography.textColor).toBe(palette.foreground);
   });
 
   it('preserves typography content when toggling through background-only', () => {

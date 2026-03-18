@@ -3,6 +3,11 @@ export const brandColors = {
   charcoal: '#111111',
   fog: '#EDE9E1',
   steel: '#6E6E73',
+  sunflower: '#F8D34D',
+  coral: '#F25F5C',
+  sky: '#66DDE8',
+  meadow: '#63D26C',
+  grape: '#5B3AE6',
   royal: '#6D5EF8',
   orange: '#FF7A00',
   chartreuse: '#C6FF3B',
@@ -13,13 +18,53 @@ export const brandColors = {
 
 export type BrandColorToken = keyof typeof brandColors;
 
-export const approvedPalettes = [
-  ['royal', 'chartreuse', 'ink'],
-  ['orange', 'blush', 'charcoal'],
-  ['emerald', 'violetMist', 'ink'],
-  ['royal', 'blush', 'charcoal'],
-  ['chartreuse', 'steel', 'ink']
-] as const satisfies readonly BrandColorToken[][];
+export type ApprovedPaletteDefinition = {
+  id: string;
+  name: string;
+  background: BrandColorToken;
+  foreground: BrandColorToken;
+  colors: readonly BrandColorToken[];
+};
+
+export const approvedPaletteDefinitions = [
+  {
+    id: 'coral-orbit',
+    name: 'Coral Orbit',
+    background: 'coral',
+    foreground: 'fog',
+    colors: ['coral', 'grape', 'sky', 'fog', 'steel', 'ink']
+  },
+  {
+    id: 'sunburst-recovery',
+    name: 'Sunburst Recovery',
+    background: 'sunflower',
+    foreground: 'ink',
+    colors: ['sunflower', 'grape', 'sky', 'fog', 'steel', 'ink']
+  },
+  {
+    id: 'aqua-recovery',
+    name: 'Aqua Recovery',
+    background: 'sky',
+    foreground: 'ink',
+    colors: ['sky', 'meadow', 'sunflower', 'fog', 'steel', 'ink']
+  },
+  {
+    id: 'meadow-recovery',
+    name: 'Meadow Recovery',
+    background: 'meadow',
+    foreground: 'ink',
+    colors: ['meadow', 'coral', 'grape', 'fog', 'steel', 'ink']
+  },
+  {
+    id: 'grape-recovery',
+    name: 'Grape Recovery',
+    background: 'grape',
+    foreground: 'fog',
+    colors: ['grape', 'sunflower', 'meadow', 'fog', 'steel', 'ink']
+  }
+] as const satisfies readonly ApprovedPaletteDefinition[];
+
+export const approvedPalettes = approvedPaletteDefinitions.map((palette) => palette.colors);
 
 export type ThemeDefinition = {
   id: string;

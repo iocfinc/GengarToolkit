@@ -1,7 +1,8 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import { useState } from 'react';
+import { PaletteGrid } from '@packages/ui/src/PaletteGrid';
+import { CollapsibleSection } from '@packages/ui/src/CollapsibleSection';
+import { approvedPaletteDefinitions } from '@/lib/theme/colors';
 import { AnchorGridField } from '@/components/controls/AnchorGridField';
 import { ColorTokenPicker } from '@/components/controls/ColorTokenPicker';
 import { SelectField } from '@/components/controls/SelectField';
@@ -27,32 +28,6 @@ import {
 } from '@/lib/types/document';
 import { useEditorStore } from '@/lib/store/editorStore';
 
-function Section({
-  title,
-  children,
-  defaultOpen = true
-}: {
-  title: string;
-  children: ReactNode;
-  defaultOpen?: boolean;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-
-  return (
-    <section className="rounded-[22px] border border-white/8 bg-white/[0.03]">
-      <button
-        className="flex w-full items-center justify-between px-4 py-3 text-left"
-        onClick={() => setOpen((current) => !current)}
-        type="button"
-      >
-        <span className="text-sm uppercase tracking-[0.24em] text-white/62">{title}</span>
-        <span className="text-white/36">{open ? '−' : '+'}</span>
-      </button>
-      {open ? <div className="space-y-4 border-t border-white/6 px-4 py-4">{children}</div> : null}
-    </section>
-  );
-}
-
 export function ControlPanel() {
   const document = useEditorStore((state) => state.document);
   const setAspectRatio = useEditorStore((state) => state.setAspectRatio);
@@ -63,11 +38,17 @@ export function ControlPanel() {
   const updateTypography = useEditorStore((state) => state.updateTypography);
   const updateMotion = useEditorStore((state) => state.updateMotion);
   const updateExport = useEditorStore((state) => state.updateExport);
+  const applyApprovedPalette = useEditorStore((state) => state.applyApprovedPalette);
   const setDocumentName = useEditorStore((state) => state.setDocumentName);
+  const selectedPalette =
+    approvedPaletteDefinitions.find((palette) => palette.name === document.background.paletteName) ?? null;
 
   return (
-    <aside className="panel-surface scrollbar-thin flex max-h-[68vh] flex-col gap-3 overflow-y-auto rounded-[28px] p-3">
-      <Section title="Template">
+    <aside
+      className="panel-surface scrollbar-thin flex h-full min-h-0 flex-col gap-3 overflow-y-auto rounded-[28px] p-3"
+      data-testid="motion-control-panel"
+    >
+      <CollapsibleSection defaultOpen={false} title="Template">
         <label className="block">
           <div className="mb-2 text-xs uppercase tracking-[0.18em] text-white/48">Document Name</div>
           <input
@@ -94,9 +75,19 @@ export function ControlPanel() {
           }))}
           value={document.layoutPreset}
         />
-      </Section>
+      </CollapsibleSection>
 
-      <Section title="Background">
+      <CollapsibleSection defaultOpen={false} title="Brand Palette">
+        <PaletteGrid
+          onSelect={(palette) => applyApprovedPalette(palette)}
+          selectedPaletteId={selectedPalette?.id ?? null}
+        />
+        <p className="text-sm text-white/58">
+          Apply one of the image-inspired palette presets, then refine any field below with token or custom hex overrides.
+        </p>
+      </CollapsibleSection>
+
+      <CollapsibleSection defaultOpen={false} title="Background">
         <SelectField
           label="Background Type"
           onChange={(value) => updateBackground({ type: value })}
@@ -177,9 +168,9 @@ export function ControlPanel() {
           onChange={(value) => updateBackground({ vignette: value })}
           value={document.background.vignette}
         />
-      </Section>
+      </CollapsibleSection>
 
-      <Section title="Motif">
+      <CollapsibleSection defaultOpen={false} title="Motif">
         <ToggleField
           checked={document.motif.enabled}
           label="Enable Motif"
@@ -232,9 +223,9 @@ export function ControlPanel() {
           onChange={(value) => updateMotif({ blur: value })}
           value={document.motif.blur}
         />
-      </Section>
+      </CollapsibleSection>
 
-      <Section title="Texture">
+      <CollapsibleSection defaultOpen={false} title="Texture">
         <ToggleField
           checked={document.texture.enabled}
           label="Enable Texture"
@@ -275,9 +266,9 @@ export function ControlPanel() {
           label="Animated Jitter"
           onChange={(value) => updateTexture({ animated: value })}
         />
-      </Section>
+      </CollapsibleSection>
 
-      <Section title="Typography">
+      <CollapsibleSection defaultOpen={false} title="Typography">
         <label className="block">
           <div className="mb-2 text-xs uppercase tracking-[0.18em] text-white/48">Eyebrow</div>
           <input
@@ -353,9 +344,9 @@ export function ControlPanel() {
           onChange={(value) => updateTypography({ maxWidth: value })}
           value={document.typography.maxWidth}
         />
-      </Section>
+      </CollapsibleSection>
 
-      <Section title="Motion">
+      <CollapsibleSection defaultOpen={false} title="Motion">
         <ToggleField
           checked={document.motion.enabled}
           label="Enable Motion"
@@ -393,9 +384,9 @@ export function ControlPanel() {
           onChange={(value) => updateMotion({ amplitude: value })}
           value={document.motion.amplitude}
         />
-      </Section>
+      </CollapsibleSection>
 
-      <Section title="Export">
+      <CollapsibleSection defaultOpen={false} title="Export">
         <SelectField
           label="Format"
           onChange={(value) => updateExport({ format: value })}
@@ -423,7 +414,7 @@ export function ControlPanel() {
           step={1}
           value={document.export.fps}
         />
-      </Section>
+      </CollapsibleSection>
     </aside>
   );
 }

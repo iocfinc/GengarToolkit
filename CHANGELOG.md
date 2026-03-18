@@ -31,6 +31,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Changed
 
+- Motion Toolkit and Data Visualization Toolkit now use an equal-split shared editor shell with collapsed-by-default accordion controls, viewport-contained control scrolling, image-inspired approved palettes, and custom hex color overrides
 - The Data Visualization Toolkit now uses dropdown edit panes, standard 4:5/16:9/1:1 output presets, editable palette overrides, always-on cartesian axes, legend placement under the subheadline, fitted header copy, and a centered Big Number layout
 - Skill guidance and tracked agent profiles now treat maintainer review notes as structured QA input and require immediate screenshot skip reasons when capture tooling is blocked
 - The root landing page now renders a suite launcher from shared registry data instead of redirecting directly into the motion editor
