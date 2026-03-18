@@ -38,7 +38,7 @@ jobs:
               "- Confirm architecture impact is acceptable.",
               "- Confirm tests cover changed behavior.",
               "- Verify `CHANGELOG.md` is updated when required.",
-              "- For frontend-affecting work, confirm screenshot artifacts or an explicit skip reason are included in the PR notes, with Chrome DevTools MCP preferred when configured."
+              "- For frontend-affecting work, confirm screenshot artifacts or an explicit skip reason are included in the PR notes, with Chrome DevTools MCP preferred when configured.",
               "- Confirm the linked issue was updated or a post-ready draft was prepared when live posting was deferred."
             ].join("\n");
             await github.rest.issues.createComment({
