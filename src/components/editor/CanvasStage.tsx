@@ -2,12 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { aspectRatioLabels } from '@/lib/types/controls';
-import { getLogicalCanvasSize } from '@/lib/render/renderSizing';
+import { getLogicalCanvasSize, getPreviewDisplaySize } from '@/lib/render/renderSizing';
 import { drawScene } from '@/lib/render/sceneRenderer';
 import { useEditorStore } from '@/lib/store/editorStore';
 
 export function CanvasStage() {
   const aspectRatio = useEditorStore((state) => state.document.aspectRatio);
+  const documentUpdatedAt = useEditorStore((state) => state.document.updatedAt);
+  const motionPlaying = useEditorStore((state) => state.document.motion.playing);
   const ui = useEditorStore((state) => state.ui);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -50,8 +52,7 @@ export function CanvasStage() {
       const state = useEditorStore.getState();
       const rect = canvas.parentElement?.getBoundingClientRect();
 
-      if (!rect) {
-        frameId = requestAnimationFrame(render);
+      if (!rect || rect.width <= 0 || rect.height <= 0) {
         return;
       }
 
@@ -65,14 +66,15 @@ export function CanvasStage() {
       canvas.height = Math.max(1, Math.floor(viewportHeight * dpr));
 
       // Stable viewport: canvas fills container; scale/center the logical scene inside.
-      const scale = Math.min(
-        viewportWidth / logicalSize.width,
-        viewportHeight / logicalSize.height
-      ) * state.ui.zoom;
-      const scaledWidth = logicalSize.width * scale;
-      const scaledHeight = logicalSize.height * scale;
-      const offsetX = (viewportWidth - scaledWidth) / 2;
-      const offsetY = (viewportHeight - scaledHeight) / 2;
+      const previewSize = getPreviewDisplaySize(
+        viewportWidth,
+        viewportHeight,
+        state.document.aspectRatio,
+        state.ui.zoom
+      );
+      const scale = previewSize.width / logicalSize.width;
+      const offsetX = (viewportWidth - previewSize.width) / 2;
+      const offsetY = (viewportHeight - previewSize.height) / 2;
 
       context.setTransform(scale * dpr, 0, 0, scale * dpr, offsetX * dpr, offsetY * dpr);
 
@@ -93,13 +95,32 @@ export function CanvasStage() {
         showGrid: state.ui.showGrid,
         showSafeMargins: state.ui.showSafeMargins
       });
-
-      frameId = requestAnimationFrame(render);
     };
 
-    frameId = requestAnimationFrame(render);
+    const animate = (now: number) => {
+      render(now);
+      if (useEditorStore.getState().document.motion.playing) {
+        frameId = requestAnimationFrame(animate);
+      }
+    };
+
+    render(typeof performance !== 'undefined' ? performance.now() : 0);
+
+    if (motionPlaying) {
+      frameId = requestAnimationFrame(animate);
+    }
+
     return () => cancelAnimationFrame(frameId);
-  }, []);
+  }, [
+    aspectRatio,
+    bounds.height,
+    bounds.width,
+    documentUpdatedAt,
+    motionPlaying,
+    ui.showGrid,
+    ui.showSafeMargins,
+    ui.zoom
+  ]);
 
   const stageLabel = useMemo(
     () => aspectRatioLabels[aspectRatio],
@@ -107,14 +128,14 @@ export function CanvasStage() {
   );
 
   return (
-    <section className="panel-surface relative flex min-h-[68vh] flex-col overflow-hidden rounded-[28px] p-4 transition-none">
+    <section className="panel-surface relative flex h-full min-h-0 flex-col overflow-hidden rounded-[28px] p-4 transition-none">
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className="text-[11px] uppercase tracking-[0.3em] text-white/40">Live Canvas</p>
           <h2 className="mt-1 font-display text-2xl text-fog">{stageLabel}</h2>
         </div>
         <div className="rounded-full border border-white/8 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.2em] text-white/56">
-          {(ui.zoom * 100).toFixed(0)}% Zoom
+          Preview Scale {(ui.zoom * 100).toFixed(0)}%
         </div>
       </div>
       <div

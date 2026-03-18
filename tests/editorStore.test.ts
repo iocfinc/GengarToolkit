@@ -18,6 +18,7 @@ describe('editorStore', () => {
     expect(state.document.name).toBeTruthy();
     expect(state.document.background.type).toBe('mesh-field');
     expect(state.document.export.format).toBe('png');
+    expect(state.document.motion.playing).toBe(false);
   });
 
   it('updates background state and refreshes updatedAt', () => {
@@ -111,6 +112,7 @@ describe('editorStore', () => {
     let state = useEditorStore.getState();
     expect(state.hydrated).toBe(true);
     expect(state.document.name).toBe(defaultPresets[1]?.document.name);
+    expect(state.document.motion.playing).toBe(false);
 
     resetEditorStore();
     window.localStorage.setItem(
@@ -125,5 +127,30 @@ describe('editorStore', () => {
     state = useEditorStore.getState();
     expect(state.presets[0]?.name).toBe(defaultPresets[0]?.name);
     expect(state.document.name).toBe(defaultPresets[0]?.document.name);
+  });
+
+  it('forces hydrated legacy presets to start paused', () => {
+    window.localStorage.setItem(
+      PRESETS_KEY,
+      JSON.stringify({
+        version: PRESETS_STORAGE_VERSION,
+        data: [
+          {
+            ...defaultPresets[0],
+            document: {
+              ...defaultPresets[0]?.document,
+              motion: {
+                ...defaultPresets[0]?.document.motion,
+                playing: true
+              }
+            }
+          }
+        ]
+      })
+    );
+
+    useEditorStore.getState().hydrate();
+
+    expect(useEditorStore.getState().document.motion.playing).toBe(false);
   });
 });

@@ -24,6 +24,23 @@ describe('ControlPanel', () => {
     expect(screen.queryByLabelText('Document Name')).not.toBeInTheDocument();
   });
 
+  it('focuses one section at a time and gives the active section the full pane', async () => {
+    const user = userEvent.setup();
+
+    render(<ControlPanel />);
+    await user.click(screen.getByRole('button', { name: 'Background' }));
+
+    expect(screen.getByRole('button', { name: 'Background' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByLabelText('Background Type')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Template' })).not.toBeInTheDocument();
+    expect(screen.getByText('Base Color').closest('.panel-surface')).toBeTruthy();
+
+    await user.click(screen.getByRole('button', { name: 'Background' }));
+
+    expect(screen.getByRole('button', { name: 'Template' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Background' })).toHaveAttribute('aria-expanded', 'false');
+  });
+
   it('applies an approved palette to the motion document', async () => {
     const user = userEvent.setup();
 

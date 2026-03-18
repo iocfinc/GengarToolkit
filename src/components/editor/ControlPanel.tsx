@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { PaletteGrid } from '@packages/ui/src/PaletteGrid';
 import { CollapsibleSection } from '@packages/ui/src/CollapsibleSection';
 import { approvedPaletteDefinitions } from '@/lib/theme/colors';
@@ -28,7 +29,18 @@ import {
 } from '@/lib/types/document';
 import { useEditorStore } from '@/lib/store/editorStore';
 
+type SectionId =
+  | 'template'
+  | 'brand-palette'
+  | 'background'
+  | 'motif'
+  | 'texture'
+  | 'typography'
+  | 'motion'
+  | 'export';
+
 export function ControlPanel() {
+  const [activeSection, setActiveSection] = useState<SectionId | null>(null);
   const document = useEditorStore((state) => state.document);
   const setAspectRatio = useEditorStore((state) => state.setAspectRatio);
   const setLayoutPreset = useEditorStore((state) => state.setLayoutPreset);
@@ -43,12 +55,28 @@ export function ControlPanel() {
   const selectedPalette =
     approvedPaletteDefinitions.find((palette) => palette.name === document.background.paletteName) ?? null;
 
+  function handleSectionChange(sectionId: SectionId, open: boolean) {
+    setActiveSection(open ? sectionId : null);
+  }
+
+  const activeSectionCardClass = 'flex min-h-0 flex-1 flex-col';
+  const activeSectionContentClass = 'min-h-0 flex-1 overflow-y-auto scrollbar-thin';
+
   return (
     <aside
-      className="panel-surface scrollbar-thin flex h-full min-h-0 flex-col gap-3 overflow-y-auto rounded-[28px] p-3"
+      className={`panel-surface flex h-full min-h-0 flex-col gap-3 rounded-[28px] p-3 ${
+        activeSection ? 'overflow-hidden' : 'overflow-y-auto scrollbar-thin'
+      }`}
       data-testid="motion-control-panel"
     >
-      <CollapsibleSection defaultOpen={false} title="Template">
+      {(!activeSection || activeSection === 'template') ? (
+      <CollapsibleSection
+        className={activeSection === 'template' ? activeSectionCardClass : ''}
+        contentClassName={activeSection === 'template' ? activeSectionContentClass : ''}
+        onOpenChange={(open) => handleSectionChange('template', open)}
+        open={activeSection === 'template'}
+        title="Template"
+      >
         <label className="block">
           <div className="mb-2 text-xs uppercase tracking-[0.18em] text-white/48">Document Name</div>
           <input
@@ -76,8 +104,16 @@ export function ControlPanel() {
           value={document.layoutPreset}
         />
       </CollapsibleSection>
+      ) : null}
 
-      <CollapsibleSection defaultOpen={false} title="Brand Palette">
+      {(!activeSection || activeSection === 'brand-palette') ? (
+      <CollapsibleSection
+        className={activeSection === 'brand-palette' ? activeSectionCardClass : ''}
+        contentClassName={activeSection === 'brand-palette' ? activeSectionContentClass : ''}
+        onOpenChange={(open) => handleSectionChange('brand-palette', open)}
+        open={activeSection === 'brand-palette'}
+        title="Brand Palette"
+      >
         <PaletteGrid
           onSelect={(palette) => applyApprovedPalette(palette)}
           selectedPaletteId={selectedPalette?.id ?? null}
@@ -86,8 +122,16 @@ export function ControlPanel() {
           Apply one of the image-inspired palette presets, then refine any field below with token or custom hex overrides.
         </p>
       </CollapsibleSection>
+      ) : null}
 
-      <CollapsibleSection defaultOpen={false} title="Background">
+      {(!activeSection || activeSection === 'background') ? (
+      <CollapsibleSection
+        className={activeSection === 'background' ? activeSectionCardClass : ''}
+        contentClassName={activeSection === 'background' ? activeSectionContentClass : ''}
+        onOpenChange={(open) => handleSectionChange('background', open)}
+        open={activeSection === 'background'}
+        title="Background"
+      >
         <SelectField
           label="Background Type"
           onChange={(value) => updateBackground({ type: value })}
@@ -169,8 +213,16 @@ export function ControlPanel() {
           value={document.background.vignette}
         />
       </CollapsibleSection>
+      ) : null}
 
-      <CollapsibleSection defaultOpen={false} title="Motif">
+      {(!activeSection || activeSection === 'motif') ? (
+      <CollapsibleSection
+        className={activeSection === 'motif' ? activeSectionCardClass : ''}
+        contentClassName={activeSection === 'motif' ? activeSectionContentClass : ''}
+        onOpenChange={(open) => handleSectionChange('motif', open)}
+        open={activeSection === 'motif'}
+        title="Motif"
+      >
         <ToggleField
           checked={document.motif.enabled}
           label="Enable Motif"
@@ -224,8 +276,16 @@ export function ControlPanel() {
           value={document.motif.blur}
         />
       </CollapsibleSection>
+      ) : null}
 
-      <CollapsibleSection defaultOpen={false} title="Texture">
+      {(!activeSection || activeSection === 'texture') ? (
+      <CollapsibleSection
+        className={activeSection === 'texture' ? activeSectionCardClass : ''}
+        contentClassName={activeSection === 'texture' ? activeSectionContentClass : ''}
+        onOpenChange={(open) => handleSectionChange('texture', open)}
+        open={activeSection === 'texture'}
+        title="Texture"
+      >
         <ToggleField
           checked={document.texture.enabled}
           label="Enable Texture"
@@ -267,8 +327,16 @@ export function ControlPanel() {
           onChange={(value) => updateTexture({ animated: value })}
         />
       </CollapsibleSection>
+      ) : null}
 
-      <CollapsibleSection defaultOpen={false} title="Typography">
+      {(!activeSection || activeSection === 'typography') ? (
+      <CollapsibleSection
+        className={activeSection === 'typography' ? activeSectionCardClass : ''}
+        contentClassName={activeSection === 'typography' ? activeSectionContentClass : ''}
+        onOpenChange={(open) => handleSectionChange('typography', open)}
+        open={activeSection === 'typography'}
+        title="Typography"
+      >
         <label className="block">
           <div className="mb-2 text-xs uppercase tracking-[0.18em] text-white/48">Eyebrow</div>
           <input
@@ -345,8 +413,16 @@ export function ControlPanel() {
           value={document.typography.maxWidth}
         />
       </CollapsibleSection>
+      ) : null}
 
-      <CollapsibleSection defaultOpen={false} title="Motion">
+      {(!activeSection || activeSection === 'motion') ? (
+      <CollapsibleSection
+        className={activeSection === 'motion' ? activeSectionCardClass : ''}
+        contentClassName={activeSection === 'motion' ? activeSectionContentClass : ''}
+        onOpenChange={(open) => handleSectionChange('motion', open)}
+        open={activeSection === 'motion'}
+        title="Motion"
+      >
         <ToggleField
           checked={document.motion.enabled}
           label="Enable Motion"
@@ -385,8 +461,16 @@ export function ControlPanel() {
           value={document.motion.amplitude}
         />
       </CollapsibleSection>
+      ) : null}
 
-      <CollapsibleSection defaultOpen={false} title="Export">
+      {(!activeSection || activeSection === 'export') ? (
+      <CollapsibleSection
+        className={activeSection === 'export' ? activeSectionCardClass : ''}
+        contentClassName={activeSection === 'export' ? activeSectionContentClass : ''}
+        onOpenChange={(open) => handleSectionChange('export', open)}
+        open={activeSection === 'export'}
+        title="Export"
+      >
         <SelectField
           label="Format"
           onChange={(value) => updateExport({ format: value })}
@@ -415,6 +499,7 @@ export function ControlPanel() {
           value={document.export.fps}
         />
       </CollapsibleSection>
+      ) : null}
     </aside>
   );
 }

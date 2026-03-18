@@ -78,7 +78,7 @@ export function createDocument(
     motion: {
       enabled: true,
       behavior: 'drift',
-      playing: true,
+      playing: false,
       speed: 0.48,
       amplitude: 0.06,
       loopDuration: 6,

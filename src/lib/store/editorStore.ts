@@ -59,6 +59,21 @@ function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
 }
 
+function withPausedMotion(document: BrandDocument): BrandDocument {
+  if (!document.motion.playing) {
+    return document;
+  }
+
+  return {
+    ...document,
+    motion: {
+      ...document.motion,
+      playing: false
+    },
+    updatedAt: nowIso()
+  };
+}
+
 function applyLayoutPreset(
   document: BrandDocument,
   layoutPreset: LayoutPreset
@@ -256,8 +271,8 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     set({
       presets,
       activePresetId: presets[0]?.id ?? null,
-      document: brandDocumentSchema.parse(
-        presets[0]?.document ?? createDocument()
+      document: withPausedMotion(
+        brandDocumentSchema.parse(presets[0]?.document ?? createDocument())
       ),
       hydrated: true
     });
@@ -368,11 +383,13 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
       }
 
       return {
-        document: brandDocumentSchema.parse({
-          ...preset.document,
-          id: createId('doc'),
-          updatedAt: nowIso()
-        }),
+        document: withPausedMotion(
+          brandDocumentSchema.parse({
+            ...preset.document,
+            id: createId('doc'),
+            updatedAt: nowIso()
+          })
+        ),
         activePresetId: preset.id,
         ui: {
           ...state.ui,
