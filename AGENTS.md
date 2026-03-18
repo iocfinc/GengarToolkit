@@ -83,4 +83,4 @@ Before implementing code changes:
 - `.github/workflows/pr-review.yml` runs `npm ci`, executes `npm run test:ci`, and posts review guidance for `agent/skills/analyze_pr.md`.
 - `.github/workflows/changelog-guard.yml` requires `CHANGELOG.md` updates when `src/`, `agent/`, or `.github/` changes are included without a `skip-changelog` label.
 - `.github/workflows/post-merge-changelog.yml` opens a follow-up issue to run `agent/skills/write_changelog.md` when merged tracked changes missed `CHANGELOG.md`.
-- Frontend review readiness should include `browser_debugger` plus `browser_screenshot` when browser tooling is available, preferring Chrome DevTools MCP when configured. Terminal/app workflow review readiness should include a screenshot artifact path and a short note on what the capture proves.
+- Frontend review readiness should include `bounty_hunter` plus `sniper` when browser tooling is available, preferring Chrome DevTools MCP when configured. Terminal/app workflow review readiness should include a screenshot artifact path and a short note on what the capture proves.

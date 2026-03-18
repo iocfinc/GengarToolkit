@@ -45,7 +45,7 @@ describe('multi-agent scaffold', () => {
     const skills = readText(skillsPath);
     const roleIds = extractAgentIds(config);
 
-    expect(roleIds).toContain('browser_screenshot');
+    expect(roleIds).toContain('sniper');
 
     for (const roleId of roleIds) {
       expect(skills).toContain(`\`${roleId}\``);

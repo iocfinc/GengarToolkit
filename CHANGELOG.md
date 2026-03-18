@@ -2,6 +2,17 @@
 
 This changelog tracks notable repository changes. Add new entries to the topmost version section unless the package version is explicitly bumped.
 
+## Unreleased
+
+### Added
+
+- Test coverage confirmations for editor sizing/preview parity, preset persistence/versioned storage, and export engine surface; minor test adjustments where needed.
+
+### Changed
+
+- Tracked sub-agent invocations renamed to unique DOTA hero names: explorer→slardar, design_guardian→omniknight, frontend_architect→tinker, chart_engine→kunkka, export_engine→gyrocopter, browser_debugger→bounty_hunter, browser_screenshot→sniper, openai_docs_researcher→oracle, docs_writer→clinkz. Updated `.codex/config.toml`, skills, roadmap, and workflow docs accordingly.
+- Updated contributor guidance and tests to reference `sniper` for screenshot evidence and `bounty_hunter` for interactive browser debugging.
+
 ## Version 0.1.0
 
 ### Added
