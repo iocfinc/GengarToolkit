@@ -7,7 +7,7 @@ import { PreviewSurface } from '@packages/studio-shell/src/PreviewSurface';
 
 describe('EditorShell', () => {
   it('renders shared header, preview, controls, and footer panes', () => {
-    render(
+    const { container } = render(
       <EditorShell
         controls={<div>Controls</div>}
         footer={<div>Footer</div>}
@@ -20,10 +20,14 @@ describe('EditorShell', () => {
       />
     );
 
+    expect(container.firstChild).toHaveClass('h-screen', 'overflow-hidden');
     expect(screen.getByText('Shared title')).toBeInTheDocument();
-    expect(screen.getByTestId('editor-shell-panes')).toHaveClass('grid-cols-[minmax(0,1fr)_380px]');
+    expect(screen.getByTestId('editor-shell-panes')).toHaveClass('md:grid-cols-2');
+    expect(screen.getByTestId('editor-shell-panes')).toHaveClass('min-h-0');
     expect(screen.getByTestId('editor-shell-preview-pane')).toHaveTextContent('Preview');
     expect(screen.getByTestId('editor-shell-controls-pane')).toHaveTextContent('Controls');
+    expect(screen.getByTestId('editor-shell-preview-pane')).toHaveClass('overflow-hidden');
+    expect(screen.getByTestId('editor-shell-controls-pane')).toHaveClass('overflow-hidden');
     expect(screen.getByText('Footer')).toBeInTheDocument();
     expect(screen.getByTestId('preview-surface')).toBeInTheDocument();
   });

@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { approvedPalettes } from '@packages/design-tokens/src/colors';
+import { approvedPaletteDefinitions } from '@packages/design-tokens/src/colors';
 import { PaletteGrid } from '@packages/ui/src/PaletteGrid';
 
 describe('PaletteGrid', () => {
@@ -13,9 +13,9 @@ describe('PaletteGrid', () => {
     render(<PaletteGrid onSelect={onSelect} />);
 
     expect(screen.getByTestId('palette-grid')).toBeInTheDocument();
-    expect(screen.getAllByRole('button')).toHaveLength(approvedPalettes.length);
+    expect(screen.getAllByRole('button')).toHaveLength(approvedPaletteDefinitions.length);
 
-    await user.click(screen.getByRole('button', { name: /Palette 1/i }));
-    expect(onSelect).toHaveBeenCalledWith(approvedPalettes[0]);
+    await user.click(screen.getByRole('button', { name: approvedPaletteDefinitions[0].name }));
+    expect(onSelect).toHaveBeenCalledWith(approvedPaletteDefinitions[0]);
   });
 });

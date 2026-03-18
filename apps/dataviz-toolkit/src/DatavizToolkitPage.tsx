@@ -293,8 +293,8 @@ export function DatavizToolkitPage() {
   return (
     <EditorShell
       controls={
-        <div className="space-y-4 overflow-y-auto pr-1">
-          <CollapsibleSection defaultOpen title="Story">
+        <div className="scrollbar-thin flex h-full min-h-0 flex-col gap-4 overflow-y-auto pr-1">
+          <CollapsibleSection defaultOpen={false} title="Story">
             <Field label="Preset Name" onChange={setPresetName} value={presetName} />
             <Field label="Headline" onChange={setHeadline} value={headline} />
             <TextAreaField label="Subheadline" onChange={setSubheadline} value={subheadline} />
@@ -302,7 +302,7 @@ export function DatavizToolkitPage() {
             <TextAreaField label="Annotations" onChange={setAnnotationsInput} value={annotationsInput} />
           </CollapsibleSection>
 
-          <CollapsibleSection defaultOpen title="Template & Output">
+          <CollapsibleSection defaultOpen={false} title="Template & Output">
             <SelectField
               label="Chart Template"
               onChange={(value) => setTemplate(value as DatavizTemplate)}
@@ -351,7 +351,7 @@ export function DatavizToolkitPage() {
             />
           </CollapsibleSection>
 
-          <CollapsibleSection defaultOpen title="Data & Mapping">
+          <CollapsibleSection defaultOpen={false} title="Data & Mapping">
             <SelectField
               label="Input Mode"
               onChange={(value) => setInputMode(value as 'csv' | 'table' | 'json')}

@@ -28,7 +28,7 @@ Before implementing code changes:
 3. For non-trivial work, load the lead/sub-agent guidance in `skills.md` and delegate bounded exploration, implementation, QA, or docs tasks through the tracked profiles in `.codex/config.toml` and `agents/`.
 4. Generate a structured plan.
 5. Decide implementation order and whether any valid features should be deferred to `agent/memory/roadmap.md`.
-6. For frontend-affecting work, include a browser visual-validation pass and capture screenshot artifacts when browser tooling is available. For terminal or desktop-app workflow fixes, capture equivalent screenshot evidence with the screenshot skill.
+6. For frontend-affecting work, include a browser visual-validation pass and capture screenshot artifacts when browser tooling is available. Prefer Chrome DevTools MCP for browser debugging and screenshot capture when it is configured. For terminal or desktop-app workflow fixes, capture equivalent screenshot evidence with the screenshot skill.
 7. If the workflow itself needs changes to support the run, land those workflow updates before spawning dependent issue branches.
 8. Create a branch named `codex/GENGARVIS-###-short-slug`.
 9. Implement the minimal change set.
@@ -55,6 +55,7 @@ Before implementing code changes:
 - Update `agent/memory/` when a design decision, durable feature record, or known issue changes.
 - Keep changes reviewable and aligned with the current editor behavior unless the request explicitly changes behavior.
 - Keep one issue or feature per pull request. If a valid feature would widen or block bug-fix work, add it to `agent/memory/roadmap.md` and keep the issue open.
+- If a maintainer explicitly approves a combined PR, keep the exception narrow, separate product and workflow domains into distinct commits, and call out the exception in the PR notes.
 - Pull requests must include the debugging steps and notes that led to the fix.
 - Frontend-affecting work should include visual QA artifacts or an explicit skip reason in the PR notes. Terminal or desktop-app workflow fixes should include equivalent screenshot evidence or a documented skip reason.
 
@@ -83,4 +84,4 @@ Before implementing code changes:
 - `.github/workflows/pr-review.yml` runs `npm ci`, executes `npm run test:ci`, and posts review guidance for `agent/skills/analyze_pr.md`.
 - `.github/workflows/changelog-guard.yml` requires `CHANGELOG.md` updates when `src/`, `agent/`, or `.github/` changes are included without a `skip-changelog` label.
 - `.github/workflows/post-merge-changelog.yml` opens a follow-up issue to run `agent/skills/write_changelog.md` when merged tracked changes missed `CHANGELOG.md`.
-- Frontend review readiness should include `browser_debugger` plus `browser_screenshot` when browser tooling is available. Terminal/app workflow review readiness should include a screenshot artifact path and a short note on what the capture proves.
+- Frontend review readiness should include `browser_debugger` plus `browser_screenshot` when browser tooling is available, preferring Chrome DevTools MCP when configured. Terminal/app workflow review readiness should include a screenshot artifact path and a short note on what the capture proves.

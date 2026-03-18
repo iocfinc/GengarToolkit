@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-03-16
+Last updated: 2026-03-18
 
 This roadmap turns open feature issues into a reviewable delivery plan. Use it to sequence feature work, track dependencies, and record the multi-agent execution path for each issue.
 
@@ -27,6 +27,7 @@ This roadmap turns open feature issues into a reviewable delivery plan. Use it t
 ## Working Rules
 
 - Default to one issue per branch and one issue per pull request.
+- Maintainer-directed combined PRs are allowed as narrow exceptions when commit boundaries stay explicit and the PR notes document the exception.
 - Use Cycle Mode only when a maintainer explicitly requests one shared delivery branch with checkpoint commits per issue.
 - Compare roadmap decisions against committed `HEAD`, not uncommitted local WIP.
 - Update `CHANGELOG.md` for shipped work.
@@ -72,7 +73,7 @@ Goal: finish the shared package and shell layer needed by every toolkit.
 - `#37` Create shared output preset catalog for social, LinkedIn, and print formats — `Review`
   - Current branch lands the shared metadata catalog first; selector adoption follows in later toolkit work.
 - `#38` Standardize toolkit editor shell with fitted preview and palette-first controls — `Review`
-  - Current branch lands shared shell primitives plus Motion Toolkit adoption; broader toolkit adoption remains a follow-through item for later cycles.
+  - Current branch lands shared shell primitives plus Motion Toolkit adoption, static preview startup, fixed preview-pane sizing, and single-active long-form controls; broader toolkit adoption remains a follow-through item for later cycles.
 
 ### Cycle 2 — Data Visualization Toolkit MVP
 
@@ -112,7 +113,7 @@ Goal: stabilize suite behavior once the shared foundations and toolkit slices ar
 - `#33` Shared brand guardrail validation — `Blocked`
   - Best scheduled after `#19`, `#20`, and the shared shell controls are stable.
 - `#34` Regression coverage for preview/export parity — `Planned`
-  - Can expand alongside each shipped slice, then harden the suite as a whole.
+  - Current branch adds preview-stability and shell-behavior regression coverage; broader preview/export parity hardening should continue alongside later slices.
 - `#35` Update changelog and agent memory for suite architecture — `Planned`
   - Should track actual merged architecture changes, not speculative local WIP.
 
@@ -149,3 +150,4 @@ Use this structure when an item moves from roadmap review into active implementa
 
 - `2026-03-15`: Created the root roadmap from the open feature queue, the current agent workflow rules, and the handover plan at `/tmp/gengartoolkit-next-feature-workplan.md`.
 - `2026-03-16`: Updated Cycle 1 items to review status after the shared package, motion-route, preset-catalog, and shell-groundwork commits were stacked on the cycle branch.
+- `2026-03-18`: Recorded the current branch’s preview-stability, fixed-pane shell, and single-active controls behavior under `#38`, plus the supporting regression-hardening progress under `#34`.

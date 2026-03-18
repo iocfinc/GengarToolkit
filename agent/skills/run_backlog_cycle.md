@@ -41,7 +41,7 @@ Use this skill to autonomously work the open GitHub backlog: validate issues, se
 12. In Issue Mode, create separate branches and separate pull requests. In Cycle Mode, create one shared branch and keep one checkpoint commit per issue slice.
 13. Implement the minimal change set for each item, add tests with `agent/skills/generate_tests.md`, and update `CHANGELOG.md`.
 14. For frontend-affecting work, run the appropriate visual-validation path before PR preparation: `browser_debugger` for interactive investigation, `browser_screenshot` for artifact capture, or record a concrete skip reason.
-15. Before opening or updating a PR, run `agent/skills/comment_issue_update.md` so the linked issue records summary, root cause or rationale, validation, PR link, and any visual-validation artifact notes.
+15. Before opening or updating a PR, run `agent/skills/comment_issue_update.md` so the linked issue records summary, root cause or rationale, validation, PR link, and any visual-validation artifact notes, or so a post-ready draft exists when live posting is deferred.
 16. Mark the work complete only when validation confirms the bug fix or feature behavior, the PR has been pushed for review, and the sub-agent evidence or skip reasons are recorded.
 17. After the delivery step, record what worked, what slowed the task down, and any needed skill or workflow updates in `agent/memory/workflow_learnings.md`.
 
@@ -65,6 +65,7 @@ Use this skill to autonomously work the open GitHub backlog: validate issues, se
 - committed-`HEAD` reality check, branch plan, and evidence plan are recorded
 - invalid or ambiguous work is either left for more input or moved into the roadmap
 - exactly one issue or feature is shipped per pull request, with workflow infrastructure merged first when needed
+- maintainer-approved combined PRs are treated as explicit exceptions and keep commit boundaries clear by domain
 - delegation is explicit enough to audit which tracked profiles actually ran
 - completion is tied to validation plus a pushed PR
 - workflow reflection is logged after delivery

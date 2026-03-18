@@ -55,10 +55,10 @@ export function BottomBar() {
         </button>
         <button
           className="rounded-full border border-white/10 px-4 py-2 text-sm text-white/78"
-          onClick={() => setUi({ zoom: ui.zoom === 1 ? 0.85 : 1 })}
+          onClick={() => setUi({ zoom: 1 })}
           type="button"
         >
-          Zoom {ui.zoom === 1 ? 'Fit' : '100%'}
+          Zoom Fit
         </button>
       </div>
     </div>

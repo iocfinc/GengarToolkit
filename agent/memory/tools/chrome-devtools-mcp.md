@@ -1,6 +1,6 @@
-# Chrome DevTools MCP for Screenshot Capture
+# Chrome DevTools MCP for Browser Debugging and Screenshot Capture
 
-This repo’s `browser_screenshot` sub‑agent can use the Chrome DevTools MCP server to capture deterministic screenshots for PR validation.
+This repo’s `browser_debugger` and `browser_screenshot` sub-agents can use the Chrome DevTools MCP server for deterministic browser debugging and screenshot capture.
 
 ## Why
 
@@ -25,10 +25,10 @@ This repo’s `browser_screenshot` sub‑agent can use the Chrome DevTools MCP s
 
 ## Agent usage
 
+- The `browser_debugger` agent should prefer Chrome MCP when available so console inspection, DOM state checks, and deterministic reproduction stay in the browser tooling path.
 - The `browser_screenshot` agent prefers Chrome MCP when available. If it cannot connect, it records a skip reason and falls back to OS-level capture.
 - Recommended viewport for editor proofs: `{ width: 1600, height: 900, deviceScaleFactor: 2 }`.
 
 ## PR notes
 
 - Include: artifact path(s), capture method (`chrome-mcp`), and a one‑line note describing what each screenshot proves.
-

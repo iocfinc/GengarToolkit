@@ -18,7 +18,7 @@ import type {
   TextureConfig,
   TypographyConfig
 } from '@/lib/types/document';
-import { approvedPalettes } from '@/lib/theme/colors';
+import { approvedPalettes, type ApprovedPaletteDefinition } from '@/lib/theme/colors';
 import { createDocument, defaultPresets } from '@/lib/presets/defaultPresets';
 
 const PRESETS_KEY = 'dioscuri-motion-presets-v1';
@@ -57,6 +57,21 @@ function createId(prefix: string) {
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
+}
+
+function withPausedMotion(document: BrandDocument): BrandDocument {
+  if (!document.motion.playing) {
+    return document;
+  }
+
+  return {
+    ...document,
+    motion: {
+      ...document.motion,
+      playing: false
+    },
+    updatedAt: nowIso()
+  };
 }
 
 function applyLayoutPreset(
@@ -223,6 +238,7 @@ type EditorStore = {
   updateTypography: (patch: Partial<TypographyConfig>) => void;
   updateMotion: (patch: Partial<MotionConfig>) => void;
   updateExport: (patch: Partial<ExportConfig>) => void;
+  applyApprovedPalette: (palette: ApprovedPaletteDefinition) => void;
   setDocumentName: (name: string) => void;
   randomizeDocument: (mode?: 'soft' | 'full') => void;
   resetDocument: () => void;
@@ -255,8 +271,8 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     set({
       presets,
       activePresetId: presets[0]?.id ?? null,
-      document: brandDocumentSchema.parse(
-        presets[0]?.document ?? createDocument()
+      document: withPausedMotion(
+        brandDocumentSchema.parse(presets[0]?.document ?? createDocument())
       ),
       hydrated: true
     });
@@ -296,6 +312,28 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   updateExport: (patch) =>
     set((state) => ({
       document: patchDocument(state.document, 'export', patch)
+    })),
+  applyApprovedPalette: (palette) =>
+    set((state) => ({
+      document: {
+        ...state.document,
+        background: {
+          ...state.document.background,
+          paletteName: palette.name,
+          baseColor: palette.background,
+          glowColorA: palette.colors[0] ?? state.document.background.glowColorA,
+          glowColorB: palette.colors[1] ?? state.document.background.glowColorB
+        },
+        motif: {
+          ...state.document.motif,
+          color: palette.colors[2] ?? palette.colors[0] ?? state.document.motif.color
+        },
+        typography: {
+          ...state.document.typography,
+          textColor: palette.foreground
+        },
+        updatedAt: nowIso()
+      }
     })),
   setDocumentName: (name) =>
     set((state) => ({
@@ -345,11 +383,13 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
       }
 
       return {
-        document: brandDocumentSchema.parse({
-          ...preset.document,
-          id: createId('doc'),
-          updatedAt: nowIso()
-        }),
+        document: withPausedMotion(
+          brandDocumentSchema.parse({
+            ...preset.document,
+            id: createId('doc'),
+            updatedAt: nowIso()
+          })
+        ),
         activePresetId: preset.id,
         ui: {
           ...state.ui,
