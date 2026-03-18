@@ -24,7 +24,8 @@ Use the lead product engineer flow in the main thread to keep planning, sequenci
 4. `export_engine` when render or export behavior changes
 5. `browser_debugger`
 6. `browser_screenshot` for frontend-affecting validation artifacts
-7. `docs_writer`
+7. `openai_docs_researcher` when the feature depends on current OpenAI, Codex, or MCP documentation
+8. `docs_writer`
 
 ### Bug fix
 
@@ -33,7 +34,8 @@ Use the lead product engineer flow in the main thread to keep planning, sequenci
 3. `browser_debugger` when the flow is UI-facing
 4. relevant implementation agent
 5. `browser_screenshot` when the fix changes visible behavior
-6. `docs_writer` only when workflow or contributor guidance changes
+6. `openai_docs_researcher` when the fix depends on current OpenAI, Codex, or MCP documentation
+7. `docs_writer` only when workflow or contributor guidance changes
 
 ## Role Contracts
 
@@ -61,6 +63,11 @@ Own deterministic export behavior, render parity, and motion-capable scene contr
 
 Run the app, reproduce frontend bugs, inspect console and layout failures, and report the smallest likely fix.
 
+Preferred debug backend:
+
+- Use Chrome DevTools MCP first when it is configured and reachable.
+- Fall back to browser-native tooling only when Chrome MCP is unavailable, and return a concrete skip reason if neither path works.
+
 ### `browser_screenshot`
 
 Use browser-native tooling first, including Chrome MCP when available. Start the app when needed, open the changed flows, capture screenshots for the relevant feature states, flag obvious layout, overflow, styling, console, or interaction regressions, and return artifact paths plus a short visual QA summary for PR-ready validation evidence.
@@ -73,6 +80,15 @@ Fallback behavior:
 - If capture is blocked, interrupted, or times out, return a concrete skip reason immediately instead of waiting indefinitely.
 - For terminal, desktop-app, or agent-workflow fixes, capture equivalent terminal/app evidence with the screenshot skill and reference the artifact path in the PR notes.
 - Store captures in temp or other local artifacts; do not commit screenshots to the repo by default unless the task explicitly asks for a durable docs asset.
+
+### `openai_docs_researcher`
+
+Use this agent when a change depends on current OpenAI, Codex, or MCP behavior and the repo should rely on official developer docs rather than memory.
+
+Preferred docs backend:
+
+- Use the OpenAI developer docs MCP server first.
+- Return concrete doc URLs and call out when the docs do not fully answer the question.
 
 ### `docs_writer`
 

@@ -28,12 +28,16 @@ description = "Export and render specialist for deterministic output, compatibil
 config_file = "../agents/export-engine.toml"
 
 [agents.browser_debugger]
-description = "UI debugger that runs the product, captures repro steps, inspects console and layout failures, and reports the smallest plausible fix."
+description = "UI debugger that runs the product, prefers Chrome DevTools MCP when configured, captures repro steps, inspects console and layout failures, and reports the smallest plausible fix."
 config_file = "../agents/browser-debugger.toml"
 
 [agents.browser_screenshot]
-description = "Browser screenshot specialist that captures feature states, flags obvious visual regressions, and returns artifact paths plus proof notes or an immediate skip reason for PR prep."
+description = "Browser screenshot specialist that prefers Chrome DevTools MCP when configured, captures feature states, flags obvious visual regressions, and returns artifact paths plus proof notes or an immediate skip reason for PR prep."
 config_file = "../agents/browser-screenshot.toml"
+
+[agents.openai_docs_researcher]
+description = "OpenAI and Codex docs researcher that uses the OpenAI developer docs MCP server for authoritative product, MCP, and integration guidance."
+config_file = "../agents/openai-docs-researcher.toml"
 
 [agents.docs_writer]
 description = "Documentation and DX specialist for concise README, changelog, agent-workflow, and issue-summary updates with explicit file references."

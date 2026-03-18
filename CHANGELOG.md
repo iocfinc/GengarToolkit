@@ -7,6 +7,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 ### Added
 
 - Repo skill `export_session_transcript` with a supporting script to fetch Codex JSONL transcripts by thread ID and copy them to a destination (e.g., `~/Desktop/Dioscuri`) for audit/review
+- A tracked `openai_docs_researcher` Codex agent that uses the OpenAI developer docs MCP server for authoritative OpenAI, Codex, and MCP guidance
 - A shared-shell Data Visualization Toolkit route with guided data mapping, saveable dataviz presets, annotation fields, and output-preset-driven SVG/PNG export
 - Dataviz validation helpers for multi-series and scatter-chart mapping requirements
 - A shared collapsible control-section primitive for dropdown-style editor panes
@@ -31,6 +32,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Changed
 
+- Codex now prefers the global `chrome-devtools` MCP server for both `browser_debugger` and `browser_screenshot` when it is configured, keeping browser QA on a deterministic DevTools path
+- The tracked `browser_debugger` and `browser_screenshot` agents now carry project-scoped Chrome DevTools MCP wiring so browser tooling is available directly through the agent configs
 - The Data Visualization Toolkit now uses dropdown edit panes, standard 4:5/16:9/1:1 output presets, editable palette overrides, always-on cartesian axes, legend placement under the subheadline, fitted header copy, and a centered Big Number layout
 - Skill guidance and tracked agent profiles now treat maintainer review notes as structured QA input and require immediate screenshot skip reasons when capture tooling is blocked
 - The root landing page now renders a suite launcher from shared registry data instead of redirecting directly into the motion editor
