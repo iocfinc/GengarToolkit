@@ -120,4 +120,5 @@ Update only the contributor-facing docs that changed. Keep extension notes conci
 - For backlog or issue-driven work in a dirty tree, compare the candidate issue against `HEAD` before assuming local WIP counts as issue progress.
 - Treat committed `HEAD` as the delivery baseline; do not count uncommitted local work as shipped progress.
 - Default to Issue Mode for branching. Only use Cycle Mode when the maintainer explicitly requests a shared branch with checkpoint commits per issue.
+- If a maintainer explicitly requests one combined PR, keep commit boundaries explicit by domain and document the exception in the PR notes.
 - For frontend-affecting work, include a visual validation pass and mention artifact paths, capture method, what the screenshot proves, or skip reasons in the PR notes.

@@ -69,6 +69,7 @@ During this cycle we hard‑switched to the new names; use these mappings if you
 - Update `agent/memory/` when a design decision, durable feature record, or known issue changes.
 - Keep changes reviewable and aligned with the current editor behavior unless the request explicitly changes behavior.
 - Keep one issue or feature per pull request. If a valid feature would widen or block bug-fix work, add it to `agent/memory/roadmap.md` and keep the issue open.
+- If a maintainer explicitly approves a combined PR, keep the exception narrow, separate product and workflow domains into distinct commits, and call out the exception in the PR notes.
 - Pull requests must include the debugging steps and notes that led to the fix.
 - Frontend-affecting work should include visual QA artifacts or an explicit skip reason in the PR notes. Terminal or desktop-app workflow fixes should include equivalent screenshot evidence or a documented skip reason.
 

@@ -10,6 +10,8 @@ describe('DatavizToolkitPage', () => {
     expect(screen.getByRole('heading', { name: 'Data Visualization Toolkit' })).toBeInTheDocument();
     expect(screen.getByTestId('editor-shell-panes')).toBeInTheDocument();
     expect(screen.getByTestId('preview-surface')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Template & Output' }));
     expect(screen.getByLabelText('Output Preset')).toBeInTheDocument();
   });
 
@@ -17,11 +19,11 @@ describe('DatavizToolkitPage', () => {
     render(<DatavizToolkitPage />);
 
     const storyToggle = screen.getByRole('button', { name: 'Story' });
-    expect(storyToggle).toHaveAttribute('aria-expanded', 'true');
+    expect(storyToggle).toHaveAttribute('aria-expanded', 'false');
 
     fireEvent.click(storyToggle);
 
-    expect(storyToggle).toHaveAttribute('aria-expanded', 'false');
-    expect(screen.queryByDisplayValue('Peak Hours Story')).not.toBeInTheDocument();
+    expect(storyToggle).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByDisplayValue('Peak Hours Story')).toBeInTheDocument();
   });
 });

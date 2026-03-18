@@ -3,6 +3,8 @@
 ## Editor Canvas
 
 - Canvas stage with live composition preview and safe-margin/grid overlays.
+- Static fitted startup preview for Motion Toolkit, with playback starting only after an explicit Play action.
+- Viewport-locked preview pane behavior that stays fixed while controls expand and scroll independently.
 
 ## Toolkit Suite
 
@@ -53,3 +55,4 @@
 - Roadmap capture for valid but under-specified feature ideas
 - Tracked Codex multi-agent runtime profiles under `.codex/` and `agents/`
 - Browser screenshot validation guidance for frontend PR preparation
+- Chrome DevTools MCP preference for browser debugging and screenshot capture when configured

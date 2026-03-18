@@ -59,7 +59,7 @@ After merge, record learnings in `agent/memory/`.
 - Trigger source: branch is committed and PR is about to be opened
 - Skill: `comment_issue_update`
 - Expected inputs: issue number, root cause, fix summary, validation, PR URL
-- Required output: a short issue comment linking the work back to the issue, including evidence notes, screenshot artifact paths, or a documented skip reason when relevant
+- Required output: a short issue comment linking the work back to the issue, including evidence notes, screenshot artifact paths, or a documented skip reason when relevant, or a post-ready draft when live posting is deferred
 - Human or agent follow-up: open or refresh the pull request
 - Matching GitHub workflow file: repository process before PR review
 

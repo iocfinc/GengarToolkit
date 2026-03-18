@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { approvedPaletteDefinitions } from '@packages/design-tokens/src/colors';
 import { defaultPresets } from '@/lib/presets/defaultPresets';
 import { useEditorStore } from '@/lib/store/editorStore';
 import { resetEditorStore } from './testUtils';
@@ -17,6 +18,7 @@ describe('editorStore', () => {
     expect(state.document.name).toBeTruthy();
     expect(state.document.background.type).toBe('mesh-field');
     expect(state.document.export.format).toBe('png');
+    expect(state.document.motion.playing).toBe(false);
   });
 
   it('updates background state and refreshes updatedAt', () => {
@@ -37,6 +39,20 @@ describe('editorStore', () => {
     expect(state.document.typography.anchor).toBe('center-left');
     expect(state.document.typography.alignment).toBe('left');
     expect(state.document.motif.position).toEqual({ x: 0.8, y: 0.3 });
+  });
+
+  it('applies an approved palette deterministically', () => {
+    const palette = approvedPaletteDefinitions[1];
+
+    useEditorStore.getState().applyApprovedPalette(palette);
+
+    const state = useEditorStore.getState();
+    expect(state.document.background.paletteName).toBe(palette.name);
+    expect(state.document.background.baseColor).toBe(palette.background);
+    expect(state.document.background.glowColorA).toBe(palette.colors[0]);
+    expect(state.document.background.glowColorB).toBe(palette.colors[1]);
+    expect(state.document.motif.color).toBe(palette.colors[2]);
+    expect(state.document.typography.textColor).toBe(palette.foreground);
   });
 
   it('preserves typography content when toggling through background-only', () => {
@@ -96,6 +112,7 @@ describe('editorStore', () => {
     let state = useEditorStore.getState();
     expect(state.hydrated).toBe(true);
     expect(state.document.name).toBe(defaultPresets[1]?.document.name);
+    expect(state.document.motion.playing).toBe(false);
 
     resetEditorStore();
     window.localStorage.setItem(
@@ -110,5 +127,30 @@ describe('editorStore', () => {
     state = useEditorStore.getState();
     expect(state.presets[0]?.name).toBe(defaultPresets[0]?.name);
     expect(state.document.name).toBe(defaultPresets[0]?.document.name);
+  });
+
+  it('forces hydrated legacy presets to start paused', () => {
+    window.localStorage.setItem(
+      PRESETS_KEY,
+      JSON.stringify({
+        version: PRESETS_STORAGE_VERSION,
+        data: [
+          {
+            ...defaultPresets[0],
+            document: {
+              ...defaultPresets[0]?.document,
+              motion: {
+                ...defaultPresets[0]?.document.motion,
+                playing: true
+              }
+            }
+          }
+        ]
+      })
+    );
+
+    useEditorStore.getState().hydrate();
+
+    expect(useEditorStore.getState().document.motion.playing).toBe(false);
   });
 });

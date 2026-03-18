@@ -65,6 +65,7 @@ Use this skill to autonomously work the open GitHub backlog: validate issues, se
 - committed-`HEAD` reality check, branch plan, and evidence plan are recorded
 - invalid or ambiguous work is either left for more input or moved into the roadmap
 - exactly one issue or feature is shipped per pull request, with workflow infrastructure merged first when needed
+- maintainer-approved combined PRs are treated as explicit exceptions and keep commit boundaries clear by domain
 - delegation is explicit enough to audit which tracked profiles actually ran
 - completion is tied to validation plus a pushed PR
 - workflow reflection is logged after delivery

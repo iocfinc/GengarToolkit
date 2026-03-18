@@ -67,6 +67,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Fixed
 
+- Motion Toolkit now focuses one accordion section at a time so long control groups use the full controls pane with internal scrolling instead of squeezing the preview pane or wasting space on inactive section pills
+- Motion Toolkit preview now opens in a static fitted state, starts playback only after an explicit Play action, and no longer uses misleading zoom controls that imply startup re-fitting behavior
 - Editor shell grid columns now compile by scanning `apps/` and `packages/` in Tailwind, preventing the controls pane from dropping below the preview and eliminating the initial growing/snap effect on load
 - Motion Toolkit shell now keeps preview and controls in a side-by-side split from `md` upward instead of dropping the controls pane below the preview until `lg`
 - Codex startup now resolves tracked sub-agent profiles relative to `.codex/config.toml`, so launching from the repo correctly finds the top-level `agents/` files
