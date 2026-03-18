@@ -59,7 +59,7 @@ describe('CanvasStage', () => {
     expect(drawScene.mock.calls[0]?.[1]).toBe(1920);
     expect(drawScene.mock.calls[0]?.[2]).toBe(1080);
     expect(rafCallbacks).toHaveLength(0);
-    expect(screen.getByText('Preview Scale 100%')).toBeInTheDocument();
+    expect(document.body.textContent).toContain('Preview Scale 100%');
   });
 
   it('starts the animation loop only when playback is enabled', () => {
@@ -121,12 +121,12 @@ describe('CanvasStage', () => {
 
     render(<CanvasStage />);
 
-    expect(document.body.textContent).toContain('100% Zoom');
+    expect(document.body.textContent).toContain('Preview Scale 100%');
 
     act(() => {
       useEditorStore.getState().setUi({ zoom: 0.85 });
     });
 
-    expect(document.body.textContent).toContain('85% Zoom');
+    expect(document.body.textContent).toContain('Preview Scale 85%');
   });
 });

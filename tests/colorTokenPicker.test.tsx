@@ -17,9 +17,9 @@ describe('ColorTokenPicker', () => {
       <ColorTokenPicker label="Text Color" value={firstToken} onChange={onChange} />
     );
 
-    // Renders one button per token
+    // Renders one button per token plus the custom color entry point
     const buttons = screen.getAllByRole('button');
-    expect(buttons.length).toBe(Object.keys(brandColors).length);
+    expect(buttons.length).toBe(Object.keys(brandColors).length + 1);
 
     // Clicking a different token triggers onChange with that token value
     const secondToken = Object.keys(brandColors)[1] as string;
@@ -30,4 +30,3 @@ describe('ColorTokenPicker', () => {
     expect(screen.getByText(secondToken)).toBeInTheDocument();
   });
 });
-
