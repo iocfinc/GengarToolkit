@@ -62,4 +62,17 @@ describe('CanvasStage', () => {
     expect(drawScene.mock.calls[0]?.[1]).toBe(1920);
     expect(drawScene.mock.calls[0]?.[2]).toBe(1080);
   });
+
+  it('updates the visible zoom label when store zoom changes', () => {
+    render(<CanvasStage />);
+
+    // Initial zoom label at 100%
+    expect(document.body.textContent).toContain('100% Zoom');
+
+    // Toggle zoom via store and expect the label to update
+    useEditorStore.getState().setUi({ zoom: 0.85 });
+
+    // React state propagation happens synchronously for this store update
+    expect(document.body.textContent).toContain('85% Zoom');
+  });
 });

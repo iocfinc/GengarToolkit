@@ -116,7 +116,7 @@ Update only the contributor-facing docs that changed. Keep extension notes conci
 - Record delegation evidence for non-trivial work: profile used, expected output, returned output, and any skip reason.
 - Ask each tracked profile to return changed files or inspected files, key risks, suggested tests, and artifact paths when UI evidence is expected.
 - If a tracked sub-agent is skipped for a non-trivial task, note the skip reason in the main thread instead of silently collapsing everything into one pass.
-- When a maintainer supplies manual UI review notes, treat them as explicit QA input, route them through `design_guardian` before implementation, and convert the accepted fixes into regression tests where feasible.
+- When a maintainer supplies manual UI review notes, treat them as explicit QA input, route them through `omniknight` before implementation, and convert the accepted fixes into regression tests where feasible.
 - For backlog or issue-driven work in a dirty tree, compare the candidate issue against `HEAD` before assuming local WIP counts as issue progress.
 - Treat committed `HEAD` as the delivery baseline; do not count uncommitted local work as shipped progress.
 - Default to Issue Mode for branching. Only use Cycle Mode when the maintainer explicitly requests a shared branch with checkpoint commits per issue.

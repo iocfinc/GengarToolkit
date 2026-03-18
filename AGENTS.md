@@ -47,6 +47,20 @@ Before implementing code changes:
 
 ## Guardrails
 
+Note on Agent Name Migration (DOTA motif)
+
+- explorer → slardar
+- design_guardian → omniknight
+- frontend_architect → tinker
+- chart_engine → kunkka
+- export_engine → gyrocopter
+- browser_debugger → bounty_hunter
+- browser_screenshot → sniper
+- openai_docs_researcher → oracle
+- docs_writer → clinkz
+
+During this cycle we hard‑switched to the new names; use these mappings if you encounter older references in past branches or CI logs.
+
 - Follow the development workflow defined in `agent/`.
 - Plan merge order before opening multiple issue branches.
 - Never modify unrelated modules unless required.
