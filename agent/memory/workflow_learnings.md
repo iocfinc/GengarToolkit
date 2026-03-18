@@ -199,3 +199,39 @@
 3. Fix shared geometry or UI primitives before patching template-specific symptoms.
 4. Add regression tests for each review finding that can be expressed deterministically.
 5. Capture browser evidence or record an explicit skip reason immediately.
+
+## Issue 38: Motion Preview Stability And Editor Shell Behavior
+
+### What Worked
+
+- Treating the maintainer repro steps as the source of truth made the preview-motion bug and the accordion overflow bug easy to reproduce without reopening discovery.
+- Separating the preview bug into playback-state, render-loop, and shell-height causes prevented a superficial CSS-only fix.
+- Converting the final behavior into store, shell, and component tests locked in the static-startup and fixed-pane contracts.
+- Preferring Chrome DevTools MCP as the target browser tooling gives the workflow a deterministic path away from OS-level screenshot flakiness.
+
+### What Slowed Us Down
+
+- The initial preview fix solved autoplay churn, but the shell still resized because the controls pane owned too much height. The bug was only fully resolved after treating layout sizing and render scheduling as two separate causes.
+- Shared UI primitives can hide regressions when their defaults drift. The accordion default-open contract had to be corrected after the higher-level control-panel behavior was already in place.
+- Screenshot capture remained the weakest validation step when browser-native tooling was unavailable or blocked by macOS permissions.
+
+### Skill Updates Needed
+
+- `triage_bug` should explicitly inspect shell height contracts, overflow ownership, and render-loop lifecycles for preview movement bugs.
+- `generate_tests` should keep converting maintainer review findings into deterministic regression tests in the same pass.
+- `comment_issue_update` should support post-ready draft comments when maintainers want issue text prepared but not posted immediately.
+
+### Workflow Updates Needed
+
+- Maintainer-directed combined PRs are acceptable as explicit exceptions when the commits are separated by domain and the PR notes call out the exception.
+- Frontend debugging and screenshot capture should prefer Chrome DevTools MCP whenever it is configured.
+- When browser capture is blocked, record the skip reason immediately and keep the PR moving.
+- Workflow reflection should capture both product learnings and process/tooling refinements from the same branch close-out.
+
+### Reusable Delivery Pattern
+
+1. Reproduce the bug from the maintainer’s concrete steps.
+2. Separate behavior bugs into state, render-loop, and layout-contract causes before patching.
+3. Lock the preview pane to the viewport and give long control sections an explicit internal scroll owner.
+4. Check shared component defaults so controlled and uncontrolled paths match the intended UX.
+5. Keep browser evidence deterministic with Chrome DevTools MCP when available, or record the skip reason immediately.
