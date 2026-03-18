@@ -4,3 +4,5 @@ dist
 out
 .DS_Store
 *.tsbuildinfo
+
+agent/memory/
