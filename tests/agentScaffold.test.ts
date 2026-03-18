@@ -1,6 +1,7 @@
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -8,7 +9,6 @@ const codexConfigPath = path.join(repoRoot, '.codex', 'config.toml');
 const codexConfigDir = path.dirname(codexConfigPath);
 const skillsPath = path.join(repoRoot, 'skills.md');
 const prTemplatePath = path.join(repoRoot, '.github', 'pull_request_template.md');
-const agentsDir = path.join(repoRoot, 'agents');
 
 function readText(filePath: string) {
   return readFileSync(filePath, 'utf8');
@@ -22,13 +22,24 @@ function extractConfigFiles(config: string) {
   return Array.from(config.matchAll(/config_file = "([^"]+)"/g)).map((match) => match[1]);
 }
 
+function listTrackedAgentProfiles() {
+  return execFileSync('git', ['ls-files', '--', 'agents'], {
+    cwd: repoRoot,
+    encoding: 'utf8'
+  })
+    .split('\n')
+    .map((entry) => entry.trim())
+    .filter((entry) => entry.endsWith('.toml'))
+    .map((entry) => path.basename(entry));
+}
+
 describe('multi-agent scaffold', () => {
   it('tracks the codex config and referenced agent profiles', () => {
     expect(existsSync(codexConfigPath)).toBe(true);
 
     const config = readText(codexConfigPath);
     const configFiles = extractConfigFiles(config);
-    const agentFiles = readdirSync(agentsDir).filter((entry) => entry.endsWith('.toml'));
+    const agentFiles = listTrackedAgentProfiles();
 
     expect(configFiles.length).toBeGreaterThan(0);
     expect(agentFiles.sort()).toEqual(

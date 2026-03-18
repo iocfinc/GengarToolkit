@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CanvasStage } from '@/components/editor/CanvasStage';
 import { useEditorStore } from '@/lib/store/editorStore';
@@ -64,15 +64,17 @@ describe('CanvasStage', () => {
   });
 
   it('updates the visible zoom label when store zoom changes', () => {
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
+    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {});
+
     render(<CanvasStage />);
 
-    // Initial zoom label at 100%
     expect(document.body.textContent).toContain('100% Zoom');
 
-    // Toggle zoom via store and expect the label to update
-    useEditorStore.getState().setUi({ zoom: 0.85 });
+    act(() => {
+      useEditorStore.getState().setUi({ zoom: 0.85 });
+    });
 
-    // React state propagation happens synchronously for this store update
     expect(document.body.textContent).toContain('85% Zoom');
   });
 });
