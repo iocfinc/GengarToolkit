@@ -61,6 +61,11 @@ Own deterministic export behavior, render parity, and motion-capable scene contr
 
 Run the app, reproduce frontend bugs, inspect console and layout failures, and report the smallest likely fix.
 
+Preferred debug backend:
+
+- Use Chrome DevTools MCP first when it is configured and reachable.
+- Fall back to browser-native tooling only when Chrome MCP is unavailable, and return a concrete skip reason if neither path works.
+
 ### `browser_screenshot`
 
 Use browser-native tooling first, including Chrome MCP when available. Start the app when needed, open the changed flows, capture screenshots for the relevant feature states, flag obvious layout, overflow, styling, console, or interaction regressions, and return artifact paths plus a short visual QA summary for PR-ready validation evidence.
@@ -92,4 +97,5 @@ Update only the contributor-facing docs that changed. Keep extension notes conci
 - For backlog or issue-driven work in a dirty tree, compare the candidate issue against `HEAD` before assuming local WIP counts as issue progress.
 - Treat committed `HEAD` as the delivery baseline; do not count uncommitted local work as shipped progress.
 - Default to Issue Mode for branching. Only use Cycle Mode when the maintainer explicitly requests a shared branch with checkpoint commits per issue.
+- If a maintainer explicitly requests one combined PR, keep commit boundaries explicit by domain and document the exception in the PR notes.
 - For frontend-affecting work, include a visual validation pass and mention artifact paths, capture method, what the screenshot proves, or skip reasons in the PR notes.

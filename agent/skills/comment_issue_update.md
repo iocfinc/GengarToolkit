@@ -9,6 +9,7 @@ Use this skill when code is ready to commit or a pull request is ready, and the 
 - a fix branch is ready for PR
 - a PR has been opened for a linked issue
 - an issue needs a concise summary of the bug, root cause, fix, and validation
+- a maintainer wants issue-comment text drafted locally before posting live
 
 ## Required Inputs
 
@@ -18,6 +19,7 @@ Use this skill when code is ready to commit or a pull request is ready, and the 
 - fix summary
 - validation steps
 - PR URL if available
+- whether the result should be posted live or returned as a local draft
 
 ## Inspect First
 
@@ -32,7 +34,8 @@ Use this skill when code is ready to commit or a pull request is ready, and the 
 3. Summarize the implemented fix.
 4. List validation performed, including screenshot artifact paths or a concrete skip reason for frontend-visible work.
 5. Link the PR if one exists.
-6. Keep the comment short and useful for future readers.
+6. If live posting is deferred, return post-ready draft text and note that it is pending publication.
+7. Keep the comment short and useful for future readers.
 
 ## Output Contract
 
@@ -48,3 +51,4 @@ Use this skill when code is ready to commit or a pull request is ready, and the 
 - issue comment explains what changed and why
 - validation is explicit
 - PR link is included when available
+- the output is usable either as a live comment or as a local draft

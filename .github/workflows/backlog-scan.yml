@@ -37,6 +37,6 @@ jobs:
             echo "- Keep the main thread as lead orchestrator and delegate bounded work through \`skills.md\`."
             echo "- Keep one fix or feature per pull request."
             echo "- Move under-specified features into \`agent/memory/roadmap.md\`."
-            echo "- For frontend changes, include browser debugging and screenshot validation before PR prep when browser tooling is available."
+            echo "- For frontend changes, include browser debugging and screenshot validation before PR prep when browser tooling is available, preferring Chrome DevTools MCP when it is configured."
             echo "- Record post-task reflection in \`agent/memory/workflow_learnings.md\`."
           } >> "$GITHUB_STEP_SUMMARY"

@@ -24,7 +24,7 @@ jobs:
               "- Confirm the affected subsystem.",
               "- Propose the narrowest fix.",
               "- Identify regression tests before implementation.",
-              "- Use browser debugging for UI-facing bugs and capture screenshots before PR prep when browser tooling is available."
+              "- Use browser debugging for UI-facing bugs, preferring Chrome DevTools MCP when it is configured, and capture screenshots before PR prep when browser tooling is available."
             ].join("\n");
             await github.rest.issues.createComment({
               owner: context.repo.owner,

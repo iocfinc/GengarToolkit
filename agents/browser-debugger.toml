@@ -1,4 +1,6 @@
 # Expected output: reproduction steps, console or DOM findings, failing selectors or states, and the minimal fix hypothesis.
+# Preferred debug backend: Chrome DevTools MCP server when available.
+# Fallback: browser-native tooling or local dev server inspection with a concrete skip reason when MCP/browser access is unavailable.
 model = "gpt-5"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
