@@ -6,6 +6,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Added
 
+- Repo skill `export_session_transcript` with a supporting script to fetch Codex JSONL transcripts by thread ID and copy them to a destination (e.g., `~/Desktop/Dioscuri`) for audit/review
 - A shared-shell Data Visualization Toolkit route with guided data mapping, saveable dataviz presets, annotation fields, and output-preset-driven SVG/PNG export
 - Dataviz validation helpers for multi-series and scatter-chart mapping requirements
 - A shared collapsible control-section primitive for dropdown-style editor panes
