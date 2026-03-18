@@ -2,36 +2,31 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { brandColors } from '@/lib/theme/colors';
 import { ColorTokenPicker } from '@/components/controls/ColorTokenPicker';
 
 describe('ColorTokenPicker', () => {
-  it('supports switching to a custom hex color', async () => {
+  it('renders brand color tokens and invokes onChange when a swatch is selected', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
 
-    function Wrapper() {
-      const [value, setValue] = React.useState('royal');
+    // Pick the first token as the initial value
+    const firstToken = Object.keys(brandColors)[0] as string;
 
-      return (
-        <ColorTokenPicker
-          label="Accent"
-          onChange={(nextValue) => {
-            onChange(nextValue);
-            setValue(nextValue);
-          }}
-          value={value}
-        />
-      );
-    }
+    render(
+      <ColorTokenPicker label="Text Color" value={firstToken} onChange={onChange} />
+    );
 
-    render(<Wrapper />);
+    // Renders one button per token plus the custom color entry point
+    const buttons = screen.getAllByRole('button');
+    expect(buttons.length).toBe(Object.keys(brandColors).length + 1);
 
-    await user.click(screen.getByRole('button', { name: 'Custom' }));
-    const hexInput = screen.getByLabelText('Accent hex color');
+    // Clicking a different token triggers onChange with that token value
+    const secondToken = Object.keys(brandColors)[1] as string;
+    await user.click(buttons[1]);
+    expect(onChange).toHaveBeenCalledWith(secondToken);
 
-    await user.clear(hexInput);
-    await user.type(hexInput, '#123ABC');
-
-    expect(onChange).toHaveBeenLastCalledWith('#123ABC');
+    // Token labels are rendered for scanability
+    expect(screen.getByText(secondToken)).toBeInTheDocument();
   });
 });

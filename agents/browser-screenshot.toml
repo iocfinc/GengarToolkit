@@ -4,3 +4,7 @@
 model = "gpt-5"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@latest"]

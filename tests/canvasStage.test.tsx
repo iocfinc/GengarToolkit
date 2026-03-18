@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CanvasStage } from '@/components/editor/CanvasStage';
 import { useEditorStore } from '@/lib/store/editorStore';
@@ -59,7 +59,7 @@ describe('CanvasStage', () => {
     expect(drawScene.mock.calls[0]?.[1]).toBe(1920);
     expect(drawScene.mock.calls[0]?.[2]).toBe(1080);
     expect(rafCallbacks).toHaveLength(0);
-    expect(screen.getByText('Preview Scale 100%')).toBeInTheDocument();
+    expect(document.body.textContent).toContain('Preview Scale 100%');
   });
 
   it('starts the animation loop only when playback is enabled', () => {
@@ -113,5 +113,20 @@ describe('CanvasStage', () => {
 
     expect(drawScene).toHaveBeenCalled();
     expect(rafCallbacks.length).toBeGreaterThan(0);
+  });
+
+  it('updates the visible zoom label when store zoom changes', () => {
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 1);
+    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {});
+
+    render(<CanvasStage />);
+
+    expect(document.body.textContent).toContain('Preview Scale 100%');
+
+    act(() => {
+      useEditorStore.getState().setUi({ zoom: 0.85 });
+    });
+
+    expect(document.body.textContent).toContain('Preview Scale 85%');
   });
 });

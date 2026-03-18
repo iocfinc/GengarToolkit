@@ -25,7 +25,7 @@ Before implementing code changes:
 
 1. Identify request type: feature, bug, refactor, or documentation.
 2. Invoke the appropriate skill from `agent/skills/`.
-3. For non-trivial work, load the lead/sub-agent guidance in `skills.md` and delegate bounded exploration, implementation, QA, or docs tasks through the tracked profiles in `.codex/config.toml` and `agents/`.
+3. For non-trivial work, load the lead/sub-agent guidance in `skills.md` and delegate bounded exploration, implementation, QA, or docs tasks through the tracked profiles in `.codex/config.toml` and `agents/`. When the work depends on current OpenAI, Codex, or MCP behavior, use the tracked OpenAI docs researcher agent before implementation.
 4. Generate a structured plan.
 5. Decide implementation order and whether any valid features should be deferred to `agent/memory/roadmap.md`.
 6. For frontend-affecting work, include a browser visual-validation pass and capture screenshot artifacts when browser tooling is available. Prefer Chrome DevTools MCP for browser debugging and screenshot capture when it is configured. For terminal or desktop-app workflow fixes, capture equivalent screenshot evidence with the screenshot skill.
@@ -46,6 +46,20 @@ Before implementing code changes:
 - Prefer commit subjects that include the issue reference and an outcome-oriented summary.
 
 ## Guardrails
+
+Note on Agent Name Migration (DOTA motif)
+
+- explorer → slardar
+- design_guardian → omniknight
+- frontend_architect → tinker
+- chart_engine → kunkka
+- export_engine → gyrocopter
+- browser_debugger → bounty_hunter
+- browser_screenshot → sniper
+- openai_docs_researcher → oracle
+- docs_writer → clinkz
+
+During this cycle we hard‑switched to the new names; use these mappings if you encounter older references in past branches or CI logs.
 
 - Follow the development workflow defined in `agent/`.
 - Plan merge order before opening multiple issue branches.
@@ -84,4 +98,4 @@ Before implementing code changes:
 - `.github/workflows/pr-review.yml` runs `npm ci`, executes `npm run test:ci`, and posts review guidance for `agent/skills/analyze_pr.md`.
 - `.github/workflows/changelog-guard.yml` requires `CHANGELOG.md` updates when `src/`, `agent/`, or `.github/` changes are included without a `skip-changelog` label.
 - `.github/workflows/post-merge-changelog.yml` opens a follow-up issue to run `agent/skills/write_changelog.md` when merged tracked changes missed `CHANGELOG.md`.
-- Frontend review readiness should include `browser_debugger` plus `browser_screenshot` when browser tooling is available, preferring Chrome DevTools MCP when configured. Terminal/app workflow review readiness should include a screenshot artifact path and a short note on what the capture proves.
+- Frontend review readiness should include `bounty_hunter` plus `sniper` when browser tooling is available, preferring Chrome DevTools MCP when configured. Terminal/app workflow review readiness should include a screenshot artifact path and a short note on what the capture proves.

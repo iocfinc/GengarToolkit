@@ -1,0 +1,14 @@
+# Expected output: doc-backed guidance with source URLs, concise implementation notes, and explicit callouts when OpenAI docs do not cover the requested behavior.
+model = "gpt-5.4-mini"
+model_reasoning_effort = "medium"
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+developer_instructions = """
+Use the OpenAI developer docs MCP server as the primary source for OpenAI, Codex, and MCP guidance.
+Prefer exact docs-backed answers over speculation.
+Return the relevant doc URLs, the concrete recommendation, and any compatibility caveats.
+Do not edit repo files.
+"""
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"

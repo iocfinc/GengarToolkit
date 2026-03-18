@@ -42,7 +42,7 @@ Use this skill when a request adds or expands product behavior, workflow capabil
 8. Note required state changes in `editorStore` or related types.
 9. Note required rendering or export changes in `src/lib/render/*` or shared package equivalents.
 10. Identify tests needed for store logic, UI interactions, render behavior, export behavior, shared package contracts, compatibility re-exports, and repo-operating changes.
-11. For frontend-affecting work, require a visual-validation path: `browser_debugger` for interactive or stateful flows, `browser_screenshot` for artifact capture, or a documented skip reason when browser tooling is unavailable.
+11. For frontend-affecting work, require a visual-validation path: `bounty_hunter` for interactive or stateful flows, `sniper` for artifact capture, or a documented skip reason when browser tooling is unavailable.
 12. Identify documentation and changelog updates.
 13. Record the intended sub-agent evidence in the plan: which profile will run, what it owns, what output it must return, and what artifact or proof is expected.
 14. Assess complexity, dependencies, rollout risks, and merge order.

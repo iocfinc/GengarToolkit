@@ -2,11 +2,23 @@
 
 This changelog tracks notable repository changes. Add new entries to the topmost version section unless the package version is explicitly bumped.
 
+## Unreleased
+
+### Added
+
+- Test coverage confirmations for editor sizing/preview parity, preset persistence/versioned storage, and export engine surface; minor test adjustments where needed.
+
+### Changed
+
+- Tracked sub-agent invocations renamed to unique DOTA hero names: explorer→slardar, design_guardian→omniknight, frontend_architect→tinker, chart_engine→kunkka, export_engine→gyrocopter, browser_debugger→bounty_hunter, browser_screenshot→sniper, openai_docs_researcher→oracle, docs_writer→clinkz. Updated `.codex/config.toml`, skills, roadmap, and workflow docs accordingly.
+- Updated contributor guidance and tests to reference `sniper` for screenshot evidence and `bounty_hunter` for interactive browser debugging.
+
 ## Version 0.1.0
 
 ### Added
 
 - Repo skill `export_session_transcript` with a supporting script to fetch Codex JSONL transcripts by thread ID and copy them to a destination (e.g., `~/Desktop/Dioscuri`) for audit/review
+- A tracked `openai_docs_researcher` Codex agent that uses the OpenAI developer docs MCP server for authoritative OpenAI, Codex, and MCP guidance
 - A shared-shell Data Visualization Toolkit route with guided data mapping, saveable dataviz presets, annotation fields, and output-preset-driven SVG/PNG export
 - Dataviz validation helpers for multi-series and scatter-chart mapping requirements
 - A shared collapsible control-section primitive for dropdown-style editor panes
@@ -31,8 +43,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Changed
 
-- Codex now registers a global `chrome-devtools` MCP server entry and the repo workflow guidance tells `browser_debugger` and `browser_screenshot` to prefer Chrome DevTools MCP for browser debugging and capture when it is configured
-- Motion Toolkit and Data Visualization Toolkit now use an equal-split shared editor shell with collapsed-by-default accordion controls, viewport-contained control scrolling, image-inspired approved palettes, and custom hex color overrides
+- Codex now prefers the global `chrome-devtools` MCP server for both `browser_debugger` and `browser_screenshot` when it is configured, keeping browser QA on a deterministic DevTools path
+- The tracked `browser_debugger` and `browser_screenshot` agents now carry project-scoped Chrome DevTools MCP wiring so browser tooling is available directly through the agent configs
 - The Data Visualization Toolkit now uses dropdown edit panes, standard 4:5/16:9/1:1 output presets, editable palette overrides, always-on cartesian axes, legend placement under the subheadline, fitted header copy, and a centered Big Number layout
 - Skill guidance and tracked agent profiles now treat maintainer review notes as structured QA input and require immediate screenshot skip reasons when capture tooling is blocked
 - The root landing page now renders a suite launcher from shared registry data instead of redirecting directly into the motion editor

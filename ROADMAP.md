@@ -38,12 +38,12 @@ This roadmap turns open feature issues into a reviewable delivery plan. Use it t
 
 ### Default Sequence
 
-1. `explorer`
-2. `design_guardian` when UI, tokens, or shell behavior changes
-3. `frontend_architect`, `chart_engine`, or `export_engine` depending on the issue
-4. `browser_debugger` for interactive validation
-5. `browser_screenshot` for PR-ready visual evidence
-6. `docs_writer` for contributor-facing documentation changes
+1. `slardar`
+2. `omniknight` when UI, tokens, or shell behavior changes
+3. `tinker`, `kunkka`, or `gyrocopter` depending on the issue
+4. `bounty_hunter` for interactive validation
+5. `sniper` for PR-ready visual evidence
+6. `clinkz` for contributor-facing documentation changes
 
 ### Evidence Required Per Feature
 
