@@ -9,6 +9,24 @@ Browser-based internal platform for creating branded motion scenes, editorial da
 - `/dataviz-toolkit` structured chart generator
 - `/social-card-toolkit` constrained social card generator
 
+## Architecture Boundaries
+
+- `apps/` holds toolkit-specific app entrypoints and page-level composition.
+- `packages/design-tokens` defines shared color, typography, and brand-theme primitives.
+- `packages/config-schema` defines shared toolkit and document contracts.
+- `packages/export-engine` owns shared sizing and export helpers used by toolkit flows.
+- `packages/studio-shell` owns shared launcher, branded header, preview shell, output presets, and preset-storage helpers.
+- `packages/ui` holds reusable controls and layout primitives that toolkits should consume before inventing local variants.
+- `src/` remains the compatibility and app-integration surface for the current Motion Toolkit while shared packages are adopted incrementally.
+
+## Current Shared Contracts
+
+- Named output presets live in `packages/studio-shell` and cover social, LinkedIn, video, and print/PDF targets.
+- The Motion Toolkit remains the compatibility baseline for the suite and is routed through `/motion-toolkit/editor`, while `/editor` continues to redirect there.
+- Shared shell behavior uses a fixed preview pane with control-pane-owned overflow and scrolling.
+- Dataviz and Social Card Toolkit flows already consume shared package contracts for presets, export, theme, and shell behavior.
+- Deferred or under-specified feature ideas belong in `agent/memory/roadmap.md`; scheduled delivery sequencing lives in `ROADMAP.md`.
+
 ## Stack
 
 - Next.js App Router
@@ -65,5 +83,6 @@ npm run dev
 - Repo workflow skills, templates, and memory live under `agent/`.
 - Tracked Codex runtime delegation lives in `.codex/config.toml` and `agents/`.
 - Role definitions and delegation order live in `skills.md`.
+- Active delivery sequencing lives in `ROADMAP.md`; `agent/memory/roadmap.md` is reserved for deferred or unresolved feature ideas.
 - For frontend-affecting work, run a browser visual-validation pass before PR prep when browser tooling is available.
 - Screenshot artifacts should stay in temp or other local paths and be summarized in PR notes rather than committed by default.

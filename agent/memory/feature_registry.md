@@ -10,6 +10,8 @@
 
 - Platform launcher for Motion Toolkit, Data Visualization Toolkit, and Social Card Toolkit
 - Shared toolkit registry, export-capability contracts, and package-style platform boundaries
+- Shared studio-shell primitives for branded headers, preview layouts, output presets, and preset storage
+- Shared UI primitives for palette-first controls, collapsible control sections, and reusable editor surfaces
 
 ## Data Visualization Toolkit
 
@@ -41,6 +43,7 @@
 ## Preset System
 
 - Default presets and local preset persistence built on the editor store.
+- Shared version-aware preset storage helpers used across toolkit flows.
 
 ## Export
 
