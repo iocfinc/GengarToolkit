@@ -10,6 +10,9 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Changed
 
+- Refreshed `ROADMAP.md` for the `2026-03-19` Design Team cycle, including Cycle Mode branch/checkpoint planning for `#37`, `#38`, and `#33`, explicit `Input`/`Reason`/`Expected Outputs` review fields, and `CODEX` label expectations for reviewed issues.
+- Updated roadmap memory and workflow learnings to keep issue `#6` deferred through the shared preset decision in `#37` and to record the new Design Team cycle kickoff pattern.
+- Refreshed `README.md`, design decisions, and feature registry notes so the documented suite routes, shared package boundaries, shell contracts, and roadmap ownership match the current repo architecture.
 - Tracked sub-agent invocations renamed to unique DOTA hero names: explorer→slardar, design_guardian→omniknight, frontend_architect→tinker, chart_engine→kunkka, export_engine→gyrocopter, browser_debugger→bounty_hunter, browser_screenshot→sniper, openai_docs_researcher→oracle, docs_writer→clinkz. Updated `.codex/config.toml`, skills, roadmap, and workflow docs accordingly.
 - Updated contributor guidance and tests to reference `sniper` for screenshot evidence and `bounty_hunter` for interactive browser debugging.
 

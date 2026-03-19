@@ -23,6 +23,9 @@
 - The repository now exposes a Brand Toolkit Suite with toolkit-specific entry points rather than a single top-level editor landing page.
 - Shared contracts are introduced through `apps/` and `packages/` boundaries first, while the existing motion editor remains behaviorally stable at `/motion-toolkit/editor`.
 - New toolkits use shared package contracts for themes, schema, chart/export logic, and shell UI before any deeper package manager or multi-runtime workspace split.
+- `packages/studio-shell` is the shared home for launcher, branded shell, preview behavior, preset storage, and named output preset contracts.
+- `packages/ui` is the preferred reuse layer for controls and layout primitives; toolkit-local UI should be the exception rather than the default.
+- Root `ROADMAP.md` is the source of truth for scheduled delivery sequencing, while `agent/memory/roadmap.md` remains the holding area for valid but unresolved feature ideas.
 
 ## Agent Layer
 

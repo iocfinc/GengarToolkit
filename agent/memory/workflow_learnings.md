@@ -1,5 +1,37 @@
 # Workflow Learnings
 
+## Issue 37/38/33: Design Team Cycle Prep
+
+### What Worked
+
+- Syncing local `main` to `origin/main` before creating the cycle branch removed ambiguity about which groundwork was already merged.
+- Converting the cycle review into explicit `Input`, `Reason`, and `Expected Outputs` fields made the in-scope versus out-of-scope decision easier to audit.
+- Writing sub-agent ownership into the roadmap upfront reduced the chance of overlapping implementation, QA, and docs work once the cycle starts.
+
+### What Slowed Us Down
+
+- The roadmap still mixed already-merged groundwork with upcoming follow-through work, so the active cycle boundary had to be restated before execution could start.
+- Several reviewed issues were still missing the `CODEX` label, which made cycle tracking inconsistent until the label pass was added to the prep checklist.
+
+### Skill Updates Needed
+
+- `run_backlog_cycle` should support a maintainer-directed mode where all reviewed issues, not just the in-scope ones, are marked for `CODEX` tracking.
+- Roadmap templates should keep `Input`, `Reason`, `Expected Outputs`, and agent handoff fields available for future cycle-prep passes.
+
+### Workflow Updates Needed
+
+- Always fetch and fast-forward `main` before opening a new Cycle Mode branch.
+- Record `CODEX` label coverage as a first-class cycle kickoff step.
+- Keep checkpoint order and sub-agent ownership in the roadmap so the branch can be resumed without re-planning.
+
+### Reusable Delivery Pattern
+
+1. Sync `main` against the remote before deciding cycle scope.
+2. Review the live open issue set instead of relying on the previous roadmap snapshot.
+3. Lock in-scope items with `Input`, `Reason`, `Expected Outputs`, and handoff ownership before implementation starts.
+4. Label every reviewed issue consistently so planning and delivery use the same tracker state.
+5. Create the shared cycle branch only after the roadmap reflects the real baseline.
+
 ## Issue 1: Preview vs Export Typography Parity
 
 ### What Worked

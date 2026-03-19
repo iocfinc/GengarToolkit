@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-03-18
+Last updated: 2026-03-19
 
 This roadmap turns open feature issues into a reviewable delivery plan. Use it to sequence feature work, track dependencies, and record the multi-agent execution path for each issue.
 
@@ -8,7 +8,8 @@ This roadmap turns open feature issues into a reviewable delivery plan. Use it t
 
 ## Sources Of Truth
 
-- Open GitHub feature issues and epics: `#6`, `#14`-`#17`, `#18`-`#21`, `#23`-`#38`
+- Open GitHub issues reviewed on `2026-03-19`: `#6`, `#13`-`#18`, `#20`, `#28`-`#31`, `#33`-`#35`, `#37`
+- Closed design baseline reviewed on `2026-03-19`: `#38` (closed `2026-03-18`)
 - Previous handover plan: `/tmp/gengartoolkit-next-feature-workplan.md`
 - Multi-agent delegation guidance: `skills.md`
 - Backlog automation and roadmap routing: `agent/skills/run_backlog_cycle.md`
@@ -30,6 +31,8 @@ This roadmap turns open feature issues into a reviewable delivery plan. Use it t
 - Maintainer-directed combined PRs are allowed as narrow exceptions when commit boundaries stay explicit and the PR notes document the exception.
 - Use Cycle Mode only when a maintainer explicitly requests one shared delivery branch with checkpoint commits per issue.
 - Compare roadmap decisions against committed `HEAD`, not uncommitted local WIP.
+- For maintainer-directed cycle prep, record `Input`, `Reason`, `Expected Outputs`, tracked agent handoffs, and `CODEX` label status before implementation starts.
+- Apply the `CODEX` label to every open issue reviewed during a Codex-run cycle planning pass, even when the issue stays out of scope for the active branch.
 - Update `CHANGELOG.md` for shipped work.
 - For frontend-affecting work, capture browser QA artifacts or record a concrete skip reason.
 - When work is too broad or unclear, defer it to `agent/memory/roadmap.md` instead of guessing.
@@ -51,6 +54,88 @@ This roadmap turns open feature issues into a reviewable delivery plan. Use it t
 - Screenshot artifact paths for frontend-visible changes when browser tooling is available
 - Changelog entry
 - Issue comment with summary, validation notes, and PR link when work is review-ready
+
+## Active Cycle Prep
+
+### Design Team Cycle — 2026-03-19
+
+Goal: run one Design Team sprint that converts the already-merged shared preset and shell groundwork into a clear implementation stream for named output selection and shared brand guardrails while consuming the closed `#38` shell contract as the UI baseline.
+
+- `Branch`: `codex/GENGARVIS-037-cycle-design-team`
+- `Mode`: `Cycle Mode`
+- `Baseline`: local `main` was synced to `origin/main` at `776786a` before the cycle branch was created
+- `Checkpoint Order`:
+  1. `#37` finalize named output preset adoption
+  2. validate and extend the closed `#38` shell baseline only where `#37` or `#33` require it
+  3. `#33` add shared brand guardrail warnings, then export gating for hard failures
+- `Reviewed Issues`: open issues `#6`, `#13`-`#18`, `#20`, `#28`-`#31`, `#33`-`#35`, `#37`, plus closed issue `#38` as design baseline input
+- `CODEX Label Policy`: required on every reviewed open issue in this cycle-prep pass
+
+#### In Scope
+
+- `#37` Create shared output preset catalog for social, LinkedIn, and print formats — `Planned`
+  - `Input`: existing `packages/studio-shell` output preset catalog, current Motion Toolkit export and selector flow, shared export-sizing helpers, issue `#6`, and the merged changelog notes that preset groundwork already exists on `main`
+  - `Reason`: named output presets need to become the source of truth before shell adoption or guardrails can safely depend on them
+  - `Expected Outputs`: named preset selection by output class, one sizing source of truth for preview and export, preserved `300 DPI` metadata for PDF-class presets, and compatibility mapping from legacy aspect-ratio paths during the migration window
+  - `Agents`: `slardar`, `omniknight`, `tinker`, `bounty_hunter`, `sniper`, `clinkz`
+  - `Dependencies`: `#19`, `#20`, `#21`, `#32`
+  - `Evidence`: preset catalog tests, selector integration coverage, export-dimension assertions, and screenshot proof of the preset-selection flow
+  - `CODEX Label`: required and applied
+  - `Next Step`: checkpoint 1 commit on the cycle branch
+- `#33` Shared brand guardrail validation — `Planned`
+  - `Input`: approved design tokens, shared theme utilities, the finalized preset and shell decisions from `#37` and `#38`, and the existing validation patterns already used by dataviz
+  - `Reason`: shared brand guardrails should attach to the settled design system, not compete with it while core shell and preset semantics are still moving
+  - `Expected Outputs`: shared guardrail utilities, readable warning UI for non-designer users, export blocking only for hard failures, and compatibility with both token defaults and custom HEX fallback during the rollout window
+  - `Agents`: `slardar`, `omniknight`, `tinker`, `bounty_hunter`, `sniper`, `clinkz`
+  - `Dependencies`: `#19`, `#20`, `#37`, `#38`
+  - `Evidence`: unit coverage for guardrail rules, one export-block integration test, and screenshot proof of warning and blocked-export states
+  - `CODEX Label`: required and applied
+  - `Next Step`: checkpoint 3 commit after the preset and shell slices are stable on the cycle branch
+
+#### Closed Baseline Consumed By This Cycle
+
+- `#38` Standardize toolkit editor shell with fitted preview and palette-first controls — `Closed on 2026-03-18`
+  - `Input`: `packages/studio-shell` shell primitives, merged preview-stability work in `CHANGELOG.md`, palette-grid groundwork, and the existing control-density tests already on `main`
+  - `Reason`: the Design Team cycle should consume the closed shell contract instead of reopening the issue or duplicating toolkit-local shell work
+  - `Expected Outputs`: `#37` and `#33` must reuse the shipped two-pane shell, fitted preview behavior, branded header, and palette-first control model instead of inventing replacements
+  - `Agents`: `slardar`, `omniknight`, `tinker`, `bounty_hunter`, `sniper`
+  - `Evidence`: shell regression coverage and screenshot validation should prove the closed baseline still holds while the active cycle lands follow-through changes
+  - `CODEX Label`: applied before close and retained for tracker continuity
+  - `Next Step`: treat as required baseline during checkpoints 1 through 3
+
+#### Out Of Scope For This Cycle
+
+- `#6` Adjust Square and 4x5 Text to Size ratio — reviewed and intentionally deferred through `#37` so typography scaling does not fork into a motion-only rule set
+- `#34` Regression coverage for preview/export parity — reviewed, but only direct regression tests required by `#37` or `#38` should land in this cycle; the broader hardening sweep stays for a later pass
+- `#35` Update changelog and agent memory for suite architecture — reviewed and deferred as a full docs sweep until the Design Team cycle lands real behavior changes
+- `#18` and `#20` — reviewed as upstream references already present on `main`; do not reopen package-boundary work inside this cycle branch
+- `#14`, `#15`, `#16`, and `#17` — reviewed as planning epics only; they inform the cycle but are not active implementation slices
+- `#28`, `#29`, `#30`, and `#31` — reviewed as downstream social-card work that should wait for the preset and shell contracts coming out of this cycle
+- `#13` Screenshot helper can target the wrong iTerm Codex session — reviewed and left separate because it is a workflow bug, not part of the Design Team sprint
+
+#### Sub-Agent Handoff
+
+- `slardar`
+  - Confirm the committed `main` baseline, identify the smallest safe change set for each checkpoint, and flag any sizing/schema/export compatibility traps before edits start
+  - Return inspected files, reuse seams, and risk notes for `#37`, `#38`, and `#33`
+- `omniknight`
+  - Lock preset naming, shell composition, palette-first interaction rules, warning copy, and guardrail thresholds before implementation
+  - Return acceptance bullets, token usage notes, and any visual constraints that must stay shared
+- `tinker`
+  - Own the cycle branch implementation in checkpoint order, reusing shared shell and preset primitives instead of introducing toolkit-local patterns
+  - Return changed files, test impact, and any follow-up slices that should stay out of scope
+- `bounty_hunter`
+  - Validate md/lg breakpoints, preview/export parity, console cleanliness, and visible regressions after each checkpoint
+  - Return repro notes, findings, and the smallest-fix suggestions when QA fails
+- `sniper`
+  - Capture PR-ready artifacts for preset selection, standardized shell layout, palette-first flow, and guardrail warning/export-block states
+  - Return artifact paths, what each artifact proves, and an immediate skip reason if browser capture is blocked
+- `clinkz`
+  - Keep `CHANGELOG.md`, issue updates, and any contributor-facing notes aligned with the actual cycle slices that land
+  - Return changed files plus the short issue-summary text that should accompany review-ready work
+- `oracle`, `kunkka`, `gyrocopter`
+  - Skip by default for this cycle
+  - Activate only if the scope expands into current OpenAI/MCP behavior, chart-template work, or export-engine changes beyond preset adoption
 
 ## Delivery Sequence
 
@@ -129,12 +214,17 @@ Goal: stabilize suite behavior once the shared foundations and toolkit slices ar
 Use this structure when an item moves from roadmap review into active implementation:
 
 - `Issue`: `#NN` title
+- `Scope`: `In Scope` or `Out Of Scope`
 - `Status`: one item from the status legend
 - `Branch`: `codex/GENGARVIS-###-short-slug`
+- `Input`: repo state, issue body, prior roadmap/changelog notes, and upstream dependencies that the implementation must honor
+- `Reason`: why the issue is shipping now or why it is explicitly deferred
+- `Expected Outputs`: 2-5 outcome bullets that define the intended implementation boundary
 - `Agents`: tracked profiles used, in order
 - `Dependencies`: upstream issues or packages
 - `Acceptance`: 2-5 outcome bullets
 - `Evidence`: tests, screenshot artifact paths, PR link
+- `CODEX Label`: required status plus whether the label is already applied
 - `Next Step`: the immediate implementation action
 
 ## Dependency Notes
@@ -151,3 +241,4 @@ Use this structure when an item moves from roadmap review into active implementa
 - `2026-03-15`: Created the root roadmap from the open feature queue, the current agent workflow rules, and the handover plan at `/tmp/gengartoolkit-next-feature-workplan.md`.
 - `2026-03-16`: Updated Cycle 1 items to review status after the shared package, motion-route, preset-catalog, and shell-groundwork commits were stacked on the cycle branch.
 - `2026-03-18`: Recorded the current branch’s preview-stability, fixed-pane shell, and single-active controls behavior under `#38`, plus the supporting regression-hardening progress under `#34`.
+- `2026-03-19`: Synced local `main` to `origin/main`, created `codex/GENGARVIS-037-cycle-design-team`, and added an explicit Design Team cycle-prep section with in-scope/out-of-scope review fields, checkpoint order, and tracked sub-agent handoffs.
