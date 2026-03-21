@@ -31,9 +31,10 @@ Use this skill to review pull requests for correctness, architectural fit, and t
 3. Review the documented root cause and debugging steps, not just the final patch.
 4. Review code quality, correctness risks, and maintainability.
 5. Check that tests cover the changed behavior.
-6. Confirm browser visual-validation evidence for frontend-affecting work, or equivalent terminal/app screenshot evidence for workflow fixes, or verify that the PR documents why the screenshot pass was skipped.
-7. Confirm changelog, issue comment or prepared draft, and documentation updates when applicable.
-8. Recommend improvements or follow-up work.
+6. When a shared toolkit pattern changed, confirm the PR checked sibling toolkits for parity or explicitly documented why no sibling surface applied.
+7. Confirm browser visual-validation evidence for frontend-affecting work, or equivalent terminal/app screenshot evidence for workflow fixes, or verify that the PR documents why the screenshot pass was skipped.
+8. Confirm changelog, issue comment or prepared draft, and documentation updates when applicable.
+9. Recommend improvements or follow-up work.
 
 ## Output Contract
 

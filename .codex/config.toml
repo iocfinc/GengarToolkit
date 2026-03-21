@@ -35,6 +35,10 @@ config_file = "../agents/browser-debugger.toml"
 description = "Browser screenshot specialist that prefers Chrome DevTools MCP when configured, captures feature states, flags obvious visual regressions, and returns artifact paths plus proof notes or an immediate skip reason for PR prep."
 config_file = "../agents/browser-screenshot.toml"
 
+[agents.arc_warden]
+description = "Cross-toolkit consistency verifier that compares shared UX contracts across sibling tools, flags parity drift, and returns the narrowest follow-up surface."
+config_file = "../agents/consistency-verifier.toml"
+
 [agents.oracle]
 description = "OpenAI and Codex docs researcher that uses the OpenAI developer docs MCP server for authoritative product, MCP, and integration guidance."
 config_file = "../agents/openai-docs-researcher.toml"

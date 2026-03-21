@@ -90,6 +90,13 @@ function buildPaletteSlots(theme: ThemeDefinition, options: DatavizOptions) {
   });
 }
 
+type DatavizSectionId =
+  | 'story'
+  | 'template-output'
+  | 'data-mapping'
+  | 'palettes'
+  | 'saved-presets';
+
 export function DatavizToolkitPage() {
   const [template, setTemplate] = useState<DatavizTemplate>('bar');
   const [outputPresetId, setOutputPresetId] = useState(DEFAULT_OUTPUT_PRESET_ID);
@@ -110,6 +117,7 @@ export function DatavizToolkitPage() {
   });
   const [options, setOptions] = useState<DatavizOptions>(DEFAULT_OPTIONS);
   const [presetName, setPresetName] = useState('Peak Hours Story');
+  const [activeSection, setActiveSection] = useState<DatavizSectionId | null>(null);
   const [presets, setPresets] = useState<DatavizToolkitDocument[]>(() =>
     loadVersionedStoredValue<DatavizToolkitDocument[]>(STORAGE_KEY, STORAGE_VERSION, [])
   );
@@ -290,19 +298,48 @@ export function DatavizToolkitPage() {
     });
   };
 
+  function handleSectionChange(sectionId: DatavizSectionId, open: boolean) {
+    setActiveSection(open ? sectionId : null);
+  }
+
+  const activeSectionCardClass = 'flex min-h-0 flex-1 flex-col';
+  const activeSectionContentClass = 'min-h-0 flex-1 overflow-y-auto scrollbar-thin';
+
   return (
     <EditorShell
       controls={
-        <div className="scrollbar-thin flex h-full min-h-0 flex-col gap-4 overflow-y-auto pr-1">
-          <CollapsibleSection defaultOpen={false} title="Story">
+        <div
+          className={`scrollbar-thin flex h-full min-h-0 flex-col gap-4 pr-1 ${
+            activeSection ? 'overflow-hidden' : 'overflow-y-auto'
+          }`}
+          data-testid="dataviz-control-panel"
+        >
+          {!activeSection || activeSection === 'story' ? (
+            <CollapsibleSection
+              className={activeSection === 'story' ? activeSectionCardClass : ''}
+              contentClassName={activeSection === 'story' ? activeSectionContentClass : ''}
+              onOpenChange={(open) => handleSectionChange('story', open)}
+              open={activeSection === 'story'}
+              title="Story"
+            >
             <Field label="Preset Name" onChange={setPresetName} value={presetName} />
             <Field label="Headline" onChange={setHeadline} value={headline} />
             <TextAreaField label="Subheadline" onChange={setSubheadline} value={subheadline} />
             <Field label="Source" onChange={setSource} value={source} />
             <TextAreaField label="Annotations" onChange={setAnnotationsInput} value={annotationsInput} />
-          </CollapsibleSection>
+            </CollapsibleSection>
+          ) : null}
 
-          <CollapsibleSection defaultOpen={false} title="Template & Output">
+          {!activeSection || activeSection === 'template-output' ? (
+            <CollapsibleSection
+              className={activeSection === 'template-output' ? activeSectionCardClass : ''}
+              contentClassName={
+                activeSection === 'template-output' ? activeSectionContentClass : ''
+              }
+              onOpenChange={(open) => handleSectionChange('template-output', open)}
+              open={activeSection === 'template-output'}
+              title="Template & Output"
+            >
             <SelectField
               label="Chart Template"
               onChange={(value) => setTemplate(value as DatavizTemplate)}
@@ -349,9 +386,17 @@ export function DatavizToolkitPage() {
               label="Show Legend"
               onChange={(checked) => setOptions((current) => ({ ...current, showLegend: checked }))}
             />
-          </CollapsibleSection>
+            </CollapsibleSection>
+          ) : null}
 
-          <CollapsibleSection defaultOpen={false} title="Data & Mapping">
+          {!activeSection || activeSection === 'data-mapping' ? (
+            <CollapsibleSection
+              className={activeSection === 'data-mapping' ? activeSectionCardClass : ''}
+              contentClassName={activeSection === 'data-mapping' ? activeSectionContentClass : ''}
+              onOpenChange={(open) => handleSectionChange('data-mapping', open)}
+              open={activeSection === 'data-mapping'}
+              title="Data & Mapping"
+            >
             <SelectField
               label="Input Mode"
               onChange={(value) => setInputMode(value as 'csv' | 'table' | 'json')}
@@ -421,9 +466,17 @@ export function DatavizToolkitPage() {
                 value={options.highlightSeries ?? resolvedMapping.valueColumns[0] ?? ''}
               />
             ) : null}
-          </CollapsibleSection>
+            </CollapsibleSection>
+          ) : null}
 
-          <CollapsibleSection defaultOpen={false} title="Palettes">
+          {!activeSection || activeSection === 'palettes' ? (
+            <CollapsibleSection
+              className={activeSection === 'palettes' ? activeSectionCardClass : ''}
+              contentClassName={activeSection === 'palettes' ? activeSectionContentClass : ''}
+              onOpenChange={(open) => handleSectionChange('palettes', open)}
+              open={activeSection === 'palettes'}
+              title="Palettes"
+            >
             <ToggleField
               checked={options.useCustomPalette}
               label="Use Custom Palette"
@@ -451,10 +504,17 @@ export function DatavizToolkitPage() {
                 The current theme palette stays as the default until you enable custom overrides.
               </p>
             )}
-          </CollapsibleSection>
+            </CollapsibleSection>
+          ) : null}
 
-          {presets.length > 0 ? (
-            <CollapsibleSection defaultOpen={false} title="Saved Presets">
+          {presets.length > 0 && (!activeSection || activeSection === 'saved-presets') ? (
+            <CollapsibleSection
+              className={activeSection === 'saved-presets' ? activeSectionCardClass : ''}
+              contentClassName={activeSection === 'saved-presets' ? activeSectionContentClass : ''}
+              onOpenChange={(open) => handleSectionChange('saved-presets', open)}
+              open={activeSection === 'saved-presets'}
+              title="Saved Presets"
+            >
               {presets.slice(0, 4).map((preset) => (
                 <button
                   className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left"

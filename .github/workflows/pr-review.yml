@@ -37,6 +37,7 @@ jobs:
               "- Use `agent/skills/analyze_pr.md` for the review structure.",
               "- Confirm architecture impact is acceptable.",
               "- Confirm tests cover changed behavior.",
+              "- When shared toolkit behavior changes, verify sibling-toolkit consistency was checked or explicitly ruled out.",
               "- Verify `CHANGELOG.md` is updated when required.",
               "- For frontend-affecting work, confirm screenshot artifacts or an explicit skip reason are included in the PR notes, with Chrome DevTools MCP preferred when configured.",
               "- Confirm the linked issue was updated or a post-ready draft was prepared when live posting was deferred."

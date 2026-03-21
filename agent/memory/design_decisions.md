@@ -16,7 +16,7 @@
 
 - Shared editor shells keep the preview pane fixed to the viewport while the controls pane owns overflow and scrolling.
 - Motion Toolkit opens with a static fitted preview; animation only starts after an explicit Play action.
-- Long control groups in the Motion Toolkit use a single-active accordion model so one section can fill the controls pane without leaving collapsed-pill artifacts behind.
+- Long control groups in suite editor toolkits use a single-active accordion model so one section can fill the controls pane without leaving collapsed-pill artifacts behind.
 
 ## Suite Architecture
 

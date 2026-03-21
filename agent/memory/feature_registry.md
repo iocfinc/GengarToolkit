@@ -57,5 +57,6 @@
 - Autonomous backlog scan for open issues and feature requests
 - Roadmap capture for valid but under-specified feature ideas
 - Tracked Codex multi-agent runtime profiles under `.codex/` and `agents/`
+- Cross-toolkit consistency verifier guidance for shared UX parity checks
 - Browser screenshot validation guidance for frontend PR preparation
 - Chrome DevTools MCP preference for browser debugging and screenshot capture when configured
