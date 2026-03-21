@@ -1,4 +1,8 @@
 import { typographyScale } from '@/lib/theme/typography';
+import {
+  resolveTypographyMetrics,
+  type ResolvedTypographyMetrics
+} from '@/lib/render/resolveTypographyMetrics';
 import type { AnchorPosition, BrandDocument } from '@/lib/types/document';
 
 type TypographyLayout = {
@@ -7,6 +11,7 @@ type TypographyLayout = {
   bodyLines: string[];
   blockWidth: number;
   startY: number;
+  metrics: ResolvedTypographyMetrics;
 };
 
 function wrapLines(
@@ -36,6 +41,7 @@ function wrapLines(
 }
 
 function measureTypographyBlockHeight(
+  metrics: ResolvedTypographyMetrics,
   document: BrandDocument,
   eyebrowText: string | null,
   headlineLines: string[],
@@ -44,22 +50,22 @@ function measureTypographyBlockHeight(
   let height = 0;
 
   if (eyebrowText) {
-    height += typographyScale.eyebrow.size * 2.1;
+    height += metrics.eyebrowSize * 2.1;
   }
 
   if (headlineLines.length > 0) {
     height +=
       headlineLines.length *
-      document.typography.headlineSize *
+      metrics.headlineSize *
       document.typography.lineHeight;
 
     if (bodyLines.length > 0) {
-      height += 20;
+      height += metrics.bodyGap;
     }
   }
 
   if (bodyLines.length > 0) {
-    height += bodyLines.length * document.typography.bodySize * 1.55;
+    height += bodyLines.length * metrics.bodySize * 1.55;
   }
 
   return height;
@@ -67,6 +73,7 @@ function measureTypographyBlockHeight(
 
 function measureTypographyBlockWidth(
   ctx: CanvasRenderingContext2D,
+  metrics: ResolvedTypographyMetrics,
   document: BrandDocument,
   eyebrowText: string | null,
   headlineLines: string[],
@@ -75,19 +82,19 @@ function measureTypographyBlockWidth(
   let width = 0;
 
   if (eyebrowText) {
-    ctx.font = `600 ${typographyScale.eyebrow.size}px ${typographyScale.eyebrow.family}`;
+    ctx.font = `600 ${metrics.eyebrowSize}px ${typographyScale.eyebrow.family}`;
     width = Math.max(width, ctx.measureText(eyebrowText).width);
   }
 
   if (headlineLines.length > 0) {
-    ctx.font = `${document.typography.weight} ${document.typography.headlineSize}px ${typographyScale.display.family}`;
+    ctx.font = `${document.typography.weight} ${metrics.headlineSize}px ${typographyScale.display.family}`;
     for (const line of headlineLines) {
       width = Math.max(width, ctx.measureText(line).width);
     }
   }
 
   if (bodyLines.length > 0) {
-    ctx.font = `500 ${document.typography.bodySize}px ${typographyScale.body.family}`;
+    ctx.font = `500 ${metrics.bodySize}px ${typographyScale.body.family}`;
     for (const line of bodyLines) {
       width = Math.max(width, ctx.measureText(line).width);
     }
@@ -121,6 +128,7 @@ export function createTypographyLayout(
   padding: number
 ): TypographyLayout {
   const maxWidth = width * document.typography.maxWidth;
+  const metrics = resolveTypographyMetrics(document, width, height);
   const eyebrowText = document.typography.eyebrow
     ? document.typography.eyebrow.toUpperCase()
     : null;
@@ -129,16 +137,17 @@ export function createTypographyLayout(
   let bodyLines: string[] = [];
 
   if (document.typography.headline) {
-    ctx.font = `${document.typography.weight} ${document.typography.headlineSize}px ${typographyScale.display.family}`;
+    ctx.font = `${document.typography.weight} ${metrics.headlineSize}px ${typographyScale.display.family}`;
     headlineLines = wrapLines(ctx, document.typography.headline, maxWidth);
   }
 
   if (document.typography.body) {
-    ctx.font = `500 ${document.typography.bodySize}px ${typographyScale.body.family}`;
+    ctx.font = `500 ${metrics.bodySize}px ${typographyScale.body.family}`;
     bodyLines = wrapLines(ctx, document.typography.body, maxWidth * 0.92);
   }
 
   const blockHeight = measureTypographyBlockHeight(
+    metrics,
     document,
     eyebrowText,
     headlineLines,
@@ -146,6 +155,7 @@ export function createTypographyLayout(
   );
   const blockWidth = measureTypographyBlockWidth(
     ctx,
+    metrics,
     document,
     eyebrowText,
     headlineLines,
@@ -157,6 +167,7 @@ export function createTypographyLayout(
     headlineLines,
     bodyLines,
     blockWidth,
-    startY: getVerticalStart(document.typography.anchor, height, padding, blockHeight)
+    startY: getVerticalStart(document.typography.anchor, height, padding, blockHeight),
+    metrics
   };
 }

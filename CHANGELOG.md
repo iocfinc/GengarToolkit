@@ -10,6 +10,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Changed
 
+- Motion Toolkit typography now scales relative to the active output preset dimensions, improving headline/body fill in square and portrait compositions while keeping 16:9 as the baseline reference.
 - Refreshed `ROADMAP.md` for the `2026-03-21` Social Publishing cycle, correcting committed-`main` status for shipped dataviz/docs issues and sequencing `#37`, `#6`, and `#28`-`#31` as the next Cycle Mode stream.
 - Tightened cycle guidance so `bounty_hunter` acts as a required reviewer gate for checkpoint regression validation before screenshot capture and review-ready handoff.
 - Updated deferred roadmap memory so issue `#6` is no longer parked as an indefinite next idea and instead keeps only the remaining typography-scaling policy question until the active cycle settles it.
