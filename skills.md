@@ -32,10 +32,11 @@ Use the lead product engineer flow in the main thread to keep planning, sequenci
 1. `slardar`
 2. `omniknight` when the fix is driven by visual QA, spacing, palette, typography, or layout review notes
 3. `bounty_hunter` when the flow is UI-facing
-4. relevant implementation agent
-5. `sniper` when the fix changes visible behavior
-6. `oracle` when the fix depends on current OpenAI, Codex, or MCP documentation
-7. `clinkz` only when workflow or contributor guidance changes
+4. `arc_warden` when the fix touches a shared toolkit pattern that may have drifted elsewhere
+5. relevant implementation agent
+6. `sniper` when the fix changes visible behavior
+7. `oracle` when the fix depends on current OpenAI, Codex, or MCP documentation
+8. `clinkz` only when workflow or contributor guidance changes
 
 ## Role Contracts
 
@@ -48,6 +49,7 @@ Note on role rename (DOTA motif):
 - export_engine → gyrocopter
 - browser_debugger → bounty_hunter
 - browser_screenshot → sniper
+- consistency_verifier → arc_warden
 - openai_docs_researcher → oracle
 - docs_writer → clinkz
 
@@ -93,6 +95,17 @@ Fallback behavior:
 - For terminal, desktop-app, or agent-workflow fixes, capture equivalent terminal/app evidence with the screenshot skill and reference the artifact path in the PR notes.
 - Store captures in temp or other local artifacts; do not commit screenshots to the repo by default unless the task explicitly asks for a durable docs asset.
 
+### `arc_warden`
+
+Run cross-toolkit parity checks when a shared shell, editor control pattern, or reusable interaction contract changes in one toolkit.
+
+Expected review shape:
+
+- identify sibling toolkits that should share the behavior
+- compare the touched pattern against those siblings
+- return mismatches, risks, and the narrowest fix surface
+- point to tests or workflow checks that should lock parity in place
+
 ### `oracle`
 
 Use this agent when a change depends on current OpenAI, Codex, or MCP behavior and the repo should rely on official developer docs rather than memory.
@@ -117,6 +130,7 @@ Update only the contributor-facing docs that changed. Keep extension notes conci
 - Ask each tracked profile to return changed files or inspected files, key risks, suggested tests, and artifact paths when UI evidence is expected.
 - If a tracked sub-agent is skipped for a non-trivial task, note the skip reason in the main thread instead of silently collapsing everything into one pass.
 - When a maintainer supplies manual UI review notes, treat them as explicit QA input, route them through `omniknight` before implementation, and convert the accepted fixes into regression tests where feasible.
+- When a shared UX pattern changes in one toolkit, route a parity pass through `arc_warden` before final review so sibling toolkits are checked deliberately instead of by memory.
 - For backlog or issue-driven work in a dirty tree, compare the candidate issue against `HEAD` before assuming local WIP counts as issue progress.
 - Treat committed `HEAD` as the delivery baseline; do not count uncommitted local work as shipped progress.
 - Default to Issue Mode for branching. Only use Cycle Mode when the maintainer explicitly requests a shared branch with checkpoint commits per issue.

@@ -7,6 +7,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 ### Added
 
 - Test coverage confirmations for editor sizing/preview parity, preset persistence/versioned storage, and export engine surface; minor test adjustments where needed.
+- A tracked `arc_warden` consistency-verifier agent profile and review guidance for checking sibling toolkits when shared UX patterns change.
 
 ### Changed
 
@@ -15,6 +16,11 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - Refreshed `README.md`, design decisions, and feature registry notes so the documented suite routes, shared package boundaries, shell contracts, and roadmap ownership match the current repo architecture.
 - Tracked sub-agent invocations renamed to unique DOTA hero names: explorer→slardar, design_guardian→omniknight, frontend_architect→tinker, chart_engine→kunkka, export_engine→gyrocopter, browser_debugger→bounty_hunter, browser_screenshot→sniper, openai_docs_researcher→oracle, docs_writer→clinkz. Updated `.codex/config.toml`, skills, roadmap, and workflow docs accordingly.
 - Updated contributor guidance and tests to reference `sniper` for screenshot evidence and `bounty_hunter` for interactive browser debugging.
+- Review guidance now explicitly requires cross-toolkit parity checks when a shared suite interaction pattern changes in one tool.
+
+### Fixed
+
+- Data Visualization Toolkit now uses the same single-active accordion behavior as Motion Toolkit, keeping the active section open, removing sibling collapsed pills, and moving scrolling into the active section.
 
 ## Version 0.1.0
 

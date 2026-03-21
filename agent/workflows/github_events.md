@@ -4,7 +4,7 @@ This repository uses GitHub events to drive a structured agentic development cyc
 
 ## Lifecycle
 
-Scheduled backlog sweep -> `run_backlog_cycle` -> `read_issue` -> `plan_feature` or `triage_bug` -> implementation -> `generate_tests` -> browser debug and screenshot validation for frontend work -> Pull Request -> `analyze_pr` -> merge -> `write_changelog`
+Scheduled backlog sweep -> `run_backlog_cycle` -> `read_issue` -> `plan_feature` or `triage_bug` -> implementation -> `generate_tests` -> consistency verification for shared frontend patterns -> browser debug and screenshot validation for frontend work -> Pull Request -> `analyze_pr` -> merge -> `write_changelog`
 
 Before PR creation for issue-linked work, run `comment_issue_update`.
 After merge, record learnings in `agent/memory/`.
@@ -51,7 +51,7 @@ After merge, record learnings in `agent/memory/`.
 - Skill: `generate_tests`
 - Expected inputs: changed files, feature or fix summary, expected behavior
 - Required output: test coverage plan and runnable tests
-- Human or agent follow-up: run `sniper` for frontend-affecting work when browser tooling is available, then open or update a pull request
+- Human or agent follow-up: run `verify_consistency` when shared toolkit behavior changed, then run `sniper` for frontend-affecting work when browser tooling is available, then open or update a pull request
 - Matching GitHub workflow file: `.github/workflows/pr-review.yml`
 
 ## Event: PR Ready For Review
