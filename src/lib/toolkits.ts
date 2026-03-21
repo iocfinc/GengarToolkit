@@ -27,8 +27,9 @@ export const toolkitRegistry: ToolkitDefinition[] = [
   {
     id: 'social-card-toolkit',
     label: 'Social Card Toolkit',
-    summary: 'Constrained social publishing templates will plug into the same launcher once the toolkit bootstrap lands.',
-    status: 'planned',
+    summary: 'Template-driven social publishing cards with shared presets, shared shell behavior, and chart-capable variants.',
+    href: '/social-card-toolkit',
+    status: 'live',
     capabilities: [
       { id: 'social-svg', label: 'SVG / PNG' },
       { id: 'social-templates', label: 'Template Cards' }

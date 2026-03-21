@@ -7,10 +7,12 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 ### Added
 
 - Test coverage confirmations for editor sizing/preview parity, preset persistence/versioned storage, and export engine surface; minor test adjustments where needed.
+- A shared social-card framework with reusable template metadata, normalized draft/preset contracts, and a `chart-core`-backed chart-caption renderer for constrained publishing cards.
 
 ### Changed
 
 - Motion Toolkit typography now scales relative to the active output preset dimensions, improving headline/body fill in square and portrait compositions while keeping 16:9 as the baseline reference.
+- Social Card Toolkit is now a live suite route in the launcher and uses the shared `BrandedHeader` / `EditorShell` / `PreviewSurface` shell with grouped controls, named output presets, and the shipped MVP template pack.
 - Refreshed `ROADMAP.md` for the `2026-03-21` Social Publishing cycle, correcting committed-`main` status for shipped dataviz/docs issues and sequencing `#37`, `#6`, and `#28`-`#31` as the next Cycle Mode stream.
 - Tightened cycle guidance so `bounty_hunter` acts as a required reviewer gate for checkpoint regression validation before screenshot capture and review-ready handoff.
 - Updated deferred roadmap memory so issue `#6` is no longer parked as an indefinite next idea and instead keeps only the remaining typography-scaling policy question until the active cycle settles it.
@@ -19,6 +21,10 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 - Refreshed `README.md`, design decisions, and feature registry notes so the documented suite routes, shared package boundaries, shell contracts, and roadmap ownership match the current repo architecture.
 - Tracked sub-agent invocations renamed to unique DOTA hero names: explorer→slardar, design_guardian→omniknight, frontend_architect→tinker, chart_engine→kunkka, export_engine→gyrocopter, browser_debugger→bounty_hunter, browser_screenshot→sniper, openai_docs_researcher→oracle, docs_writer→clinkz. Updated `.codex/config.toml`, skills, roadmap, and workflow docs accordingly.
 - Updated contributor guidance and tests to reference `sniper` for screenshot evidence and `bounty_hunter` for interactive browser debugging.
+
+### Fixed
+
+- Shared select controls and the Social Card Toolkit's local text inputs now emit stable `id` / `name` attributes, removing the browser QA form-field warning from the new publishing flow.
 
 ## Version 0.1.0
 
