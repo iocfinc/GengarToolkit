@@ -1,0 +1,4 @@
+# Expected output: toolkits checked, shared behavior compared, mismatches found, tests or evidence reviewed, and the narrowest recommended fix surface.
+model = "gpt-5"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"

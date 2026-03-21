@@ -1,7 +1,6 @@
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execFileSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -23,12 +22,7 @@ function extractConfigFiles(config: string) {
 }
 
 function listTrackedAgentProfiles() {
-  return execFileSync('git', ['ls-files', '--', 'agents'], {
-    cwd: repoRoot,
-    encoding: 'utf8'
-  })
-    .split('\n')
-    .map((entry) => entry.trim())
+  return readdirSync(path.join(repoRoot, 'agents'))
     .filter((entry) => entry.endsWith('.toml'))
     .map((entry) => path.basename(entry));
 }
