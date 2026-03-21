@@ -217,30 +217,30 @@ function drawTypography(
   let cursorY = layout.startY;
 
   if (layout.eyebrowText) {
-    ctx.font = `600 ${typographyScale.eyebrow.size}px ${typographyScale.eyebrow.family}`;
+    ctx.font = `600 ${layout.metrics.eyebrowSize}px ${typographyScale.eyebrow.family}`;
     ctx.globalAlpha = 0.78;
     ctx.fillText(layout.eyebrowText, originX, cursorY);
-    cursorY += typographyScale.eyebrow.size * 2.1;
+    cursorY += layout.metrics.eyebrowSize * 2.1;
   }
 
   if (layout.headlineLines.length > 0) {
     ctx.globalAlpha = 1;
-    ctx.font = `${document.typography.weight} ${document.typography.headlineSize}px ${typographyScale.display.family}`;
+    ctx.font = `${document.typography.weight} ${layout.metrics.headlineSize}px ${typographyScale.display.family}`;
     for (const line of layout.headlineLines) {
       ctx.fillText(line, originX, cursorY);
-      cursorY += document.typography.headlineSize * document.typography.lineHeight;
+      cursorY += layout.metrics.headlineSize * document.typography.lineHeight;
     }
     if (layout.bodyLines.length > 0) {
-      cursorY += 20;
+      cursorY += layout.metrics.bodyGap;
     }
   }
 
   if (layout.bodyLines.length > 0) {
     ctx.globalAlpha = 0.82;
-    ctx.font = `500 ${document.typography.bodySize}px ${typographyScale.body.family}`;
+    ctx.font = `500 ${layout.metrics.bodySize}px ${typographyScale.body.family}`;
     for (const line of layout.bodyLines) {
       ctx.fillText(line, originX, cursorY);
-      cursorY += document.typography.bodySize * 1.55;
+      cursorY += layout.metrics.bodySize * 1.55;
     }
   }
 

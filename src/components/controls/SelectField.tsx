@@ -1,5 +1,7 @@
 'use client';
 
+import { useId } from 'react';
+
 type SelectFieldProps<T extends string> = {
   label: string;
   value: T;
@@ -13,11 +15,15 @@ export function SelectField<T extends string>({
   options,
   onChange
 }: SelectFieldProps<T>) {
+  const inputId = useId();
+
   return (
-    <label className="block">
+    <label className="block" htmlFor={inputId}>
       <div className="mb-2 text-xs uppercase tracking-[0.18em] text-white/48">{label}</div>
       <select
         className="w-full rounded-2xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-fog"
+        id={inputId}
+        name={inputId}
         onChange={(event) => onChange(event.target.value as T)}
         value={value}
       >

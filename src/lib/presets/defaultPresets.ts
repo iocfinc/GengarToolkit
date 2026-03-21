@@ -88,6 +88,7 @@ export function createDocument(
     export: {
       format: 'png',
       resolution: 'full-hd',
+      presetId: 'landscape-16x9',
       fps: 30,
       duration: 5,
       scale: 1,

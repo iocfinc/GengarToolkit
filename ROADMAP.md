@@ -1,6 +1,6 @@
 # Roadmap
 
-Last updated: 2026-03-19
+Last updated: 2026-03-21
 
 This roadmap turns open feature issues into a reviewable delivery plan. Use it to sequence feature work, track dependencies, and record the multi-agent execution path for each issue.
 
@@ -8,8 +8,8 @@ This roadmap turns open feature issues into a reviewable delivery plan. Use it t
 
 ## Sources Of Truth
 
-- Open GitHub issues reviewed on `2026-03-19`: `#6`, `#13`-`#18`, `#20`, `#28`-`#31`, `#33`-`#35`, `#37`
-- Closed design baseline reviewed on `2026-03-19`: `#38` (closed `2026-03-18`)
+- Open GitHub issues reviewed on `2026-03-21`: `#6`, `#13`-`#18`, `#20`, `#28`-`#31`, `#33`, `#34`, `#37`
+- Closed implementation baseline reviewed on `2026-03-21`: `#21`, `#23`-`#27`, `#32`, `#35`, `#38`
 - Previous handover plan: `/tmp/gengartoolkit-next-feature-workplan.md`
 - Multi-agent delegation guidance: `skills.md`
 - Backlog automation and roadmap routing: `agent/skills/run_backlog_cycle.md`
@@ -51,11 +51,99 @@ This roadmap turns open feature issues into a reviewable delivery plan. Use it t
 ### Evidence Required Per Feature
 
 - Focused tests for the changed contract or flow
+- `bounty_hunter` review notes for regressions, console/layout issues, and checkpoint readiness before a slice is treated as reviewable
 - Screenshot artifact paths for frontend-visible changes when browser tooling is available
 - Changelog entry
 - Issue comment with summary, validation notes, and PR link when work is review-ready
 
 ## Active Cycle Prep
+
+### Publishing Team Cycle — 2026-03-21
+
+Goal: turn the shipped preset, shell, and dataviz groundwork on `main` into a reviewable social-publishing cycle, while fixing Motion Toolkit typography sizing through the shared output contract instead of another px-bound one-off.
+
+- `Branch`: `codex/GENGARVIS-016-cycle-social-publishing`
+- `Mode`: `Cycle Mode`
+- `Baseline`: local `main` matched `origin/main` at `10d7ae1` when this cycle was prepared; uncommitted local workflow-doc edits do not count as shipped progress
+- `Reviewer Gate`: `bounty_hunter` is the mandatory checkpoint reviewer for this cycle and must validate regressions before `sniper` capture and review-ready close-out
+- `Reality Check`:
+  1. Dataviz child issues `#23`-`#27` are already closed and their route is live on `main`
+  2. Social Card Toolkit already has a prototype route on `main`, but it still uses toolkit-local sizing and a custom shell instead of the shared launcher/shell contract
+  3. Motion typography still renders from raw `headlineSize` and `bodySize` px values instead of a format-relative sizing rule
+- `Checkpoint Order`:
+  1. `#37` finish named output preset adoption where Motion and Social still rely on toolkit-local size choices
+  2. `#6` implement format-relative motion typography scaling on top of the shared preset sizing contract
+  3. `#28` align Social Card Toolkit with the shared launcher and editor-shell baseline
+  4. `#29` extract the shared social-card template framework
+  5. `#30` complete the MVP social-card template pack
+  6. `#31` integrate the chart + caption card with `chart-core`
+- `Reviewed Issues`: open issues `#6`, `#15`, `#16`, `#28`-`#31`, `#34`, `#37`, plus closed issues `#23`-`#27` and `#38` as committed baseline inputs
+- `CODEX Label Policy`: required on every reviewed open issue in this cycle-prep pass
+
+#### In Scope
+
+- `#37` Create shared output preset catalog for social, LinkedIn, and print formats — `In Progress`
+  - `Input`: shipped `packages/studio-shell` preset catalog, live dataviz preset selector, Motion Toolkit aspect-ratio/export controls, Social Card Toolkit prototype sizing, and issue `#6`
+  - `Reason`: the next social and typography slices need one shared sizing source of truth instead of separate motion/social mappings
+  - `Expected Outputs`: Motion and Social consume shared preset IDs or compatibility mappings, preview/export sizing stays aligned, and PDF/image/video preset classes remain explicit
+  - `Agents`: `slardar`, `omniknight`, `tinker`, `bounty_hunter`, `sniper`, `clinkz`
+  - `Dependencies`: `#20`, `#21`, `#32`, `#38`
+  - `Evidence`: preset-selection tests, export-dimension assertions, and screenshot proof of the updated selector states
+  - `CODEX Label`: required and applied
+  - `Next Step`: checkpoint 1 commit on the cycle branch
+- `#6` Adjust Square and 4x5 Text to Size ratio — `Planned`
+  - `Input`: current Motion Toolkit typography controls, issue screenshots showing 16:9 versus 4:5 imbalance, and the shared preset/output sizing contract from checkpoint 1
+  - `Reason`: the user-facing typography problem is real, but it should land as a shared sizing rule derived from composition size instead of a motion-only cap increase
+  - `Expected Outputs`: a format-relative typography-size resolver, preserved preview/export parity, and compatibility behavior for existing saved presets
+  - `Agents`: `slardar`, `omniknight`, `tinker`, `bounty_hunter`, `sniper`, `clinkz`
+  - `Dependencies`: `#37`, `#38`
+  - `Evidence`: typography parity tests across aspect ratios plus screenshot proof comparing 16:9, 4:5, and 1:1 headline scale
+  - `CODEX Label`: required and applied
+  - `Next Step`: checkpoint 2 commit after preset adoption is stable
+- `#28` Bootstrap `apps/social-card-toolkit` with shared shell — `Planned`
+  - `Input`: existing Social Card Toolkit prototype route, shared launcher registry, `EditorShell`, `PreviewSurface`, and the closed shell baseline in `#38`
+  - `Reason`: the prototype exists, but it still needs to become a first-class suite toolkit before template work widens
+  - `Expected Outputs`: launcher-visible toolkit entry, shared shell adoption, preset-driven preview sizing, and preserved SVG/PNG export behavior
+  - `Agents`: `slardar`, `omniknight`, `tinker`, `bounty_hunter`, `sniper`, `clinkz`
+  - `Dependencies`: `#37`, `#38`
+  - `Evidence`: route-level tests plus screenshot proof of the shared-shell Social Card Toolkit layout
+  - `CODEX Label`: required and applied
+  - `Next Step`: checkpoint 3 commit after the typography slice lands
+- `#29` Implement social card template framework — `Planned`
+  - `Input`: Social Card Toolkit prototype render path, shared tokens, output presets, and the template types already defined in `config-schema`
+  - `Reason`: MVP templates should extend a constrained framework, not keep growing inside one monolithic page component
+  - `Expected Outputs`: reusable template metadata, shared render/config contracts, and constrained grouped controls that match the suite shell model
+  - `Agents`: `slardar`, `omniknight`, `tinker`, `bounty_hunter`, `sniper`, `clinkz`
+  - `Dependencies`: `#28`, `#37`
+  - `Evidence`: component or contract tests plus screenshot proof of at least two template states using the shared framework
+  - `CODEX Label`: required and applied
+  - `Next Step`: checkpoint 4 commit after shared-shell bootstrap is stable
+- `#30` Implement MVP social card template pack — `Planned`
+  - `Input`: the new social-card framework, MVP template list from the issue body, and shared theme/token constraints
+  - `Reason`: the cycle should finish with the promised social-card templates instead of stopping at scaffolding
+  - `Expected Outputs`: quote, stat, announcement, and explainer cards ship through the shared framework with consistent spacing, typography, and export behavior
+  - `Agents`: `slardar`, `omniknight`, `tinker`, `bounty_hunter`, `sniper`, `clinkz`
+  - `Dependencies`: `#29`
+  - `Evidence`: focused template coverage plus screenshot artifacts for each shipped MVP card state
+  - `CODEX Label`: required and applied
+  - `Next Step`: checkpoint 5 commit after the framework contract lands
+- `#31` Integrate chart + caption card with `chart-core` — `Planned`
+  - `Input`: shipped dataviz `chart-core` contracts, the social-card framework from `#29`, and the MVP pack work in `#30`
+  - `Reason`: the chart card should finish the social-card stream by reusing approved dataviz outputs instead of inventing a separate chart renderer
+  - `Expected Outputs`: chart-caption template wiring through `chart-core`, constrained chart embed controls, and visual consistency with the live dataviz toolkit
+  - `Agents`: `slardar`, `omniknight`, `kunkka`, `tinker`, `bounty_hunter`, `sniper`, `clinkz`
+  - `Dependencies`: `#29`, `#30`
+  - `Evidence`: chart-embed contract coverage and screenshot proof of a chart-caption card matching the approved dataviz look
+  - `CODEX Label`: required and applied
+  - `Next Step`: checkpoint 6 commit after the non-chart social templates are stable
+
+#### Out Of Scope For This Cycle
+
+- `#23`-`#27` Dataviz child issues — already closed on GitHub and shipped on `main`; do not reopen the MVP stream unless a concrete regression appears
+- `#33` Shared brand guardrail validation — keep separate from the social-publishing sequence so validation policy does not compete with active template work
+- `#34` Regression coverage for preview/export parity — only direct regression tests needed by checkpoints `#6`, `#28`, `#29`, `#30`, or `#31` should land in this cycle
+- `#35` Update changelog and agent memory for suite architecture — already closed on GitHub; only incremental changelog updates tied to actual cycle slices should land here
+- `#13` Screenshot helper can target the wrong iTerm Codex session — keep separate because it is a workflow bug, not a product-cycle item
 
 ### Design Team Cycle — 2026-03-19
 
@@ -162,33 +250,34 @@ Goal: finish the shared package and shell layer needed by every toolkit.
 
 ### Cycle 2 — Data Visualization Toolkit MVP
 
-Goal: bootstrap the dataviz app on top of the shared shell, then add constrained charting workflows.
+Goal: ship the shared-shell dataviz route and constrained chart workflows that now act as the chart baseline for downstream social-card work.
 
-- `#15` Epic: Data Visualization Toolkit MVP — `Planned`
-- `#23` Bootstrap `apps/dataviz-toolkit` with shared shell — `Blocked`
-  - Depends on `#38`.
-- `#24` Implement structured data ingestion and column mapping — `Blocked`
-  - Depends on `#23`.
-- `#25` Implement dataviz template set A — `Blocked`
-  - Depends on `#24`.
-- `#26` Implement dataviz template set B — `Blocked`
-  - Depends on `#25`.
-- `#27` Add dataviz validation, story copy, presets, and export — `Blocked`
-  - Depends on `#37` and the earlier dataviz slices.
+- `#15` Epic: Data Visualization Toolkit MVP — `Review`
+  - Child implementation issues are closed on GitHub and the toolkit route is live on `main`; keep the epic open only for follow-through review if needed.
+- `#23` Bootstrap `apps/dataviz-toolkit` with shared shell — `Shipped`
+  - Closed on GitHub and present on `main`.
+- `#24` Implement structured data ingestion and column mapping — `Shipped`
+  - Closed on GitHub and present on `main`.
+- `#25` Implement dataviz template set A — `Shipped`
+  - Closed on GitHub and present on `main`.
+- `#26` Implement dataviz template set B — `Shipped`
+  - Closed on GitHub and present on `main`.
+- `#27` Add dataviz validation, story copy, presets, and export — `Shipped`
+  - Closed on GitHub and present on `main`.
 
 ### Cycle 3 — Social Card Toolkit MVP
 
-Goal: bootstrap the social-card app, then add constrained template workflows that reuse shared systems.
+Goal: turn the current Social Card Toolkit prototype into a first-class suite toolkit that reuses shared presets, shell behavior, and chart contracts.
 
 - `#16` Epic: Social Card Toolkit MVP — `Planned`
-- `#28` Bootstrap `apps/social-card-toolkit` with shared shell — `Blocked`
-  - Depends on `#38`.
-- `#29` Implement social card template framework — `Blocked`
+- `#28` Bootstrap `apps/social-card-toolkit` with shared shell — `Planned`
+  - Prototype route exists on `main`, but launcher visibility and shared-shell adoption are still missing.
+- `#29` Implement social card template framework — `Planned`
   - Depends on `#37` and `#28`.
-- `#30` Implement MVP social card template pack — `Blocked`
+- `#30` Implement MVP social card template pack — `Planned`
   - Depends on `#29`.
-- `#31` Integrate chart + caption card with `chart-core` — `Blocked`
-  - Depends on the shared dataviz/chart contracts and `#29`.
+- `#31` Integrate chart + caption card with `chart-core` — `Planned`
+  - Depends on the shipped dataviz/chart contracts plus `#29` and `#30`.
 
 ### Cross-Cutting Hardening
 
@@ -199,15 +288,15 @@ Goal: stabilize suite behavior once the shared foundations and toolkit slices ar
   - Best scheduled after `#19`, `#20`, and the shared shell controls are stable.
 - `#34` Regression coverage for preview/export parity — `Planned`
   - Current branch adds preview-stability and shell-behavior regression coverage; broader preview/export parity hardening should continue alongside later slices.
-- `#35` Update changelog and agent memory for suite architecture — `Planned`
-  - Should track actual merged architecture changes, not speculative local WIP.
+- `#35` Update changelog and agent memory for suite architecture — `Shipped`
+  - Closed on GitHub and merged to `main`.
 
 ## Routed Through Shared Systems
 
-- `#6` Adjust Square and 4x5 Text to Size ratio — `Blocked`
-  - Keep this tied to `#37` instead of landing a motion-only one-off.
-  - Use the shared preset system to define whether typography scaling is normalized, format-aware, or preset-specific.
-  - If the scaling decision is still unresolved when `#37` starts, keep the open design question in `agent/memory/roadmap.md`.
+- `#6` Adjust Square and 4x5 Text to Size ratio — `Planned`
+  - Keep this tied to `#37` so typography sizing ships through the shared output contract instead of landing as a motion-only override.
+  - Use a composition-relative sizing rule derived from the logical canvas or named preset metadata, then prove preview/export parity with targeted tests.
+  - If the active cycle cannot settle the scaling rule cleanly, move only the unresolved policy question back to `agent/memory/roadmap.md`.
 
 ## Issue Execution Templates
 
@@ -229,11 +318,12 @@ Use this structure when an item moves from roadmap review into active implementa
 
 ## Dependency Notes
 
-- `#37` should land before `#38` so shell controls target named presets instead of toolkit-local size assumptions.
+- `#38` is now the shipped shell baseline that `#28` must adopt rather than replace.
 - `#19`, `#20`, and `#21` form the shared package baseline for `#37`.
-- `#23` and `#28` should adopt the shared shell behavior from `#38`, not create app-local layout patterns.
-- `#27` and `#29` should consume the shared preset catalog from `#37`.
+- `#23` is shipped; `#28` should adopt the shared shell behavior from `#38` instead of creating app-local layout patterns.
+- `#27` is shipped, and `#29` should consume the shared preset catalog from `#37`.
 - `#31` should reuse approved chart contracts rather than inventing a parallel charting stack.
+- `#6` should follow the first `#37` adoption checkpoint so typography scaling attaches to the same output-size contract used elsewhere.
 - `#34` should grow incrementally as each cycle lands so parity checks stay close to the change that introduced them.
 
 ## Revision History
@@ -242,3 +332,4 @@ Use this structure when an item moves from roadmap review into active implementa
 - `2026-03-16`: Updated Cycle 1 items to review status after the shared package, motion-route, preset-catalog, and shell-groundwork commits were stacked on the cycle branch.
 - `2026-03-18`: Recorded the current branch’s preview-stability, fixed-pane shell, and single-active controls behavior under `#38`, plus the supporting regression-hardening progress under `#34`.
 - `2026-03-19`: Synced local `main` to `origin/main`, created `codex/GENGARVIS-037-cycle-design-team`, and added an explicit Design Team cycle-prep section with in-scope/out-of-scope review fields, checkpoint order, and tracked sub-agent handoffs.
+- `2026-03-21`: Refreshed the roadmap against committed `main`, marked the closed dataviz and docs issues as shipped, and added the Social Publishing cycle that sequences `#37`, `#6`, and `#28`-`#31` in Cycle Mode.

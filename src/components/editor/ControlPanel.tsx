@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { PaletteGrid } from '@packages/ui/src/PaletteGrid';
 import { CollapsibleSection } from '@packages/ui/src/CollapsibleSection';
+import { listMotionOutputPresets } from '@/lib/outputPresets/motionOutputPresets';
 import { approvedPaletteDefinitions } from '@/lib/theme/colors';
 import { AnchorGridField } from '@/components/controls/AnchorGridField';
 import { ColorTokenPicker } from '@/components/controls/ColorTokenPicker';
@@ -24,7 +25,6 @@ import {
   exportFormats,
   layoutPresets,
   motionBehaviors,
-  resolutionPresets,
   textureTypes
 } from '@/lib/types/document';
 import { useEditorStore } from '@/lib/store/editorStore';
@@ -42,7 +42,7 @@ type SectionId =
 export function ControlPanel() {
   const [activeSection, setActiveSection] = useState<SectionId | null>(null);
   const document = useEditorStore((state) => state.document);
-  const setAspectRatio = useEditorStore((state) => state.setAspectRatio);
+  const setOutputPreset = useEditorStore((state) => state.setOutputPreset);
   const setLayoutPreset = useEditorStore((state) => state.setLayoutPreset);
   const updateBackground = useEditorStore((state) => state.updateBackground);
   const updateMotif = useEditorStore((state) => state.updateMotif);
@@ -54,6 +54,7 @@ export function ControlPanel() {
   const setDocumentName = useEditorStore((state) => state.setDocumentName);
   const selectedPalette =
     approvedPaletteDefinitions.find((palette) => palette.name === document.background.paletteName) ?? null;
+  const motionOutputPresets = listMotionOutputPresets();
 
   function handleSectionChange(sectionId: SectionId, open: boolean) {
     setActiveSection(open ? sectionId : null);
@@ -86,13 +87,13 @@ export function ControlPanel() {
           />
         </label>
         <SelectField
-          label="Aspect Ratio"
-          onChange={setAspectRatio}
-          options={aspectRatios.map((ratio) => ({
-            value: ratio,
-            label: aspectRatioLabels[ratio]
+          label="Output Preset"
+          onChange={setOutputPreset}
+          options={motionOutputPresets.map((preset) => ({
+            value: preset.id,
+            label: `${preset.label} · ${preset.aspectRatio}`
           }))}
-          value={document.aspectRatio}
+          value={document.export.presetId ?? motionOutputPresets[0]?.id ?? 'landscape-16x9'}
         />
         <SelectField
           label="Layout Preset"
@@ -481,13 +482,13 @@ export function ControlPanel() {
           value={document.export.format}
         />
         <SelectField
-          label="Resolution"
-          onChange={(value) => updateExport({ resolution: value })}
-          options={resolutionPresets.map((resolution) => ({
-            value: resolution,
-            label: resolution
+          label="Output Preset"
+          onChange={setOutputPreset}
+          options={motionOutputPresets.map((preset) => ({
+            value: preset.id,
+            label: `${preset.label} · ${preset.width}×${preset.height}`
           }))}
-          value={document.export.resolution}
+          value={document.export.presetId ?? motionOutputPresets[0]?.id ?? 'landscape-16x9'}
         />
         <SliderField
           label="FPS"

@@ -7,10 +7,18 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 ### Added
 
 - Test coverage confirmations for editor sizing/preview parity, preset persistence/versioned storage, and export engine surface; minor test adjustments where needed.
+- A shared social-card framework with reusable template metadata, normalized draft/preset contracts, and a `chart-core`-backed chart-caption renderer for constrained publishing cards.
+- A repo-native `create_announcement_asset` skill for turning branch or cycle changes into saved Social Card Toolkit announcement presets plus PR-ready artifact notes.
 - A tracked `arc_warden` consistency-verifier agent profile and review guidance for checking sibling toolkits when shared UX patterns change.
 
 ### Changed
 
+- Motion Toolkit typography now scales relative to the active output preset dimensions, improving headline/body fill in square and portrait compositions while keeping 16:9 as the baseline reference.
+- Social Card Toolkit is now a live suite route in the launcher and uses the shared `BrandedHeader` / `EditorShell` / `PreviewSurface` shell with grouped controls, named output presets, and the shipped MVP template pack.
+- Social Card Toolkit now opens with a seeded Dioscuri Agent Team launch announcement preset, uses Gengar/Kirby-aligned palette defaults for that card, and keeps named preset saves deduped by preset title during dogfooding.
+- Refreshed `ROADMAP.md` for the `2026-03-21` Social Publishing cycle, correcting committed-`main` status for shipped dataviz/docs issues and sequencing `#37`, `#6`, and `#28`-`#31` as the next Cycle Mode stream.
+- Tightened cycle guidance so `bounty_hunter` acts as a required reviewer gate for checkpoint regression validation before screenshot capture and review-ready handoff.
+- Updated deferred roadmap memory so issue `#6` is no longer parked as an indefinite next idea and instead keeps only the remaining typography-scaling policy question until the active cycle settles it.
 - Refreshed `ROADMAP.md` for the `2026-03-19` Design Team cycle, including Cycle Mode branch/checkpoint planning for `#37`, `#38`, and `#33`, explicit `Input`/`Reason`/`Expected Outputs` review fields, and `CODEX` label expectations for reviewed issues.
 - Updated roadmap memory and workflow learnings to keep issue `#6` deferred through the shared preset decision in `#37` and to record the new Design Team cycle kickoff pattern.
 - Refreshed `README.md`, design decisions, and feature registry notes so the documented suite routes, shared package boundaries, shell contracts, and roadmap ownership match the current repo architecture.
@@ -21,6 +29,10 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 ### Fixed
 
 - Data Visualization Toolkit now uses the same single-active accordion behavior as Motion Toolkit, keeping the active section open, removing sibling collapsed pills, and moving scrolling into the active section.
+
+### Fixed
+
+- Shared select controls and the Social Card Toolkit's local text inputs now emit stable `id` / `name` attributes, removing the browser QA form-field warning from the new publishing flow.
 
 ## Version 0.1.0
 

@@ -30,6 +30,18 @@ describe('render sizing', () => {
     });
   });
 
+  it('prefers shared output preset dimensions when a preset id is present', () => {
+    const document = createDocument();
+    document.aspectRatio = '4:5';
+    document.export.presetId = 'portrait-4x5';
+    document.export.resolution = 'full-hd';
+
+    expect(getLogicalCanvasSize(document)).toEqual({
+      width: 1080,
+      height: 1350
+    });
+  });
+
   it('fits the preview canvas into the stage while preserving aspect ratio', () => {
     expect(getPreviewDisplaySize(900, 700, '16:9', 1)).toEqual({
       width: 900,

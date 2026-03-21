@@ -157,6 +157,7 @@ export const motionConfigSchema = z.object({
 export const exportConfigSchema = z.object({
   format: z.enum(exportFormats),
   resolution: z.enum(resolutionPresets),
+  presetId: z.string().optional(),
   fps: z.number(),
   duration: z.number(),
   scale: z.number(),
@@ -262,7 +263,8 @@ export const socialCardToolkitDocumentSchema = z.object({
   aspectRatio: z.enum(suiteAspectRatios),
   export: z.object({
     format: z.enum(['png', 'svg']),
-    filename: z.string()
+    filename: z.string(),
+    presetId: z.string().optional()
   }),
   presetMeta: presetMetaSchema,
   content: socialCardContentSchema,
