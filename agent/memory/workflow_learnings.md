@@ -1,5 +1,34 @@
 # Workflow Learnings
 
+## Issue 28/29/30/31 Follow-Through: Dogfooded Announcement Assets
+
+### What Worked
+
+- Shipping a seeded social-card announcement preset made the toolkit immediately usable for branch and cycle launch notes instead of requiring manual copy setup every time.
+- Capturing the PR-ready announcement inside the product exposed preset-persistence details and UI polish needs earlier than a standalone screenshot pass would have.
+- Pairing the seeded preset with a dedicated repo skill turned one successful launch card into a reusable workflow.
+
+### What Slowed Us Down
+
+- Browser-local saved presets alone were not durable enough for team-wide reuse, so the branch needed a shipped fallback preset instead of relying only on local storage.
+- Saving the seeded preset without dedupe would have created duplicate preset names during dogfooding.
+
+### Skill Updates Needed
+
+- Add a dedicated announcement-asset skill that tells future runs how to turn a branch diff into a Social Card Toolkit preset, artifact, and PR note.
+
+### Workflow Updates Needed
+
+- Treat launch announcements as part of PR preparation for user-visible cycle work.
+- Prefer seeded presets for canonical launch cards and use browser-saved presets as the working copy layer.
+
+### Reusable Delivery Pattern
+
+1. Convert the branch summary into announcement copy inside the Social Card Toolkit.
+2. Save the asset as a named preset before export or screenshot capture.
+3. Capture the announcement artifact and cite it in the PR notes.
+4. Record the workflow as a repo skill if the team is likely to repeat it.
+
 ## Issue 37/38/33: Design Team Cycle Prep
 
 ### What Worked

@@ -32,6 +32,7 @@ export const SOCIAL_CHART_TEMPLATES = [
 ] as const;
 
 const DEFAULT_CHART_INPUT = 'Quarter,Value\nQ1,42\nQ2,58\nQ3,64\nQ4,72';
+const DIOSCURI_AGENT_TEAM_PRESET_ID = 'dioscuri-agent-team-launch';
 
 function escapeMarkup(value: string) {
   return value
@@ -417,19 +418,41 @@ export function inferLegacyOutputPresetId(aspectRatio?: SocialCardPreset['aspect
   }
 }
 
+export const DIOSCURI_AGENT_TEAM_ANNOUNCEMENT_PRESET: SocialCardPreset = {
+  id: DIOSCURI_AGENT_TEAM_PRESET_ID,
+  name: 'Dioscuri Agent Team Launch Announcement',
+  template: 'announcement-card',
+  outputPresetId: 'linkedin-shared-image',
+  themeId: 'dark-editorial',
+  title: 'Dioscuri Agent Team ships launch-ready publishing',
+  subtitle: 'Shared presets, reactive motion type, live social cards, and chart captions are now in the suite.',
+  body: 'This cycle turns our launch loop into a product workflow. Motion typography now scales to the active format, Social Card Toolkit ships in the shared shell, saved presets use named output sizes, and chart-caption cards reuse chart-core for branded exports.',
+  footer: 'Dioscuri Agent Team • Cycle 016',
+  cta: 'TRY IT!',
+  quoteAttribution: 'Dioscuri Agent Team',
+  accentColor: 'violetMist',
+  backgroundStyle: 'spotlight',
+  chartTemplate: 'bar',
+  chartInput: DEFAULT_CHART_INPUT,
+  chartShowLegend: false
+};
+
+export const SEEDED_SOCIAL_CARD_PRESETS: SocialCardPreset[] = [
+  DIOSCURI_AGENT_TEAM_ANNOUNCEMENT_PRESET
+];
+
 export function getDefaultSocialCardDraft(): SocialCardDraft {
+  const {
+    id: _id,
+    name: _name,
+    aspectRatio: _aspectRatio,
+    ...draft
+  } = DIOSCURI_AGENT_TEAM_ANNOUNCEMENT_PRESET;
+
   return {
+    ...draft,
     template: 'announcement-card',
-    outputPresetId: DEFAULT_OUTPUT_PRESET_ID,
-    themeId: 'dark-editorial',
-    title: 'Q2 launches moved faster than forecast',
-    subtitle: 'Constrained templates for fast internal publishing',
-    body: 'Package your key message with strong defaults, approved brand treatments, and social-ready export sizes without rebuilding the same composition from scratch.',
-    footer: 'Dioscuri platform update',
-    cta: 'Read brief',
-    quoteAttribution: 'Internal Comms Team',
-    accentColor: 'royal',
-    backgroundStyle: 'mesh',
+    outputPresetId: draft.outputPresetId || DEFAULT_OUTPUT_PRESET_ID,
     chartTemplate: 'bar',
     chartInput: DEFAULT_CHART_INPUT,
     chartShowLegend: false

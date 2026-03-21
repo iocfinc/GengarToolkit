@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  DIOSCURI_AGENT_TEAM_ANNOUNCEMENT_PRESET,
+  SEEDED_SOCIAL_CARD_PRESETS,
   getDefaultSocialCardDraft,
   getSocialCardTemplateDefinition,
   renderSocialCardPreview,
@@ -26,5 +28,12 @@ describe('social card framework', () => {
     expect(getSocialCardTemplateDefinition('chart-caption-card')?.chartEnabled).toBe(true);
     expect(preview.svg).toContain('data:image/svg+xml');
     expect(preview.svg).toContain('CHART + CAPTION');
+  });
+
+  it('ships a seeded Dioscuri Agent Team announcement preset', () => {
+    expect(SEEDED_SOCIAL_CARD_PRESETS).toHaveLength(1);
+    expect(DIOSCURI_AGENT_TEAM_ANNOUNCEMENT_PRESET.outputPresetId).toBe('linkedin-shared-image');
+    expect(DIOSCURI_AGENT_TEAM_ANNOUNCEMENT_PRESET.cta).toBe('TRY IT!');
+    expect(getDefaultSocialCardDraft().title).toContain('Dioscuri Agent Team');
   });
 });

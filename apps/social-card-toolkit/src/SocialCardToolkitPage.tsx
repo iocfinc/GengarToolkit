@@ -15,8 +15,10 @@ import { SelectField } from '@packages/ui/src/controls/SelectField';
 import { ToggleField } from '@packages/ui/src/controls/ToggleField';
 import {
   DEFAULT_OUTPUT_PRESET_ID,
+  DIOSCURI_AGENT_TEAM_ANNOUNCEMENT_PRESET,
   SOCIAL_CHART_TEMPLATES,
   SOCIAL_OUTPUT_PRESETS,
+  SEEDED_SOCIAL_CARD_PRESETS,
   getDefaultSocialCardDraft,
   getSocialCardTemplateDefinition,
   getSocialCardValidationMessages,
@@ -34,9 +36,9 @@ function createId(prefix: string) {
 
 export function SocialCardToolkitPage() {
   const [draft, setDraft] = useState<SocialCardDraft>(getDefaultSocialCardDraft);
-  const [presetName, setPresetName] = useState('Launch update card');
+  const [presetName, setPresetName] = useState(DIOSCURI_AGENT_TEAM_ANNOUNCEMENT_PRESET.name);
   const [presets, setPresets] = useState<SocialCardPreset[]>(() =>
-    loadStoredValue<SocialCardPreset[]>(STORAGE_KEY, []).map((preset) =>
+    loadStoredValue<SocialCardPreset[]>(STORAGE_KEY, SEEDED_SOCIAL_CARD_PRESETS).map((preset) =>
       normalizeSocialPreset(preset)
     )
   );
@@ -62,7 +64,12 @@ export function SocialCardToolkitPage() {
       id: createId('social-preset'),
       name: presetName.trim() || 'Untitled social card'
     });
-    const nextPresets = [nextPreset, ...presets];
+    const nextPresets = [
+      nextPreset,
+      ...presets.filter(
+        (preset) => preset.name.trim().toLowerCase() !== nextPreset.name.trim().toLowerCase()
+      )
+    ];
     setPresets(nextPresets);
     saveStoredValue(STORAGE_KEY, nextPresets);
   };
