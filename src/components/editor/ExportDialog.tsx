@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { listMotionOutputPresets } from '@/lib/outputPresets/motionOutputPresets';
 import { exportDocumentAsPng } from '@/lib/render/captureFrame';
 import { exportDocumentAsWebM } from '@/lib/render/exportVideo';
 import { useEditorStore } from '@/lib/store/editorStore';
@@ -18,9 +19,11 @@ export function ExportDialog() {
   const { exportDialogOpen } = useEditorStore((state) => state.ui);
   const setUi = useEditorStore((state) => state.setUi);
   const document = useEditorStore((state) => state.document);
+  const setOutputPreset = useEditorStore((state) => state.setOutputPreset);
   const updateExport = useEditorStore((state) => state.updateExport);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const motionOutputPresets = listMotionOutputPresets();
 
   if (!exportDialogOpen) {
     return null;
@@ -64,32 +67,17 @@ export function ExportDialog() {
             />
           </label>
           <label className="block">
-            <div className="mb-2 text-xs uppercase tracking-[0.18em] text-white/48">Resolution</div>
+            <div className="mb-2 text-xs uppercase tracking-[0.18em] text-white/48">Output Preset</div>
             <select
               className="w-full rounded-2xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-fog"
-              onChange={(event) =>
-                updateExport({
-                  resolution: event.target.value as
-                    | 'preview'
-                    | 'hd'
-                    | 'full-hd'
-                    | 'square'
-                })
-              }
-              value={document.export.resolution}
+              onChange={(event) => setOutputPreset(event.target.value)}
+              value={document.export.presetId ?? motionOutputPresets[0]?.id ?? 'landscape-16x9'}
             >
-              <option className="bg-[#111111]" value="preview">
-                Preview
-              </option>
-              <option className="bg-[#111111]" value="hd">
-                HD
-              </option>
-              <option className="bg-[#111111]" value="full-hd">
-                Full HD
-              </option>
-              <option className="bg-[#111111]" value="square">
-                Square
-              </option>
+              {motionOutputPresets.map((preset) => (
+                <option className="bg-[#111111]" key={preset.id} value={preset.id}>
+                  {preset.label} · {preset.width}×{preset.height}
+                </option>
+              ))}
             </select>
           </label>
           <label className="block">

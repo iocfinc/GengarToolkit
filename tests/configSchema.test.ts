@@ -76,6 +76,7 @@ describe('config schema package', () => {
       export: {
         format: 'png',
         resolution: 'full-hd',
+        presetId: 'landscape-16x9',
         fps: 30,
         duration: 5,
         scale: 1,
@@ -131,5 +132,42 @@ describe('config schema package', () => {
     });
 
     expect(parsed.toolkit).toBe('dataviz');
+  });
+
+  it('parses social-card toolkit documents with named output presets', () => {
+    const parsed = toolkitDocumentSchema.parse({
+      toolkit: 'social-card',
+      template: 'announcement-card',
+      theme: 'dark-editorial',
+      aspectRatio: '1:1',
+      export: {
+        format: 'png',
+        filename: 'launch-update',
+        presetId: 'linkedin-video-square'
+      },
+      presetMeta: {
+        id: 'preset-2',
+        name: 'Launch Update',
+        createdAt: '2026-03-21T00:00:00.000Z',
+        updatedAt: '2026-03-21T00:00:00.000Z'
+      },
+      content: {
+        title: 'Launch update',
+        subtitle: 'Short-form system',
+        body: 'Shared shell and preset-driven export sizes.',
+        footer: 'Dioscuri',
+        cta: 'Read brief',
+        quoteAttribution: 'Internal team'
+      },
+      options: {
+        mascotVariant: 'none',
+        backgroundStyle: 'mesh',
+        accentColor: 'royal',
+        includeMiniChart: false
+      }
+    });
+
+    expect(parsed.toolkit).toBe('social-card');
+    expect(parsed.export.presetId).toBe('linkedin-video-square');
   });
 });

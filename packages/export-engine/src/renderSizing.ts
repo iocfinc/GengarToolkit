@@ -1,5 +1,6 @@
 import { aspectRatioDimensions, exportResolutionSizes } from '@/lib/types/controls';
 import type { AspectRatio, BrandDocument, ResolutionPreset } from '@packages/config-schema/src/document';
+import { getOutputPreset } from '@packages/studio-shell/src/outputPresets';
 
 export type CanvasSize = {
   width: number;
@@ -14,6 +15,17 @@ export function getLogicalCanvasSize(
   document: Pick<BrandDocument, 'aspectRatio' | 'export'>,
   resolution: ResolutionPreset = document.export.resolution
 ): CanvasSize {
+  const outputPreset = document.export.presetId
+    ? getOutputPreset(document.export.presetId)
+    : null;
+
+  if (outputPreset) {
+    return {
+      width: outputPreset.width,
+      height: outputPreset.height
+    };
+  }
+
   const base = exportResolutionSizes[resolution];
   const aspect = getAspectRatioValue(document.aspectRatio);
 

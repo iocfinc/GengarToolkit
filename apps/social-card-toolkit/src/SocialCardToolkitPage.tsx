@@ -4,16 +4,30 @@ import { useMemo, useState } from 'react';
 import { brandThemes, resolveColor } from '@packages/design-tokens/src/colors';
 import type { SocialCardTemplate, SuiteAspectRatio } from '@packages/config-schema/src/document';
 import { downloadBlob, svgMarkupToBlob, svgMarkupToPngBlob } from '@packages/export-engine/src/svgExport';
+import { getOutputPreset } from '@packages/studio-shell/src/outputPresets';
 import { loadStoredValue, saveStoredValue } from '@packages/studio-shell/src/presetStorage';
 import { SurfaceCard } from '@packages/ui/src/SurfaceCard';
 
 const STORAGE_KEY = 'dioscuri-social-card-presets-v1';
+const DEFAULT_OUTPUT_PRESET_ID = 'square-1080';
+const SOCIAL_OUTPUT_PRESET_IDS = [
+  'square-1080',
+  'portrait-4x5',
+  'stories-9x16',
+  'linkedin-shared-image',
+  'landscape-16x9',
+  'linkedin-video-landscape',
+  'linkedin-video-square'
+] as const;
+const SOCIAL_OUTPUT_PRESETS = SOCIAL_OUTPUT_PRESET_IDS
+  .map((presetId) => getOutputPreset(presetId))
+  .filter((preset): preset is NonNullable<ReturnType<typeof getOutputPreset>> => Boolean(preset));
 
 type SocialPreset = {
   id: string;
   name: string;
   template: SocialCardTemplate;
-  aspectRatio: SuiteAspectRatio;
+  outputPresetId: string;
   themeId: string;
   title: string;
   subtitle: string;
@@ -24,12 +38,6 @@ type SocialPreset = {
   accentColor: string;
   backgroundStyle: 'mesh' | 'spotlight' | 'wash';
   includeMiniChart: boolean;
-};
-
-const aspectSizes: Record<SuiteAspectRatio, { width: number; height: number }> = {
-  '1:1': { width: 1080, height: 1080 },
-  '4:5': { width: 1080, height: 1350 },
-  '16:9': { width: 1600, height: 900 }
 };
 
 function escapeMarkup(value: string) {
@@ -44,9 +52,30 @@ function createId(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
+function inferLegacyOutputPresetId(aspectRatio?: SuiteAspectRatio) {
+  switch (aspectRatio) {
+    case '4:5':
+      return 'portrait-4x5';
+    case '16:9':
+      return 'landscape-16x9';
+    case '1:1':
+    default:
+      return DEFAULT_OUTPUT_PRESET_ID;
+  }
+}
+
+function normalizeSocialPreset(
+  preset: SocialPreset & { aspectRatio?: SuiteAspectRatio }
+): SocialPreset {
+  return {
+    ...preset,
+    outputPresetId: preset.outputPresetId || inferLegacyOutputPresetId(preset.aspectRatio)
+  };
+}
+
 function renderSocialSvg({
   template,
-  aspectRatio,
+  outputPresetId,
   themeId,
   title,
   subtitle,
@@ -59,11 +88,14 @@ function renderSocialSvg({
   includeMiniChart
 }: Omit<SocialPreset, 'id' | 'name'>) {
   const theme = brandThemes.find((entry) => entry.id === themeId) ?? brandThemes[0];
-  const { width, height } = aspectSizes[aspectRatio];
+  const outputPreset =
+    getOutputPreset(outputPresetId) ?? getOutputPreset(DEFAULT_OUTPUT_PRESET_ID) ?? SOCIAL_OUTPUT_PRESETS[0];
+  const width = outputPreset?.width ?? 1080;
+  const height = outputPreset?.height ?? 1080;
   const background = resolveColor(theme.canvas.background);
   const foreground = resolveColor(theme.canvas.foreground);
   const accent = resolveColor(accentColor);
-  const pad = aspectRatio === '16:9' ? 92 : 74;
+  const pad = width > height ? 92 : 74;
   const bodyY = template === 'quote-card' ? 360 : 440;
 
   const backgroundMarkup =
@@ -116,7 +148,7 @@ function renderSocialSvg({
 
 export function SocialCardToolkitPage() {
   const [template, setTemplate] = useState<SocialCardTemplate>('announcement-card');
-  const [aspectRatio, setAspectRatio] = useState<SuiteAspectRatio>('1:1');
+  const [outputPresetId, setOutputPresetId] = useState(DEFAULT_OUTPUT_PRESET_ID);
   const [themeId, setThemeId] = useState('dark-editorial');
   const [title, setTitle] = useState('Q2 launches moved faster than forecast');
   const [subtitle, setSubtitle] = useState('Constrained templates for fast internal publishing');
@@ -129,14 +161,16 @@ export function SocialCardToolkitPage() {
   const [includeMiniChart, setIncludeMiniChart] = useState(false);
   const [presetName, setPresetName] = useState('Launch update card');
   const [presets, setPresets] = useState<SocialPreset[]>(() =>
-    loadStoredValue<SocialPreset[]>(STORAGE_KEY, [])
+    loadStoredValue<Array<SocialPreset & { aspectRatio?: SuiteAspectRatio }>>(STORAGE_KEY, []).map(
+      normalizeSocialPreset
+    )
   );
 
   const preview = useMemo(
     () =>
       renderSocialSvg({
         template,
-        aspectRatio,
+        outputPresetId,
         themeId,
         title,
         subtitle,
@@ -148,7 +182,7 @@ export function SocialCardToolkitPage() {
         backgroundStyle,
         includeMiniChart
       }),
-    [accentColor, aspectRatio, backgroundStyle, body, cta, footer, includeMiniChart, quoteAttribution, subtitle, template, themeId, title]
+    [accentColor, backgroundStyle, body, cta, footer, includeMiniChart, outputPresetId, quoteAttribution, subtitle, template, themeId, title]
   );
 
   const savePreset = () => {
@@ -156,7 +190,7 @@ export function SocialCardToolkitPage() {
       id: createId('social-preset'),
       name: presetName.trim() || 'Untitled social card',
       template,
-      aspectRatio,
+      outputPresetId,
       themeId,
       title,
       subtitle,
@@ -230,14 +264,13 @@ export function SocialCardToolkitPage() {
               value={template}
             />
             <Select
-              label="Aspect Ratio"
-              onChange={(value) => setAspectRatio(value as SuiteAspectRatio)}
-              options={[
-                { value: '1:1', label: '1:1 Square' },
-                { value: '4:5', label: '4:5 Portrait' },
-                { value: '16:9', label: '16:9 Presentation' }
-              ]}
-              value={aspectRatio}
+              label="Output Preset"
+              onChange={setOutputPresetId}
+              options={SOCIAL_OUTPUT_PRESETS.map((preset) => ({
+                value: preset.id,
+                label: `${preset.label} · ${preset.width}×${preset.height}`
+              }))}
+              value={outputPresetId}
             />
             <Select
               label="Theme"
@@ -280,8 +313,9 @@ export function SocialCardToolkitPage() {
             </div>
             <div className="overflow-hidden rounded-[28px] border border-white/8 bg-black/30">
               <div
-                className="aspect-square w-full [&_svg]:h-full [&_svg]:w-full"
+                className="w-full [&_svg]:h-full [&_svg]:w-full"
                 dangerouslySetInnerHTML={{ __html: preview.svg }}
+                style={{ aspectRatio: `${preview.width} / ${preview.height}` }}
               />
             </div>
           </SurfaceCard>
@@ -318,7 +352,7 @@ export function SocialCardToolkitPage() {
                     onClick={() => {
                       setPresetName(preset.name);
                       setTemplate(preset.template);
-                      setAspectRatio(preset.aspectRatio);
+                      setOutputPresetId(preset.outputPresetId);
                       setThemeId(preset.themeId);
                       setTitle(preset.title);
                       setSubtitle(preset.subtitle);
@@ -334,7 +368,7 @@ export function SocialCardToolkitPage() {
                   >
                     <p className="text-sm font-semibold text-fog">{preset.name}</p>
                     <p className="mt-1 text-xs uppercase tracking-[0.18em] text-white/48">
-                      {preset.template} / {preset.aspectRatio}
+                      {preset.template} / {getOutputPreset(preset.outputPresetId)?.label ?? 'Custom'}
                     </p>
                   </button>
                 ))}

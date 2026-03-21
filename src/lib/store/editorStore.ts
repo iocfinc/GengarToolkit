@@ -19,6 +19,11 @@ import type {
   TypographyConfig
 } from '@/lib/types/document';
 import { approvedPalettes, type ApprovedPaletteDefinition } from '@/lib/theme/colors';
+import {
+  applyMotionOutputPreset,
+  getGenericMotionOutputPresetId,
+  inferMotionOutputPresetId
+} from '@/lib/outputPresets/motionOutputPresets';
 import { createDocument, defaultPresets } from '@/lib/presets/defaultPresets';
 
 const PRESETS_KEY = 'dioscuri-motion-presets-v1';
@@ -231,6 +236,7 @@ type EditorStore = {
   ui: UIState;
   hydrate: () => void;
   setAspectRatio: (ratio: AspectRatio) => void;
+  setOutputPreset: (presetId: string) => void;
   setLayoutPreset: (preset: LayoutPreset) => void;
   updateBackground: (patch: Partial<BackgroundConfig>) => void;
   updateMotif: (patch: Partial<MotifConfig>) => void;
@@ -280,8 +286,20 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   setAspectRatio: (aspectRatio) =>
     set((state) => ({
       document: {
-        ...state.document,
-        aspectRatio,
+        ...applyMotionOutputPreset(
+          {
+            ...state.document,
+            aspectRatio
+          },
+          getGenericMotionOutputPresetId(aspectRatio)
+        ),
+        updatedAt: nowIso()
+      }
+    })),
+  setOutputPreset: (presetId) =>
+    set((state) => ({
+      document: {
+        ...applyMotionOutputPreset(state.document, presetId),
         updatedAt: nowIso()
       }
     })),
