@@ -35,4 +35,17 @@ export const toolkitRegistry: ToolkitDefinition[] = [
       { id: 'social-templates', label: 'Template Cards' }
     ]
   }
+  ,
+  {
+    id: 'pattern-toolkit',
+    label: 'Pattern Toolkit',
+    summary: 'Quarter-circle “Cells → Modules” patterns with seeded randomness, edit mode, and 300 DPI export.',
+    href: '/pattern-toolkit',
+    status: 'live',
+    capabilities: [
+      { id: 'pattern-svg', label: 'SVG' },
+      { id: 'pattern-png', label: 'PNG 300 DPI' },
+      { id: 'pattern-jpg', label: 'JPG' }
+    ]
+  }
 ];

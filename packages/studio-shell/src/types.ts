@@ -7,7 +7,7 @@ export type ToolkitCapability = {
 };
 
 export type ToolkitDefinition = {
-  id: 'motion-toolkit' | 'dataviz-toolkit' | 'social-card-toolkit';
+  id: 'motion-toolkit' | 'dataviz-toolkit' | 'social-card-toolkit' | 'pattern-toolkit';
   label: string;
   summary: string;
   href?: Route;
