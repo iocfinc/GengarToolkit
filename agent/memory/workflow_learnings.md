@@ -296,3 +296,30 @@
 3. Lock the preview pane to the viewport and give long control sections an explicit internal scroll owner.
 4. Check shared component defaults so controlled and uncontrolled paths match the intended UX.
 5. Keep browser evidence deterministic with Chrome DevTools MCP when available, or record the skip reason immediately.
+
+## Weekly Sweep 2026-03-24: Issue 46 Delivery Retry
+
+### What Worked
+
+- Reusing the previously prepared #46 fix commit kept this run limited to one validated bug and avoided widening scope.
+- Re-running only the targeted Social Card and Data Viz regression tests confirmed parity behavior quickly.
+- Creating a new issue branch from `origin/main` and cherry-picking the single fix commit preserved the one-issue-per-branch contract.
+
+### What Slowed Us Down
+
+- The prior fix branch name was already attached to a different local worktree, so this run needed a replacement branch suffix.
+- Chrome DevTools MCP visual capture was blocked by a locked shared profile path.
+- GitHub API connectivity remained intermittent: branch push succeeded, but PR creation and issue commenting failed.
+
+### Workflow Updates Needed
+
+- Keep PR/issue body text in temp files to avoid shell interpolation failures from markdown backticks in automation commands.
+- If API calls fail but `git push` succeeds, always return the direct PR-create URL in the run summary to minimize handoff friction.
+
+### Reusable Delivery Pattern
+
+1. Pull backlog and select one validated bug.
+2. Check committed `HEAD` and existing issue branches before coding.
+3. Reapply only the minimal fix commit on a fresh issue branch when needed.
+4. Run targeted regression tests first, then broader checks only if scope expands.
+5. Attempt PR/comment publication, then record concrete manual follow-up links when API connectivity blocks completion.

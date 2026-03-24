@@ -12,7 +12,7 @@ Active delivery sequencing now lives in the root `ROADMAP.md`.
 
 ## Now
 
-- None yet.
+- 2026-03-24: Defer issue #34 (regression coverage for preview/export parity) until after validated bug #46 is fully delivered; keep bug-first sequencing for weekly sweep stability.
 
 ## Next
 
