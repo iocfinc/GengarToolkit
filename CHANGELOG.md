@@ -28,6 +28,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Fixed
 
+- Social Card Toolkit now follows the shared single-active accordion behavior, keeping only one section in focus and routing long controls through active-pane scrolling.
 - Data Visualization Toolkit now uses the same single-active accordion behavior as Motion Toolkit, keeping the active section open, removing sibling collapsed pills, and moving scrolling into the active section.
 
 ### Fixed

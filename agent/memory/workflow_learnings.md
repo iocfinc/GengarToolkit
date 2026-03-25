@@ -296,3 +296,33 @@
 3. Lock the preview pane to the viewport and give long control sections an explicit internal scroll owner.
 4. Check shared component defaults so controlled and uncontrolled paths match the intended UX.
 5. Keep browser evidence deterministic with Chrome DevTools MCP when available, or record the skip reason immediately.
+
+## Issue 46: Social Card Accordion Focus And Scroll Parity
+
+### What Worked
+
+- Running `npm run backlog:scan -- --format markdown` first kept issue selection deterministic and avoided widening scope beyond the validated bug.
+- Comparing Data Viz and Social Card control-panel behavior in code before patching narrowed the fix to a single toolkit file plus focused tests.
+- Adding regression assertions for active-section visibility and overflow class switching caught the expected behavioral shift in existing tests.
+
+### What Slowed Us Down
+
+- Chrome DevTools MCP visual capture remained blocked by a locked shared profile, so browser evidence had to be skipped and documented.
+- `gh pr create` failed intermittently against the GitHub API in this environment, requiring REST fallback via `gh api`.
+
+### Skill Updates Needed
+
+- `comment_issue_update` could include a fallback path note for posting issue updates when PR creation is delayed by API connectivity.
+
+### Workflow Updates Needed
+
+- For recurring sweeps, keep a standard REST fallback snippet for PR creation when GraphQL-style `gh pr` commands fail.
+- Keep visual-validation skip reasons tied to explicit local paths to reduce reviewer ambiguity.
+
+### Reusable Delivery Pattern
+
+1. Confirm validated-bug priority from backlog scan output.
+2. Diff sibling toolkit behavior first to isolate the smallest parity patch.
+3. Patch UI behavior and tests in the same pass to avoid partial state transitions.
+4. Run only the affected toolkit tests plus the parity toolkit tests.
+5. If browser or GitHub tooling blocks delivery, switch to a documented fallback and post status to the linked issue immediately.
