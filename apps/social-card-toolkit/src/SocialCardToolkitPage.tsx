@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { brandThemes } from '@packages/design-tokens/src/colors';
 import type { SocialCardTemplate } from '@packages/config-schema/src/document';
 import { downloadBlob, svgMarkupToBlob, svgMarkupToPngBlob } from '@packages/export-engine/src/svgExport';
@@ -42,6 +42,7 @@ export function SocialCardToolkitPage() {
       normalizeSocialPreset(preset)
     )
   );
+  const [activeSection, setActiveSection] = useState<SocialCardSectionId | null>(null);
 
   const templateDefinition =
     getSocialCardTemplateDefinition(draft.template) ?? socialCardTemplateDefinitions[0];
@@ -50,6 +51,12 @@ export function SocialCardToolkitPage() {
     SOCIAL_OUTPUT_PRESETS[0];
   const preview = useMemo(() => renderSocialCardPreview(draft), [draft]);
   const validationMessages = useMemo(() => getSocialCardValidationMessages(draft), [draft]);
+
+  useEffect(() => {
+    if (!templateDefinition.chartEnabled && activeSection === 'chart') {
+      setActiveSection(null);
+    }
+  }, [activeSection, templateDefinition.chartEnabled]);
 
   const updateDraft = <T extends keyof SocialCardDraft>(key: T, value: SocialCardDraft[T]) => {
     setDraft((current) => ({
@@ -83,11 +90,30 @@ export function SocialCardToolkitPage() {
     downloadBlob(blob, `${presetName || 'social-card'}.png`);
   };
 
+  function handleSectionChange(sectionId: SocialCardSectionId, open: boolean) {
+    setActiveSection(open ? sectionId : null);
+  }
+
+  const activeSectionCardClass = 'flex min-h-0 flex-1 flex-col';
+  const activeSectionContentClass = 'min-h-0 flex-1 overflow-y-auto scrollbar-thin';
+
   return (
     <EditorShell
       controls={
-        <div className="scrollbar-thin flex h-full min-h-0 flex-col gap-4 overflow-y-auto pr-1">
-          <CollapsibleSection defaultOpen={false} title="Template & Output">
+        <div
+          className={`scrollbar-thin flex h-full min-h-0 flex-col gap-4 pr-1 ${
+            activeSection ? 'overflow-hidden' : 'overflow-y-auto'
+          }`}
+          data-testid="social-card-control-panel"
+        >
+          {!activeSection || activeSection === 'template-output' ? (
+            <CollapsibleSection
+              className={activeSection === 'template-output' ? activeSectionCardClass : ''}
+              contentClassName={activeSection === 'template-output' ? activeSectionContentClass : ''}
+              onOpenChange={(open) => handleSectionChange('template-output', open)}
+              open={activeSection === 'template-output'}
+              title="Template & Output"
+            >
             <Field label="Preset Name" onChange={setPresetName} value={presetName} />
             <SelectField
               label="Template"
@@ -131,9 +157,17 @@ export function SocialCardToolkitPage() {
               onChange={(value) => updateDraft('accentColor', value)}
               value={draft.accentColor}
             />
-          </CollapsibleSection>
+            </CollapsibleSection>
+          ) : null}
 
-          <CollapsibleSection defaultOpen={false} title="Copy">
+          {!activeSection || activeSection === 'copy' ? (
+            <CollapsibleSection
+              className={activeSection === 'copy' ? activeSectionCardClass : ''}
+              contentClassName={activeSection === 'copy' ? activeSectionContentClass : ''}
+              onOpenChange={(open) => handleSectionChange('copy', open)}
+              open={activeSection === 'copy'}
+              title="Copy"
+            >
             <Field label="Title" onChange={(value) => updateDraft('title', value)} value={draft.title} />
             <Field label="Subtitle" onChange={(value) => updateDraft('subtitle', value)} value={draft.subtitle} />
             {templateDefinition.bodyLabel ? (
@@ -164,10 +198,17 @@ export function SocialCardToolkitPage() {
                 value={draft.quoteAttribution}
               />
             ) : null}
-          </CollapsibleSection>
+            </CollapsibleSection>
+          ) : null}
 
-          {templateDefinition.chartEnabled ? (
-            <CollapsibleSection defaultOpen={false} title="Chart">
+          {templateDefinition.chartEnabled && (!activeSection || activeSection === 'chart') ? (
+            <CollapsibleSection
+              className={activeSection === 'chart' ? activeSectionCardClass : ''}
+              contentClassName={activeSection === 'chart' ? activeSectionContentClass : ''}
+              onOpenChange={(open) => handleSectionChange('chart', open)}
+              open={activeSection === 'chart'}
+              title="Chart"
+            >
               <SelectField
                 label="Chart Template"
                 onChange={(value) => updateDraft('chartTemplate', value as SocialCardDraft['chartTemplate'])}
@@ -190,8 +231,14 @@ export function SocialCardToolkitPage() {
             </CollapsibleSection>
           ) : null}
 
-          {presets.length > 0 ? (
-            <CollapsibleSection defaultOpen={false} title="Saved Presets">
+          {presets.length > 0 && (!activeSection || activeSection === 'saved-presets') ? (
+            <CollapsibleSection
+              className={activeSection === 'saved-presets' ? activeSectionCardClass : ''}
+              contentClassName={activeSection === 'saved-presets' ? activeSectionContentClass : ''}
+              onOpenChange={(open) => handleSectionChange('saved-presets', open)}
+              open={activeSection === 'saved-presets'}
+              title="Saved Presets"
+            >
               {presets.slice(0, 5).map((preset) => (
                 <button
                   className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left"
@@ -283,6 +330,8 @@ export function SocialCardToolkitPage() {
     />
   );
 }
+
+type SocialCardSectionId = 'template-output' | 'copy' | 'chart' | 'saved-presets';
 
 function Field({
   label,
