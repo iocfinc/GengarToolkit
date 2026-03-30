@@ -40,6 +40,7 @@ export function SocialCardToolkitPage() {
   const [draft, setDraft] = useState<SocialCardDraft>(getDefaultSocialCardDraft);
   const [activeSection, setActiveSection] = useState<SocialCardSectionId | null>(null);
   const [presetName, setPresetName] = useState(DIOSCURI_AGENT_TEAM_ANNOUNCEMENT_PRESET.name);
+  const [activeSection, setActiveSection] = useState<SocialSectionId | null>(null);
   const [presets, setPresets] = useState<SocialCardPreset[]>(() =>
     loadStoredValue<SocialCardPreset[]>(STORAGE_KEY, SEEDED_SOCIAL_CARD_PRESETS).map((preset) =>
       normalizeSocialPreset(preset)
@@ -326,6 +327,8 @@ export function SocialCardToolkitPage() {
     />
   );
 }
+
+type SocialSectionId = 'template-output' | 'copy' | 'chart' | 'saved-presets';
 
 function Field({
   label,
