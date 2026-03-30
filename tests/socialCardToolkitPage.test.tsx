@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { SocialCardToolkitPage } from '@apps/social-card-toolkit/src/SocialCardToolkitPage';
 
@@ -32,10 +33,64 @@ describe('SocialCardToolkitPage', () => {
     fireEvent.change(screen.getByLabelText('Template'), {
       target: { value: 'chart-caption-card' }
     });
+    fireEvent.click(screen.getByRole('button', { name: 'Template & Output' }));
 
     fireEvent.click(screen.getByRole('button', { name: 'Chart' }));
     expect(screen.getByLabelText('Chart Template')).toBeInTheDocument();
     expect(screen.getByLabelText('Chart Dataset (CSV)')).toBeInTheDocument();
     expect(screen.getByText('Show Chart Legend')).toBeInTheDocument();
+  });
+
+  it('starts collapsed and focuses one section at a time', async () => {
+    const user = userEvent.setup();
+
+    render(<SocialCardToolkitPage />);
+
+    const templateToggle = screen.getByRole('button', { name: 'Template & Output' });
+    const copyToggle = screen.getByRole('button', { name: 'Copy' });
+    const controlsPanel = screen.getByTestId('social-card-control-panel');
+
+    expect(controlsPanel).toHaveClass('overflow-y-auto');
+    expect(templateToggle).toHaveAttribute('aria-expanded', 'false');
+    expect(copyToggle).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByLabelText('Preset Name')).not.toBeInTheDocument();
+
+    await user.click(templateToggle);
+
+    expect(templateToggle).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByLabelText('Preset Name')).toBeInTheDocument();
+    expect(controlsPanel).toHaveClass('overflow-hidden');
+    expect(screen.queryByRole('button', { name: 'Copy' })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Template & Output' }));
+
+    expect(screen.getByTestId('social-card-control-panel')).toHaveClass('overflow-y-auto');
+    expect(screen.getByRole('button', { name: 'Copy' })).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('switches active section and keeps chart controls reachable', async () => {
+    const user = userEvent.setup();
+
+    render(<SocialCardToolkitPage />);
+
+    await user.click(screen.getByRole('button', { name: 'Template & Output' }));
+    expect(screen.getByLabelText('Preset Name')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Copy' })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Template & Output' }));
+    await user.click(screen.getByRole('button', { name: 'Copy' }));
+    expect(screen.getByRole('button', { name: 'Copy' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByLabelText('Title')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Template & Output' })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Copy' }));
+    await user.click(screen.getByRole('button', { name: 'Template & Output' }));
+    await user.selectOptions(screen.getByLabelText('Template'), 'chart-caption-card');
+    await user.click(screen.getByRole('button', { name: 'Template & Output' }));
+    await user.click(screen.getByRole('button', { name: 'Chart' }));
+
+    expect(screen.getByRole('button', { name: 'Chart' })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByLabelText('Chart Template')).toBeInTheDocument();
+    expect(screen.getByLabelText('Chart Dataset (CSV)')).toBeInTheDocument();
   });
 });
