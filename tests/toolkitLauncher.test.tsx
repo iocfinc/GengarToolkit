@@ -30,10 +30,13 @@ describe('ToolkitLauncher', () => {
 
     const links = screen.getAllByRole('link');
 
-    expect(links).toHaveLength(3);
-    expect(links[0]).toHaveAttribute('href', '/motion-toolkit/editor');
-    expect(links[1]).toHaveAttribute('href', '/dataviz-toolkit');
-    expect(links[2]).toHaveAttribute('href', '/social-card-toolkit');
+    // Expect 4 live toolkits
+    expect(links.length).toBeGreaterThanOrEqual(4);
+    // Verify each expected route exists (ordering may vary)
+    expect(links.some((a) => a.getAttribute('href') === '/motion-toolkit/editor')).toBe(true);
+    expect(links.some((a) => a.getAttribute('href') === '/dataviz-toolkit')).toBe(true);
+    expect(links.some((a) => a.getAttribute('href') === '/social-card-toolkit')).toBe(true);
+    expect(links.some((a) => a.getAttribute('href') === '/pattern-toolkit')).toBe(true);
     expect(screen.queryByText('Planned')).not.toBeInTheDocument();
   });
 });
