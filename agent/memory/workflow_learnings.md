@@ -296,3 +296,21 @@
 3. Lock the preview pane to the viewport and give long control sections an explicit internal scroll owner.
 4. Check shared component defaults so controlled and uncontrolled paths match the intended UX.
 5. Keep browser evidence deterministic with Chrome DevTools MCP when available, or record the skip reason immediately.
+
+## Issue 46: Social Card Accordion Focus + Scroll Follow-Up (2026-03-30)
+
+### What Worked
+
+- Re-triaging issue #46 against committed `origin/main` confirmed the bug remained open and reproducible in `SocialCardToolkitPage`.
+- A narrow controlled-accordion update plus focused regression tests resolved the behavior without widening scope.
+- Branch push succeeded even with intermittent GitHub API instability.
+
+### What Slowed Us Down
+
+- `gh pr create` and `gh issue comment` were blocked repeatedly by intermittent `api.github.com` connectivity.
+- Browser visual capture remained blocked by the locked shared Chrome DevTools MCP profile path.
+
+### Workflow Updates Needed
+
+- Keep a fallback path for posting issue/PR updates when GitHub API intermittently fails after branch push.
+- Continue documenting explicit screenshot skip reasons immediately when Chrome MCP profile lock blocks capture.
