@@ -30,12 +30,15 @@ import type { SocialCardDraft, SocialCardPreset } from './framework/types';
 
 const STORAGE_KEY = 'dioscuri-social-card-presets-v1';
 
+type SocialCardSectionId = 'template-output' | 'copy' | 'chart' | 'saved-presets';
+
 function createId(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
 export function SocialCardToolkitPage() {
   const [draft, setDraft] = useState<SocialCardDraft>(getDefaultSocialCardDraft);
+  const [activeSection, setActiveSection] = useState<SocialCardSectionId | null>(null);
   const [presetName, setPresetName] = useState(DIOSCURI_AGENT_TEAM_ANNOUNCEMENT_PRESET.name);
   const [activeSection, setActiveSection] = useState<SocialSectionId | null>(null);
   const [presets, setPresets] = useState<SocialCardPreset[]>(() =>
@@ -84,7 +87,7 @@ export function SocialCardToolkitPage() {
     downloadBlob(blob, `${presetName || 'social-card'}.png`);
   };
 
-  function handleSectionChange(sectionId: SocialSectionId, open: boolean) {
+  function handleSectionChange(sectionId: SocialCardSectionId, open: boolean) {
     setActiveSection(open ? sectionId : null);
   }
 
@@ -98,7 +101,7 @@ export function SocialCardToolkitPage() {
           className={`scrollbar-thin flex h-full min-h-0 flex-col gap-4 pr-1 ${
             activeSection ? 'overflow-hidden' : 'overflow-y-auto'
           }`}
-          data-testid="social-control-panel"
+          data-testid="social-card-control-panel"
         >
           {!activeSection || activeSection === 'template-output' ? (
             <CollapsibleSection

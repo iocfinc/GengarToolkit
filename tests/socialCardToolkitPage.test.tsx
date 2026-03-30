@@ -17,7 +17,7 @@ describe('SocialCardToolkitPage', () => {
     expect(screen.getByTestId('preview-surface')).toBeInTheDocument();
     expect(screen.getByText('TRY IT!')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: 'Template & Output' }));
+    await user.click(screen.getByRole('button', { name: 'Template & Output' }));
 
     const presetSelect = screen.getByLabelText('Output Preset');
     expect(presetSelect).toBeInTheDocument();
@@ -25,12 +25,14 @@ describe('SocialCardToolkitPage', () => {
     expect(screen.getByDisplayValue('Dioscuri Agent Team Launch Announcement')).toBeInTheDocument();
     expect(presetSelect).toHaveValue('linkedin-shared-image');
 
-    fireEvent.change(presetSelect, { target: { value: 'linkedin-shared-image' } });
+    await user.selectOptions(presetSelect, 'linkedin-shared-image');
 
     expect(presetSelect).toHaveValue('linkedin-shared-image');
   });
 
-  it('shows constrained chart controls when the chart-caption template is selected', () => {
+  it('shows constrained chart controls when the chart-caption template is selected', async () => {
+    const user = userEvent.setup();
+
     render(<SocialCardToolkitPage />);
 
     const templateToggle = screen.getByRole('button', { name: 'Template & Output' });
@@ -40,7 +42,8 @@ describe('SocialCardToolkitPage', () => {
     });
     fireEvent.click(templateToggle);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Chart' }));
+    await user.click(screen.getByRole('button', { name: 'Template & Output' }));
+    await user.click(screen.getByRole('button', { name: 'Chart' }));
     expect(screen.getByLabelText('Chart Template')).toBeInTheDocument();
     expect(screen.getByLabelText('Chart Dataset (CSV)')).toBeInTheDocument();
     expect(screen.getByText('Show Chart Legend')).toBeInTheDocument();
