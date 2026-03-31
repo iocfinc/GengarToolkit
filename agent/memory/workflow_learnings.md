@@ -297,6 +297,23 @@
 4. Check shared component defaults so controlled and uncontrolled paths match the intended UX.
 5. Keep browser evidence deterministic with Chrome DevTools MCP when available, or record the skip reason immediately.
 
+## Issue 13: iTerm Proof Session Screenshot Targeting
+
+### What Worked
+
+- Requiring explicit selectors removed the accidental active-session fallback path.
+- Keeping session-targeting logic in a small helper module made ambiguity and no-match behavior easy to lock with unit tests.
+- A single script that supports both `--list` and capture reduced manual translation between discovery and capture steps.
+
+### What Slowed Us Down
+
+- Runtime validation of iTerm enumeration is environment-dependent and can fail in headless or sandboxed automation contexts.
+- GitHub label editing can require scopes that are not necessary for issue listing and commenting.
+
+### Workflow Updates Needed
+
+- For terminal/app workflow bugs, treat selector ambiguity tests as primary validation when desktop app access is unavailable.
+- Keep recording explicit screenshot skip reasons in PR and issue notes when environment app access is blocked.
 ## Weekly Sweep 2026-03-24: Issue 46 Delivery Retry
 
 ### What Worked
