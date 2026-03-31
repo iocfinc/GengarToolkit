@@ -314,3 +314,58 @@
 
 - For terminal/app workflow bugs, treat selector ambiguity tests as primary validation when desktop app access is unavailable.
 - Keep recording explicit screenshot skip reasons in PR and issue notes when environment app access is blocked.
+## Weekly Sweep 2026-03-24: Issue 46 Delivery Retry
+
+### What Worked
+
+- Reusing the previously prepared #46 fix commit kept this run limited to one validated bug and avoided widening scope.
+- Re-running only the targeted Social Card and Data Viz regression tests confirmed parity behavior quickly.
+- Creating a new issue branch from `origin/main` and cherry-picking the single fix commit preserved the one-issue-per-branch contract.
+
+### What Slowed Us Down
+
+- The prior fix branch name was already attached to a different local worktree, so this run needed a replacement branch suffix.
+- Chrome DevTools MCP visual capture was blocked by a locked shared profile path.
+- GitHub API connectivity remained intermittent: branch push succeeded, but PR creation and issue commenting failed.
+
+### Workflow Updates Needed
+
+- Keep PR/issue body text in temp files to avoid shell interpolation failures from markdown backticks in automation commands.
+- If API calls fail but `git push` succeeds, always return the direct PR-create URL in the run summary to minimize handoff friction.
+
+### Reusable Delivery Pattern
+
+1. Pull backlog and select one validated bug.
+2. Check committed `HEAD` and existing issue branches before coding.
+3. Reapply only the minimal fix commit on a fresh issue branch when needed.
+4. Run targeted regression tests first, then broader checks only if scope expands.
+5. Attempt PR/comment publication, then record concrete manual follow-up links when API connectivity blocks completion.
+## Issue 46: Social Card Accordion Focus And Scroll Parity
+
+### What Worked
+
+- Running `npm run backlog:scan -- --format markdown` first kept issue selection deterministic and avoided widening scope beyond the validated bug.
+- Comparing Data Viz and Social Card control-panel behavior in code before patching narrowed the fix to a single toolkit file plus focused tests.
+- Adding regression assertions for active-section visibility and overflow class switching caught the expected behavioral shift in existing tests.
+
+### What Slowed Us Down
+
+- Chrome DevTools MCP visual capture remained blocked by a locked shared profile, so browser evidence had to be skipped and documented.
+- `gh pr create` failed intermittently against the GitHub API in this environment, requiring REST fallback via `gh api`.
+
+### Skill Updates Needed
+
+- `comment_issue_update` could include a fallback path note for posting issue updates when PR creation is delayed by API connectivity.
+
+### Workflow Updates Needed
+
+- For recurring sweeps, keep a standard REST fallback snippet for PR creation when GraphQL-style `gh pr` commands fail.
+- Keep visual-validation skip reasons tied to explicit local paths to reduce reviewer ambiguity.
+
+### Reusable Delivery Pattern
+
+1. Confirm validated-bug priority from backlog scan output.
+2. Diff sibling toolkit behavior first to isolate the smallest parity patch.
+3. Patch UI behavior and tests in the same pass to avoid partial state transitions.
+4. Run only the affected toolkit tests plus the parity toolkit tests.
+5. If browser or GitHub tooling blocks delivery, switch to a documented fallback and post status to the linked issue immediately.
