@@ -2,6 +2,19 @@ function normalizeText(value) {
   return typeof value === 'string' ? value : '';
 }
 
+function parseWindowId(value) {
+  if (value === undefined || value === null || value === '') {
+    return null;
+  }
+
+  const parsed = Number.parseInt(String(value), 10);
+  if (!Number.isFinite(parsed)) {
+    throw new Error('Invalid --window-id value. Provide a numeric window id.');
+  }
+
+  return parsed;
+}
+
 function includesInsensitive(haystack, needle) {
   if (!needle) return true;
   return normalizeText(haystack).toLowerCase().includes(needle.toLowerCase());
@@ -10,10 +23,7 @@ function includesInsensitive(haystack, needle) {
 export function buildSessionSelectors(options = {}) {
   return {
     sessionId: options.sessionId ? String(options.sessionId) : null,
-    windowId:
-      options.windowId !== undefined && options.windowId !== null
-        ? Number.parseInt(String(options.windowId), 10)
-        : null,
+    windowId: parseWindowId(options.windowId),
     titleContains: options.titleContains ? String(options.titleContains) : null,
     textContains: options.textContains ? String(options.textContains) : null,
     tty: options.tty ? String(options.tty) : null

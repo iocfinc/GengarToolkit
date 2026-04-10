@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildSessionSelectors,
   filterSessions,
   normalizeSession,
   selectSession
@@ -40,6 +41,12 @@ describe('iTerm session targeting', () => {
 
   it('supports window id selection', () => {
     expect(selectSession(sessions, { windowId: 101 }).sessionId).toBe('s-main');
+  });
+
+  it('throws a clear error for non-numeric window id selectors', () => {
+    expect(() => buildSessionSelectors({ windowId: 'proof-window' })).toThrow(
+      /Invalid --window-id value/
+    );
   });
 
   it('supports title and text filtering together', () => {
