@@ -31,7 +31,10 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 - Social Card Toolkit now follows the shared single-active accordion behavior, keeping only one section in focus and routing long controls through active-pane scrolling.
 - Data Visualization Toolkit now uses the same single-active accordion behavior as Motion Toolkit, keeping the active section open, removing sibling collapsed pills, and moving scrolling into the active section.
+- Added a deterministic iTerm proof-capture helper (`agent/scripts/capture_iterm_proof.mjs`) that refuses active-session fallback, requires explicit selectors, and errors on ambiguous matches so terminal proof screenshots do not target the wrong Codex session.
 - Social Card Toolkit now mirrors the same single-active accordion behavior, so only one section stays in focus and long parameter groups scroll inside the active panel.
+- Repaired malformed Social Card Toolkit source/test merge artifacts so CI `npm run test:ci` parses and validates the branch again (duplicate state declarations removed and chart-toggle test aligned with single-active accordion behavior).
+- iTerm proof-session targeting now rejects non-numeric `--window-id` values with an explicit error instead of silently degrading selector matching.
 
 ### Fixed
 
