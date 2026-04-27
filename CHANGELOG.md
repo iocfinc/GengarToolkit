@@ -14,6 +14,8 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Changed
 
+- Tightened product and agent operating rules around data-story publishing, shared suite primitives, template-driven procedural generation, and Designer review gates for visual cohesion.
+- Repo-local Codex configuration now enables the Apps surface and registers the Excalidraw MCP endpoint for trusted GengarToolkit sessions.
 - Motion Toolkit typography now scales relative to the active output preset dimensions, improving headline/body fill in square and portrait compositions while keeping 16:9 as the baseline reference.
 - Social Card Toolkit is now a live suite route in the launcher and uses the shared `BrandedHeader` / `EditorShell` / `PreviewSurface` shell with grouped controls, named output presets, and the shipped MVP template pack.
 - Social Card Toolkit now opens with a seeded Dioscuri Agent Team launch announcement preset, uses Gengar/Kirby-aligned palette defaults for that card, and keeps named preset saves deduped by preset title during dogfooding.
