@@ -1,0 +1,93 @@
+{
+  "name": "gengar-brand-system",
+  "status": "initial-working-system",
+  "color": {
+    "ink-950": { "value": "#17111F", "role": "primary dark field and high-contrast text" },
+    "ink-900": { "value": "#20162C", "role": "secondary dark field" },
+    "ink-700": { "value": "#3A3047", "role": "light-mode secondary heading and chart label" },
+    "violet-700": { "value": "#5B35D5", "role": "primary brand emphasis" },
+    "violet-500": { "value": "#7C5CFF", "role": "secondary emphasis and active states" },
+    "violet-100": { "value": "#EEE8FF", "role": "light-mode violet tint and callout surface" },
+    "gold-500": { "value": "#F4C542", "role": "premium highlight and key numerals" },
+    "gold-100": { "value": "#FFF2BF", "role": "light-mode gold tint and highlight wash" },
+    "lime-500": { "value": "#B9FF3B", "role": "analytical signal and focus marker" },
+    "lime-100": { "value": "#ECFFD0", "role": "light-mode lime tint and positive signal wash" },
+    "stone-100": { "value": "#F5F1E8", "role": "light surface and primary text on dark fields" },
+    "stone-300": { "value": "#D8D0C5", "role": "axes, dividers, quiet rules, secondary text on dark fields" },
+    "stone-500": { "value": "#8F879C", "role": "metadata and secondary labels" },
+    "paper-000": { "value": "#FFFDF8", "role": "primary light-mode page surface" },
+    "paper-050": { "value": "#FAF6EF", "role": "secondary light-mode editorial surface" },
+    "white-000": { "value": "#FFFDF8", "role": "paper and high-contrast light text on dark fields" }
+  },
+  "modes": {
+    "darkEditorial": {
+      "background": "ink-950",
+      "surface": "ink-900",
+      "textPrimary": "white-000",
+      "textSecondary": "stone-300",
+      "textMuted": "stone-500",
+      "accentPrimary": "gold-500",
+      "accentSignal": "lime-500",
+      "accentBrand": "violet-500"
+    },
+    "lightEditorial": {
+      "background": "paper-000",
+      "surface": "paper-050",
+      "textPrimary": "ink-950",
+      "textSecondary": "ink-700",
+      "textMuted": "stone-500",
+      "accentPrimary": "violet-700",
+      "accentSignal": "lime-500",
+      "accentWarm": "gold-500",
+      "calloutViolet": "violet-100",
+      "calloutGold": "gold-100",
+      "calloutLime": "lime-100"
+    }
+  },
+  "paletteRatio": {
+    "neutralAndInk": 70,
+    "purple": 20,
+    "gold": 7,
+    "lime": 3
+  },
+  "typography": {
+    "display-emphasis": {
+      "family": "Futura",
+      "fallback": "Montserrat, Arial, sans-serif",
+      "weights": ["Light", "Bold"],
+      "usage": "cover titles, section openers, short pull statements"
+    },
+    "base-editorial": {
+      "family": "Montserrat",
+      "fallback": "Poppins, Arial, sans-serif",
+      "weights": ["Light", "Regular", "Bold"],
+      "usage": "default deck and editorial system"
+    },
+    "base-human": {
+      "family": "Poppins",
+      "fallback": "Montserrat, Arial, sans-serif",
+      "weights": ["Light", "Regular", "Bold"],
+      "usage": "optional softer marketing or people-led contexts"
+    },
+    "technical-mono": {
+      "family": "Space Mono",
+      "fallback": "Courier New, monospace",
+      "weights": ["Regular", "Bold"],
+      "usage": "charts, sources, timestamps, axes, dataset labels"
+    }
+  },
+  "grid": {
+    "baseColumns": 12,
+    "presentationSpanSystem": [5, "3/2", "2/3"],
+    "titleDefault": "full-span",
+    "twoColumnRule": "dominant-support, not equal weak columns"
+  },
+  "surfaceRules": {
+    "background": "stay in one tonal family per asset",
+    "textOnDark": "never use black or dark ink text on deep purple surfaces; use white-000, stone-100, stone-300, gold-500, or lime-500",
+    "textOnLight": "use ink-950 or ink-700 for body text on paper surfaces; use violet, gold, and lime as accents, not paragraph text",
+    "emphasis": "use type, weight, accent, and placement before full-background changes",
+    "charts": "use visible light axes, restrained gridlines, light labels, and adequate padding",
+    "whitespace": "do not fill unless the added object is the story"
+  }
+}
