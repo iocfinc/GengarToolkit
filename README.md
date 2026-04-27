@@ -1,6 +1,13 @@
 # Dioscuri Brand Toolkit Suite
 
-Browser-based internal platform for creating branded motion scenes, editorial data visualizations, and constrained social card assets from shared brand primitives.
+Browser-based internal platform for data scientists and analysts creating branded posters, article covers, editorial data visualizations, and constrained social card assets from shared brand primitives.
+
+## Product Direction
+
+- Build for fast data-story publishing: findings posters, article/report covers, chart-led social cards, and presentation-ready cover pages.
+- Keep generation template-driven and procedural. New tools should start from named templates with explicit slots, grid constraints, material rules, palette rules, typography rules, and output presets.
+- Reuse shared shell, navigation, preview, form, palette, typography, and export primitives across the launcher and every toolkit route.
+- Route off-direction ideas into `agent/memory/roadmap.md` until their fit with the data-story publishing portfolio is clear.
 
 ## Suite Apps
 

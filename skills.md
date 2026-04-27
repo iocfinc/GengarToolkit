@@ -19,7 +19,7 @@ Use the lead product engineer flow in the main thread to keep planning, sequenci
 ### New feature
 
 1. `slardar`
-2. `omniknight` when UI or token usage changes
+2. `omniknight` when UI, token usage, templates, grids, materials, palettes, typography, or product cohesion changes
 3. `tinker` or `kunkka`
 4. `gyrocopter` when render or export behavior changes
 5. `bounty_hunter`
@@ -59,7 +59,15 @@ Read-only repo explorer. Inspect architecture seams, reusable modules, and the s
 
 ### `omniknight`
 
-Protect shared tokens, typography, spacing, and reusable styling patterns. Flag one-off visual decisions early.
+Protect the Designer framework for shared templates, grids, materials, tokens, typography, spacing, palette behavior, and reusable styling patterns. Flag one-off visual decisions early, and require toolkit pages to reuse or extend shared shell/UI primitives before accepting local variants.
+
+Expected review shape:
+
+- confirm the work serves data-story publishing, cover/poster generation, chart-led communication, or reusable brand/template infrastructure
+- identify which shared template, shell, control, palette, typography, and output-preset modules are reused or extended
+- reject toolkit-local hamburgers, dropdown systems, text inputs, color controls, cards, or export selectors when a shared primitive exists
+- return the narrowest shared package update needed when visual cohesion is blocked by missing primitives
+- record explicit exceptions with owner, reason, affected routes, and follow-up cleanup path
 
 ### `tinker`
 
@@ -67,7 +75,7 @@ Implement shell, routing, shared UI, and feature architecture changes without wi
 
 ### `kunkka`
 
-Handle chart templates, data contracts, and responsive scene behavior for supported aspect ratios.
+Handle chart templates, data contracts, responsive scene behavior, and template-slot constraints for supported aspect ratios.
 
 ### `gyrocopter`
 
@@ -105,6 +113,16 @@ Expected review shape:
 - compare the touched pattern against those siblings
 - return mismatches, risks, and the narrowest fix surface
 - point to tests or workflow checks that should lock parity in place
+
+### Template and Portfolio Gate
+
+Before implementation, feature plans must answer:
+
+- Which target user workflow does this serve: data finding poster, article cover, chart-led card, presentation cover page, or reusable template infrastructure?
+- Which named template, grid, material, palette, typography, and output preset contract does it use or extend?
+- Which shared modules in `packages/studio-shell`, `packages/ui`, `packages/design-tokens`, `packages/config-schema`, or `packages/export-engine` are touched?
+- Which launcher and toolkit routes need visual comparison for cohesion?
+- Which attractive but off-direction requests should move to `agent/memory/roadmap.md` instead of entering the implementation branch?
 
 ### `oracle`
 
