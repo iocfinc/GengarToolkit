@@ -1,5 +1,11 @@
 # Feature Registry
 
+## Product Foundation
+
+- Data-story publishing suite for data scientists and analysts creating posters, cover pages, chart-led cards, and presentation-ready story assets.
+- Template-driven procedural generation model based on named templates, explicit content slots, reusable grids, material rules, palette rules, typography rules, and output presets.
+- Designer review gate through `omniknight` for template, grid, material, palette, typography, spacing, and cross-toolkit cohesion decisions until the dedicated designer framework is committed.
+
 ## Editor Canvas
 
 - Canvas stage with live composition preview and safe-margin/grid overlays.
@@ -12,6 +18,7 @@
 - Shared toolkit registry, export-capability contracts, and package-style platform boundaries
 - Shared studio-shell primitives for branded headers, preview layouts, output presets, and preset storage
 - Shared UI primitives for palette-first controls, collapsible control sections, and reusable editor surfaces
+- Shared visual cohesion requirements for launcher and toolkit routes, including navigation/header, controls/forms, palette/typography, and preview/export framing comparisons
 
 ## Data Visualization Toolkit
 

@@ -6,3 +6,4 @@ out
 *.tsbuildinfo
 
 agent/memory/
+tmp/

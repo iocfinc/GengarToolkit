@@ -1,0 +1,137 @@
+{
+  "version": "0.1.0",
+  "name": "gengar-skill-gym-v0",
+  "owner": "GengarToolkit",
+  "harness_boundary": "Reusable runners, aggregation scripts, and cross-repo skill-training loops belong in CodexSkills. This file is the Gengar-specific problem set.",
+  "scorecards": [
+    "marketing_writing",
+    "communications",
+    "image_generation_prompting",
+    "skill_engineering",
+    "agent_workflow"
+  ],
+  "tasks": [
+    {
+      "id": "mkt-landing-001",
+      "lane": "foreground",
+      "scorecard": "marketing_writing",
+      "title": "Rewrite a toolkit launch hero",
+      "user_prompt": "Rewrite the first-screen copy for a Gengar marketing toolkit launch page. Audience: founder-operators who need polished brand assets without hiring a full studio. Output: H1, subhead under 34 words, primary CTA, secondary CTA, and three proof bullets.",
+      "required_artifacts": ["copy"],
+      "deterministic_checks": [
+        "has_h1",
+        "subhead_max_34_words",
+        "has_two_ctas",
+        "has_three_proof_bullets"
+      ],
+      "hidden_grader_notes": "Reward specificity about brand assets and toolkit output. Penalize generic AI productivity claims."
+    },
+    {
+      "id": "mkt-email-001",
+      "lane": "foreground",
+      "scorecard": "marketing_writing",
+      "title": "Launch email from a sparse brief",
+      "user_prompt": "Draft a concise launch email for a new social-card generator inside Gengar. Audience: internal Dioscuri users. Keep it practical, not promotional. Include subject, preview text, body, and one CTA.",
+      "required_artifacts": ["email"],
+      "deterministic_checks": [
+        "has_subject",
+        "has_preview_text",
+        "has_one_cta",
+        "no_unsupported_performance_claims"
+      ],
+      "hidden_grader_notes": "Reward concrete workflow fit and restrained tone. Penalize grandiose launch language."
+    },
+    {
+      "id": "comms-issue-001",
+      "lane": "foreground",
+      "scorecard": "communications",
+      "title": "Issue update after blocked validation",
+      "user_prompt": "Write a GitHub issue update explaining that visual validation could not run because browser tooling was unavailable. Include what changed, what was validated instead, the exact blocker, and the next step.",
+      "required_artifacts": ["issue_comment"],
+      "deterministic_checks": [
+        "mentions_change",
+        "mentions_alternate_validation",
+        "mentions_exact_blocker",
+        "mentions_next_step"
+      ],
+      "hidden_grader_notes": "Reward transparent blocker handling. Fail if it pretends screenshot validation happened."
+    },
+    {
+      "id": "img-prompt-001",
+      "lane": "foreground",
+      "scorecard": "image_generation_prompting",
+      "title": "Campaign image prompt",
+      "user_prompt": "Create an image-generation prompt for a Gengar campaign asset showing an operator building polished brand cards from a practical desktop workflow. Avoid generic futuristic AI visuals. Output one prompt and five acceptance checks.",
+      "required_artifacts": ["image_prompt", "acceptance_checks"],
+      "deterministic_checks": [
+        "mentions_subject",
+        "mentions_setting",
+        "mentions_aspect_ratio",
+        "has_five_acceptance_checks",
+        "excludes_generic_ai_visuals"
+      ],
+      "hidden_grader_notes": "Reward product-specific visual hierarchy and believable workflow details."
+    },
+    {
+      "id": "skill-author-001",
+      "lane": "background",
+      "scorecard": "skill_engineering",
+      "title": "Design a marketing rewrite skill",
+      "user_prompt": "Design the contents of a Codex skill for rewriting product marketing copy into the Dioscuri/Gengar voice. Do not create files. Return the proposed skill name, trigger description, SKILL.md outline, references, and validation tasks.",
+      "required_artifacts": ["skill_design"],
+      "deterministic_checks": [
+        "skill_name_hyphen_case",
+        "description_has_trigger_scope",
+        "includes_validation_tasks",
+        "does_not_include_generic_readme"
+      ],
+      "hidden_grader_notes": "Reward context economy and concrete trigger boundaries. Penalize generic brand-writing advice."
+    },
+    {
+      "id": "skill-forward-test-001",
+      "lane": "background",
+      "scorecard": "skill_engineering",
+      "title": "Plan a non-leaky forward test",
+      "user_prompt": "Given a candidate skill for creating announcement copy, design two forward-testing prompts that do not reveal expected answers. Include what artifacts the tester should return and what would count as a failure.",
+      "required_artifacts": ["test_plan"],
+      "deterministic_checks": [
+        "has_two_prompts",
+        "does_not_leak_expected_answer",
+        "mentions_returned_artifacts",
+        "mentions_failure_criteria"
+      ],
+      "hidden_grader_notes": "Reward raw task framing and independent validation. Penalize prompts that ask the tester to review the skill directly."
+    },
+    {
+      "id": "agent-workflow-001",
+      "lane": "background",
+      "scorecard": "agent_workflow",
+      "title": "Classify and plan an eval framework change",
+      "user_prompt": "Classify a request to add skills/evals planning docs to GengarToolkit, then produce a branch plan, validation plan, changelog plan, and frontend visual-QA skip reason.",
+      "required_artifacts": ["plan"],
+      "deterministic_checks": [
+        "classifies_as_feature_or_docs",
+        "branch_uses_gengarvis_prefix",
+        "mentions_changelog",
+        "mentions_visual_qa_skip_reason"
+      ],
+      "hidden_grader_notes": "Reward repo-specific workflow fidelity. Penalize code-heavy plans for a docs-only change."
+    },
+    {
+      "id": "benchmark-research-001",
+      "lane": "background",
+      "scorecard": "agent_workflow",
+      "title": "Map public benchmarks to Gengar needs",
+      "user_prompt": "Compare available writing and image-generation benchmarks to Gengar's marketing-skill needs. Return what can be reused, what cannot, and what local graders are still required. Use source links.",
+      "required_artifacts": ["research_note", "source_links"],
+      "deterministic_checks": [
+        "has_source_links",
+        "separates_reusable_from_local",
+        "mentions_writing",
+        "mentions_image_generation"
+      ],
+      "hidden_grader_notes": "Reward source quality and limits. Fail if it treats public benchmarks as sufficient for brand-quality approval."
+    }
+  ]
+}
+
