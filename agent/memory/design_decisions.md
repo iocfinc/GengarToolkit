@@ -1,5 +1,20 @@
 # Design Decisions
 
+## Product North Star
+
+- Gengar Toolkit serves data scientists and data analysts who need fast, repeatable editorial assets for sharing data findings.
+- The core jobs are data finding posters, article or report cover pages, chart-led social cards, and presentation-ready covers for research and executive storytelling.
+- The product portfolio should stay anchored to data-story publishing and reusable brand/template infrastructure. Ideas outside that lane belong in `agent/memory/roadmap.md` until a maintainer approves a tighter fit.
+- Template-driven procedural generation is the preferred creation model. New tools should pull from named templates with explicit slots, grid constraints, material rules, palette rules, typography rules, and output presets.
+- Open-ended interpretive generation is treated as a risk unless it is constrained by reusable templates and deterministic validation.
+
+## Visual Cohesion
+
+- The launcher and every toolkit route must look like one suite, not separate prototypes.
+- Shared shell, navigation, preview, form, palette, typography, output preset, and export controls should come from `packages/studio-shell`, `packages/ui`, `packages/design-tokens`, `packages/config-schema`, and `packages/export-engine`.
+- Toolkit-local hamburgers, dropdown systems, text inputs, palette controls, cards, and export selectors are exceptions that need a recorded product reason and cleanup path.
+- `omniknight` owns Designer review until a dedicated designer-authored template framework lands. That review covers templates, grids, materials, palettes, typography, spacing, and route-to-route visual cohesion.
+
 ## Rendering Stack
 
 - The editor uses a canvas-first rendering pipeline instead of Three.js to keep export behavior predictable and the runtime simpler.

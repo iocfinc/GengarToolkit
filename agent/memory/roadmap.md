@@ -16,7 +16,7 @@ Active delivery sequencing now lives in the root `ROADMAP.md`.
 
 ## Next
 
-- None yet.
+- Designer-authored template framework: define reusable template families, grid systems, material rules, palette constraints, typography scales, and acceptance checks for procedural generation across launcher and toolkit routes.
 
 ## Later
 

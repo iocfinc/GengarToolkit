@@ -6,6 +6,7 @@ This changelog tracks notable repository changes. Add new entries to the topmost
 
 ### Added
 
+- A Gengar-specific skill eval framework under `agent/evals/`, including foreground/background task lanes, scorecards, and a seed problem set for marketing, communications, image-prompting, skill-engineering, and agent-workflow evals.
 - Pattern Toolkit: Quarter-circle Cells → Modules generator integrated under `/pattern-toolkit`, with seeded randomness, edit mode, JSON config copy/apply, and SVG/PNG (300 DPI)/JPG export.
 - Test coverage confirmations for editor sizing/preview parity, preset persistence/versioned storage, and export engine surface; minor test adjustments where needed.
 - A shared social-card framework with reusable template metadata, normalized draft/preset contracts, and a `chart-core`-backed chart-caption renderer for constrained publishing cards.

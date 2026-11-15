@@ -1,5 +1,22 @@
 # Workflow Learnings
 
+## Product Cohesion Rules Refresh
+
+### What Worked
+
+- Converting the maintainer review into explicit portfolio, template-system, shared-primitive, and visual-evidence checks made the cohesion gap actionable for future branches.
+- Recording the product north star in both `AGENTS.md` and agent memory gives future runs a stable rule set without embedding reusable harness logic in the product repo.
+
+### Skill Updates Needed
+
+- `plan_feature` should keep portfolio fit, template-system fit, shared primitive reuse, and visual cohesion evidence as required planning sections.
+- `omniknight` should remain the Designer review gate for templates, grids, materials, palettes, typography, and route-to-route cohesion until a designer-authored framework replaces the interim rule.
+
+### Workflow Updates Needed
+
+- Treat toolkit-local navigation, form controls, palettes, text controls, and export selectors as exceptions that need an owner, product reason, affected routes, and cleanup path.
+- Route broad or off-direction ideas to `agent/memory/roadmap.md` instead of implementing them during bug-fix or cohesion branches.
+
 ## Issue 28/29/30/31 Follow-Through: Dogfooded Announcement Assets
 
 ### What Worked
